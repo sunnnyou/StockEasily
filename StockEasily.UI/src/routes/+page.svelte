@@ -1,2 +1,6 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script>
+    import {t} from "svelte-intl-precompile";
+</script>
+
+<h1>{$t('home.heading')}</h1>
+<p>{$t('home.caption', {values: { url: 'kit.svelte.dev'}})}</p>
