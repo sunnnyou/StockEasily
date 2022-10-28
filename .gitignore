@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/linux,macos,windows,jetbrains+all,visualstudiocode,java,node
-# Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,windows,jetbrains+all,visualstudiocode,java,node
+# Created by https://www.toptal.com/developers/gitignore/api/linux,macos,windows,jetbrains+all,visualstudiocode,java,gradle,node
+# Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,windows,jetbrains+all,visualstudiocode,java,gradle,node
 
 ### Java ###
 # Compiled class file
@@ -137,7 +137,7 @@ fabric.properties
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
 
 # Thumbnails
 ._*
@@ -346,5 +346,32 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/linux,macos,windows,jetbrains+all,visualstudiocode,java,node
+### Gradle ###
+.gradle
+**/build/
+!src/**/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Avoid ignore Gradle wrappper properties
+!gradle-wrapper.properties
+
+# Cache of project
+.gradletasknamecache
+
+# Eclipse Gradle plugin generated files
+# Eclipse Core
+.project
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+### Gradle Patch ###
+# Java heap dump
+*.hprof
+
+# End of https://www.toptal.com/developers/gitignore/api/linux,macos,windows,jetbrains+all,visualstudiocode,java,gradle,node
 
