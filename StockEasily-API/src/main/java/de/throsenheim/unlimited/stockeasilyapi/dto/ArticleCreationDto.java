@@ -9,7 +9,6 @@ public class ArticleCreationDto {
     private String name;
     private List<Property> properties;
 
-
     public String getName() {
         return name;
     }
