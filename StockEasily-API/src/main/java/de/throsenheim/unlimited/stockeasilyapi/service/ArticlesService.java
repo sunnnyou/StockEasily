@@ -7,7 +7,11 @@ public class ArticlesService implements IArticlesService {
 
     @Override
     public Article create(ArticleCreationDto creationDto) {
-        return new Article();
+        Article result = new Article();
+        result.setId(1); // TODO get from DB
+        result.setName(creationDto.getName());
+        result.setProperties(creationDto.getProperties());
+        return result;
     }
 
 }
