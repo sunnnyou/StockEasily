@@ -5,6 +5,7 @@ import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.service.IArticlesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +21,7 @@ public class ArticlesController {
     }
 
     @PostMapping
-    Article createArticle(ArticleCreationDto creationDto) {
+    Article createArticle(@RequestBody ArticleCreationDto creationDto) {
         // this.articleService.
         // TODO implement
         return this.articleService.create(creationDto);
