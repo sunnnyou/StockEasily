@@ -21,10 +21,10 @@ public class ArticlesController {
     }
 
     @PostMapping
-    Article createArticle(@RequestBody ArticleCreationDto creationDto) {
+    Article createArticle(@RequestBody ArticleCreationDto inputDto) {
         // this.articleService.
         // TODO implement
-        return this.articleService.create(creationDto);
+        return this.articleService.create(inputDto);
     }
 
 }
