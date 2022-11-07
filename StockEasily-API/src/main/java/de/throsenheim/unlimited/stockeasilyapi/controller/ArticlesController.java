@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/articles")
 public class ArticlesController {
@@ -21,7 +23,7 @@ public class ArticlesController {
     }
 
     @PostMapping
-    Article createArticle(@RequestBody ArticleCreationDto inputDto) {
+    Article createArticle(@Valid @RequestBody ArticleCreationDto inputDto) {
         // this.articleService.
         // TODO implement
         return this.articleService.create(inputDto);
