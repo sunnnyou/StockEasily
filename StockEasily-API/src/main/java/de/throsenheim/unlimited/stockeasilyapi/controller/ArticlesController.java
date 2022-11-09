@@ -21,8 +21,6 @@ public class ArticlesController {
 
     @PostMapping
     Article createArticle(@Valid @RequestBody ArticleCreationDto inputDto) {
-        // this.articleService.
-        // TODO implement
         return this.articleService.create(inputDto);
     }
 
