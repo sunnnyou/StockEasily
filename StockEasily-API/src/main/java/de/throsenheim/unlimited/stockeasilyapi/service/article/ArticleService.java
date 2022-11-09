@@ -1,11 +1,11 @@
-package de.throsenheim.unlimited.stockeasilyapi.service;
+package de.throsenheim.unlimited.stockeasilyapi.service.article;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.ArticleCreationDto;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ArticlesService implements IArticlesService {
+public class ArticleService implements IArticleService {
 
     @Override
     public Article create(ArticleCreationDto inputDto) {
