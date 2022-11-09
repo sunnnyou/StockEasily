@@ -4,6 +4,8 @@ import de.throsenheim.unlimited.stockeasilyapi.dto.ArticleCreationDto;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.service.article.IArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,8 +22,8 @@ public class ArticlesController {
     }
 
     @PostMapping
-    Article createArticle(@Valid @RequestBody ArticleCreationDto inputDto) {
-        return this.articleService.create(inputDto);
+    public ResponseEntity<Article> createArticle(@Valid @RequestBody ArticleCreationDto inputDto) {
+        return new ResponseEntity<>(this.articleService.create(inputDto), HttpStatus.CREATED);
     }
 
 }
