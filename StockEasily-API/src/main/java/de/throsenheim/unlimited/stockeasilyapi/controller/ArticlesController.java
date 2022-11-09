@@ -2,7 +2,7 @@ package de.throsenheim.unlimited.stockeasilyapi.controller;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.ArticleCreationDto;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
-import de.throsenheim.unlimited.stockeasilyapi.service.article.IArticleService;
+import de.throsenheim.unlimited.stockeasilyapi.service.article.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +14,10 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/articles")
 public class ArticlesController {
 
-    private final IArticleService articleService;
+    private final ArticleService articleService;
 
     @Autowired
-    public ArticlesController(@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") IArticleService articleService) {
+    public ArticlesController(@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") ArticleService articleService) {
         this.articleService = articleService;
     }
 

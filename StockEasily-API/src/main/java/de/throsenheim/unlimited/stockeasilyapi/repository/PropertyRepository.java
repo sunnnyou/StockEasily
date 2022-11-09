@@ -1,6 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.repository;
 
-import de.throsenheim.unlimited.stockeasilyapi.factory.IDatabaseConnectionFactory;
+import de.throsenheim.unlimited.stockeasilyapi.factory.DatabaseConnectionFactory;
 import de.throsenheim.unlimited.stockeasilyapi.model.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
     private final Connection connection;
 
     @Autowired
-    public PropertyRepository(IDatabaseConnectionFactory databaseConnectionFactory) {
+    public PropertyRepository(DatabaseConnectionFactory databaseConnectionFactory) {
         this.connection = databaseConnectionFactory.getConnection(false);
     }
 

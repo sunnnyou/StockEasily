@@ -1,6 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.repository;
 
-import de.throsenheim.unlimited.stockeasilyapi.factory.IDatabaseConnectionFactory;
+import de.throsenheim.unlimited.stockeasilyapi.factory.DatabaseConnectionFactory;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.model.Category;
 import de.throsenheim.unlimited.stockeasilyapi.model.Property;
@@ -20,7 +20,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
     private final CategoryRepository categoryRepository;
 
     @Autowired
-    public ArticleRepository(IDatabaseConnectionFactory databaseConnectionFactory,
+    public ArticleRepository(DatabaseConnectionFactory databaseConnectionFactory,
                              PropertyRepository propertyRepository,
                              CategoryRepository categoryRepository) {
         this.connection = databaseConnectionFactory.getConnection(false);
