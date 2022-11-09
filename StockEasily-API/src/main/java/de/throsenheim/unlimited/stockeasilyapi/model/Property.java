@@ -1,27 +1,38 @@
 package de.throsenheim.unlimited.stockeasilyapi.model;
 
+import javax.validation.constraints.NotEmpty;
+
 public class Property {
 
-    private int id; // TODO use for database
+    private int id;
 
-    private String key;
+    @NotEmpty
+    private String name;
 
-    private String value;
+    private String description;
 
-    public String getKey() {
-        return key;
+    public int getId() {
+        return id;
     }
 
-    public String getValue() {
-        return value;
+    public String getName() {
+        return name;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public String getDescription() {
+        return description;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }
