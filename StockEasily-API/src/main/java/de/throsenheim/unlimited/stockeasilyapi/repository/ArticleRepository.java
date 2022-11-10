@@ -43,23 +43,13 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         return null;
     }
 
-////        try {
-////            String table = "";
-////            final String query = "SELECT * FROM articles WHERE id = ? LIMIT 1";
-////            Statement statement = connection.createStatement();
-////            ResultSet resultSet = statement.executeQuery(query);
-////            if (resultSet.next()) {
-////                Article result = new Article();
-////                result.setId(id);
-////                result.setName(resultSet.getString(""));
-////                return
-////            }
-////        } catch (SQLException e) {
-////            throw new RuntimeException(e);
-////        }
-
     @Override
     public Article save(Article article) {
+        return save(article, true);
+    }
+
+    @Override
+    public Article save(Article article, boolean commit) {
         Category category = article.getCategory();
         if (category != null) {
             category = categoryRepository.save(category);
@@ -74,7 +64,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             article.setProperties(properties);
         }
 
-        return insertArticle(article);
+        return insert(article, commit);
     }
 
     @Override
@@ -85,15 +75,13 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         return null;
     }
 
-    private Article insertArticle(Article article) {
+    private Article insert(Article article, boolean commit) {
         try {
             final Long categoryId = article.getCategory() == null ? null : article.getCategory().getId();
-            final StringBuilder queryBuilder = new StringBuilder("INSERT INTO articles(name,quantity,image");
-            queryBuilder.append(categoryId == null ? "" : ",categoryId");
-            queryBuilder.append(") VALUES (?,?,?");
-            queryBuilder.append(categoryId == null ? "" : ",?");
-            queryBuilder.append(")");
-            PreparedStatement preparedStatement = connection.prepareStatement(queryBuilder.toString(), Statement.RETURN_GENERATED_KEYS);
+            final String query = "INSERT INTO articles(name,quantity,image" + (categoryId == null ? "" : ",categoryId")
+                    + ") VALUES (?,?,?" + (categoryId == null ? "" : ",?") + ")";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, article.getName());
             preparedStatement.setInt(2, article.getQuantity());
             preparedStatement.setBlob(3, article.getImage()); // TODO implement image upload
@@ -103,6 +91,9 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             if (preparedStatement.executeUpdate() == 1) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
+                    if (commit) {
+                        this.connection.commit();
+                    }
                     article.setId(resultSet.getLong("insert_id"));
                     return article;
                 }

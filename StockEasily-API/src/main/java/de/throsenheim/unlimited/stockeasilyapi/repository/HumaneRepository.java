@@ -32,4 +32,6 @@ public interface HumaneRepository<T, ID> extends Repository<T, ID> {
     Iterable<T> saveAll(Iterable<T> entities);
 
     T save(T entity);
+
+    T save(T entity, boolean commit);
 }

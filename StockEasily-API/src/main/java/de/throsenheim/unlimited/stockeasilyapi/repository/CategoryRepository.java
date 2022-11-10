@@ -51,6 +51,15 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
 
     @Override
     public Category save(Category category) {
+        return save(category, false);
+    }
+
+    @Override
+    public Category save(Category category, boolean commit) {
+        return insert(category, commit);
+    }
+
+    private Category insert(Category category, boolean commit) {
         try {
             final String query = "INSERT INTO categories(name) VALUES (?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -59,6 +68,7 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
             if (preparedStatement.executeUpdate() == 1) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
+                    this.connection.commit();
                     category.setId(resultSet.getLong("insert_id"));
                     return category;
                 }

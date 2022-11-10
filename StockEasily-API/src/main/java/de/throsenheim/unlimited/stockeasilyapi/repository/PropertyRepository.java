@@ -50,7 +50,7 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
     @Override
     public Iterable<Property> saveAll(Iterable<Property> properties) {
         List<Property> result = new LinkedList<>();
-        for(Property property : properties) {
+        for (Property property : properties) {
             Property resultProperty = save(property);
             if (resultProperty == null) {
                 System.out.println("Skipping Property " + property.getId());
@@ -63,6 +63,15 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
 
     @Override
     public Property save(Property property) {
+        return save(property, false);
+    }
+
+    @Override
+    public Property save(Property property, boolean commit) {
+        return insert(property, commit);
+    }
+
+    private Property insert(Property property, boolean commit) {
         try {
             final String query = "INSERT INTO properties(name,description) VALUES (?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -72,6 +81,9 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
             if (preparedStatement.executeUpdate() == 1) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
+                    if (commit) {
+                        this.connection.commit();
+                    }
                     property.setId(resultSet.getLong("insert_id"));
                     return property;
                 }
