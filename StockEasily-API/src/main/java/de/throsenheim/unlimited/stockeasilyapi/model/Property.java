@@ -6,7 +6,7 @@ import javax.validation.constraints.NotEmpty;
 
 public class Property {
 
-    private int id;
+    private long id;
 
     @NotEmpty
     @Length(min = 1, max = 30)
@@ -15,7 +15,7 @@ public class Property {
     @Length(max = 50)
     private String description;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -27,7 +27,7 @@ public class Property {
         return description;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

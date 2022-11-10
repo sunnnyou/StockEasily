@@ -6,14 +6,14 @@ import javax.validation.constraints.NotEmpty;
 
 public class Category {
 
-    private int id;
+    private long id;
 
     @NotEmpty
     @Length(min = 1, max = 30)
     private String name;
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -21,7 +21,7 @@ public class Category {
         return name;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
