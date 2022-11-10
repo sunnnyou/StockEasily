@@ -58,19 +58,16 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
 
     private ArticleProperty insert(ArticleProperty relation, boolean commit) {
         try {
-            final String query = "INSERT INTO articles_properties(articleId,propertyId) VALUES (?)";
+            final String query = "INSERT INTO articles_properties(articleId,propertyId) VALUES (?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setLong(1, relation.getArticleId());
-            preparedStatement.setLong(1, relation.getPropertyId());
+            preparedStatement.setLong(2, relation.getPropertyId());
 
             if (preparedStatement.executeUpdate() == 1) {
-                ResultSet resultSet = preparedStatement.getGeneratedKeys();
-                if (resultSet.next()) {
-                    if (commit) {
-                        this.connection.commit();
-                    }
-                    return relation;
+                if (commit) {
+                    this.connection.commit();
                 }
+                return relation;
             }
             return null;
         } catch (SQLException e) {
