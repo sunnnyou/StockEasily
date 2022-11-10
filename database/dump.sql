@@ -26,7 +26,7 @@ CREATE TABLE `articles` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(30) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `categoryId` bigint(20) DEFAULT -1,
+  `categoryId` bigint(20) DEFAULT NULL,
   `image` blob DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `articles_categories_null_fk` (`categoryId`),
@@ -89,4 +89,4 @@ CREATE TABLE `properties` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-09 21:55:23
+-- Dump completed on 2022-11-10 14:09:16
