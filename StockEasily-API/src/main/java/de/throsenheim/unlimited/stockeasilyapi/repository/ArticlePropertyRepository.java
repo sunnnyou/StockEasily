@@ -3,10 +3,12 @@ package de.throsenheim.unlimited.stockeasilyapi.repository;
 import de.throsenheim.unlimited.stockeasilyapi.factory.DatabaseConnectionFactory;
 import de.throsenheim.unlimited.stockeasilyapi.model.ArticleProperty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.Optional;
 
+@Component
 public class ArticlePropertyRepository implements HumaneRepository<ArticleProperty, Long> {
 
     private Connection connection;
