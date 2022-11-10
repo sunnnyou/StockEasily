@@ -2,6 +2,7 @@ package de.throsenheim.unlimited.stockeasilyapi.repository;
 
 import de.throsenheim.unlimited.stockeasilyapi.factory.DatabaseConnectionFactory;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
+import de.throsenheim.unlimited.stockeasilyapi.model.ArticleProperty;
 import de.throsenheim.unlimited.stockeasilyapi.model.Category;
 import de.throsenheim.unlimited.stockeasilyapi.model.Property;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,17 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
     private final PropertyRepository propertyRepository;
     private final CategoryRepository categoryRepository;
 
+    private final ArticlePropertyRepository articlePropertyRepository;
+
     @Autowired
     public ArticleRepository(DatabaseConnectionFactory databaseConnectionFactory,
                              PropertyRepository propertyRepository,
-                             CategoryRepository categoryRepository) {
+                             CategoryRepository categoryRepository,
+                             ArticlePropertyRepository articlePropertyRepository) {
         this.connection = databaseConnectionFactory.getConnection(false);
         this.propertyRepository = propertyRepository;
         this.categoryRepository = categoryRepository;
+        this.articlePropertyRepository = articlePropertyRepository;
     }
 
     @Override
@@ -65,8 +70,10 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             }
             article.setProperties(properties);
         }
-
-        return insert(article, commit);
+        Article result = insert(article, commit);
+        List<ArticleProperty> articlePropertyRelations = getArticlePropertyRelations(result);
+        articlePropertyRepository.saveAll(articlePropertyRelations);
+        return result;
     }
 
     @Override
@@ -106,4 +113,14 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         }
     }
 
+    private List<ArticleProperty> getArticlePropertyRelations(Article article) {
+        List<ArticleProperty> result = new LinkedList<>();
+        for (Property property : article.getProperties()) {
+            ArticleProperty relation = new ArticleProperty();
+            relation.setArticleId(article.getId());
+            relation.setPropertyId(property.getId());
+            result.add(relation);
+        }
+        return result;
+    }
 }

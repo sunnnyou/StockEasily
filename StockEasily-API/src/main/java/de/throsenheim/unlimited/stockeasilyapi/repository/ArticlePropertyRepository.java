@@ -1,0 +1,79 @@
+package de.throsenheim.unlimited.stockeasilyapi.repository;
+
+import de.throsenheim.unlimited.stockeasilyapi.factory.DatabaseConnectionFactory;
+import de.throsenheim.unlimited.stockeasilyapi.model.ArticleProperty;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.sql.*;
+import java.util.Optional;
+
+public class ArticlePropertyRepository implements HumaneRepository<ArticleProperty, Long> {
+
+    private Connection connection;
+
+    @Autowired
+    public ArticlePropertyRepository(DatabaseConnectionFactory databaseConnectionFactory) {
+        this.connection = databaseConnectionFactory.getConnection(false);
+    }
+
+    @Override
+    public Iterable<ArticleProperty> findAllById(Iterable<Long> longs) {
+        return null;
+    }
+
+    @Override
+    public Optional<ArticleProperty> findById(Long aLong) {
+        return Optional.empty();
+    }
+
+    @Override
+    public ArticleProperty findByName(String name) {
+        return null;
+    }
+
+    @Override
+    public Iterable<ArticleProperty> saveAll(Iterable<ArticleProperty> relations) {
+        for (ArticleProperty relation : relations) {
+            save(relation);
+        }
+        try {
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return relations;
+    }
+
+    @Override
+    public ArticleProperty save(ArticleProperty relation) {
+        return save(relation, false);
+    }
+
+    @Override
+    public ArticleProperty save(ArticleProperty relation, boolean commit) {
+        return insert(relation, commit);
+    }
+
+    private ArticleProperty insert(ArticleProperty relation, boolean commit) {
+        try {
+            final String query = "INSERT INTO articles_properties(articleId,propertyId) VALUES (?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, relation.getArticleId());
+            preparedStatement.setLong(1, relation.getPropertyId());
+
+            if (preparedStatement.executeUpdate() == 1) {
+                ResultSet resultSet = preparedStatement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    if (commit) {
+                        this.connection.commit();
+                    }
+                    return relation;
+                }
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+}
