@@ -1,5 +1,5 @@
 <script>
-    import {t} from "svelte-intl-precompile";
+    import {t} from "../i18n/i18n.js";
 
     const title = 'StockEasily';
 </script>
