@@ -57,7 +57,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
     public Article save(Article article, boolean commit) {
         Category category = article.getCategory();
         if (category != null) {
-            category = categoryRepository.save(category);
+            category = categoryRepository.save(category, true);
             article.setCategory(category);
         }
 
