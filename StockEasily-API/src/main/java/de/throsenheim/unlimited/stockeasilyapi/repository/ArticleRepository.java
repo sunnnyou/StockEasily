@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +59,9 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         List<Property> properties = article.getProperties();
         if (properties != null) {
             if (properties.size() > 0) {
-                properties = (ArrayList<Property>) propertyRepository.saveAll(properties);
+                Iterable<Property> resultProperties = propertyRepository.saveAll(properties);
+                properties = new LinkedList<>();
+                resultProperties.forEach(properties::add);
             }
             article.setProperties(properties);
         }
