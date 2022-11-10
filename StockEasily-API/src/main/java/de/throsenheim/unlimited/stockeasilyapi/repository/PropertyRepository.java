@@ -58,6 +58,11 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
             }
             result.add(resultProperty);
         }
+        try {
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return result;
     }
 
