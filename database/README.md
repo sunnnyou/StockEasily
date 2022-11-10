@@ -56,11 +56,12 @@ Or change to `repo/sql` directory with the terminal (via `cd`).
 #### Windows (PowerShell or CMD)
 
 ```powershell
-cmd.exe /c "mysql -u stockeasily -p develop < database/dump.sql"
+cmd.exe /c "mysql -u stockeasily -p develop stockeasily < database/dump.sql"
 ```
+*Note:* Try `-pdevelop` instead, if there are problems.
 
 #### Linux/Unix
 
 ```shell
-mysql -u stockeasily -p develop < ./database/dump.sql
+mysql -u stockeasily -pdevelop stockeasily < ./database/dump.sql
 ```
