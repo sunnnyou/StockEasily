@@ -60,9 +60,6 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
     @Override
     public Article save(Article article) {
-        Article result = insertArticle(article);
-        // TODO use id
-
         Category category = article.getCategory();
         if (category != null) {
             category = categoryRepository.save(category);
@@ -71,11 +68,13 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
         List<Property> properties = article.getProperties();
         if (properties != null) {
-            properties = (ArrayList<Property>) propertyRepository.saveAll(article.getProperties());
+            if (properties.size() > 0) {
+                properties = (ArrayList<Property>) propertyRepository.saveAll(properties);
+            }
             article.setProperties(properties);
         }
 
-        return result;
+        return insertArticle(article);
     }
 
     @Override
@@ -88,17 +87,24 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
     private Article insertArticle(Article article) {
         try {
-            final String query = "INSERT INTO articles(name,quantity,image) VALUES (?,?,?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            final Long categoryId = article.getCategory() == null ? null : article.getCategory().getId();
+            final StringBuilder queryBuilder = new StringBuilder("INSERT INTO articles(name,quantity,image");
+            queryBuilder.append(categoryId == null ? "" : ",categoryId");
+            queryBuilder.append(") VALUES (?,?,?");
+            queryBuilder.append(categoryId == null ? "" : ",?");
+            queryBuilder.append(")");
+            PreparedStatement preparedStatement = connection.prepareStatement(queryBuilder.toString(), Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, article.getName());
             preparedStatement.setInt(2, article.getQuantity());
             preparedStatement.setBlob(3, article.getImage()); // TODO implement image upload
-
-            int success = preparedStatement.executeUpdate();
-            if (success == 1) {
+            if (categoryId != null) {
+                preparedStatement.setLong(4, categoryId);
+            }
+            if (preparedStatement.executeUpdate() == 1) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
-                    article.setId(resultSet.getLong(1));
+                    article.setId(resultSet.getLong("insert_id"));
+                    return article;
                 }
             }
             return null;
@@ -107,11 +113,4 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         }
     }
 
-    private void insertCategory() {
-
-    }
-
-    private void insertProperties() {
-
-    }
 }

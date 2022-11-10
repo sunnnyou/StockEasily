@@ -5,10 +5,7 @@ import de.throsenheim.unlimited.stockeasilyapi.model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Optional;
 
 @Component
@@ -53,8 +50,23 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
     }
 
     @Override
-    public Category save(Category entity) {
-        return null;
+    public Category save(Category category) {
+        try {
+            final String query = "INSERT INTO categories(name) VALUES (?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, category.getName());
+
+            if (preparedStatement.executeUpdate() == 1) {
+                ResultSet resultSet = preparedStatement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    category.setId(resultSet.getLong("insert_id"));
+                    return category;
+                }
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

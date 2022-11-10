@@ -5,10 +5,9 @@ import de.throsenheim.unlimited.stockeasilyapi.model.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -49,13 +48,38 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
     }
 
     @Override
-    public Iterable<Property> saveAll(Iterable<Property> entities) {
-        return null;
+    public Iterable<Property> saveAll(Iterable<Property> properties) {
+        List<Property> result = new LinkedList<>();
+        for(Property property : properties) {
+            Property resultProperty = save(property);
+            if (resultProperty == null) {
+                System.out.println("Skipping Property " + property.getId());
+                continue;
+            }
+            result.add(resultProperty);
+        }
+        return result;
     }
 
     @Override
-    public Property save(Property entity) {
-        return null;
+    public Property save(Property property) {
+        try {
+            final String query = "INSERT INTO properties(name,description) VALUES (?,?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, property.getName());
+            preparedStatement.setString(2, property.getDescription());
+
+            if (preparedStatement.executeUpdate() == 1) {
+                ResultSet resultSet = preparedStatement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    property.setId(resultSet.getLong("insert_id"));
+                    return property;
+                }
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
