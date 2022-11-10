@@ -68,7 +68,9 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
             if (preparedStatement.executeUpdate() == 1) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
-                    this.connection.commit();
+                    if (commit) {
+                        this.connection.commit();
+                    }
                     category.setId(resultSet.getLong("insert_id"));
                     return category;
                 }
