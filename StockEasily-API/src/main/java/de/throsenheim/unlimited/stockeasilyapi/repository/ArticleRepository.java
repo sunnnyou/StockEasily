@@ -70,7 +70,11 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             }
             article.setProperties(properties);
         }
+
         Article result = insert(article, commit);
+        if (result == null) {
+            return null;
+        }
         List<ArticleProperty> articlePropertyRelations = getArticlePropertyRelations(result);
         articlePropertyRepository.saveAll(articlePropertyRelations);
         return result;
@@ -87,16 +91,19 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
     private Article insert(Article article, boolean commit) {
         try {
             final Long categoryId = article.getCategory() == null ? null : article.getCategory().getId();
-            final String query = "INSERT INTO articles(name,quantity,image" + (categoryId == null ? "" : ",categoryId")
-                    + ") VALUES (?,?,?" + (categoryId == null ? "" : ",?") + ")";
+            final String query = "INSERT INTO " +
+                    "articles(name,quantity,image" + (categoryId == null ? "" : ",categoryId") + ") " +
+                    "VALUES (?,?,?" + (categoryId == null ? "" : ",?") + ")";
 
             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
             preparedStatement.setString(1, article.getName());
             preparedStatement.setInt(2, article.getQuantity());
             preparedStatement.setBlob(3, article.getImage()); // TODO implement image upload
             if (categoryId != null) {
                 preparedStatement.setLong(4, categoryId);
             }
+
             if (preparedStatement.executeUpdate() == 1) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
