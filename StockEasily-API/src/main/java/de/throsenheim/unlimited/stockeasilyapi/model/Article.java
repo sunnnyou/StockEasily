@@ -49,7 +49,7 @@ public class Article {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.trim();
     }
 
     public void setProperties(List<Property> properties) {
