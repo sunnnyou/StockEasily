@@ -56,10 +56,10 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
     @Override
     public Article save(Article article, boolean commit) {
         Category category = article.getCategory();
-        if (category != null) {
+        if (category != null && category.getName() != null) {
             category = categoryRepository.save(category, true);
-            article.setCategory(category);
         }
+        article.setCategory(category);
 
         List<Property> properties = article.getProperties();
         if (properties != null) {
