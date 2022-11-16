@@ -24,6 +24,7 @@ public class ArticlesController {
     @PostMapping
     public ResponseEntity<Article> createArticle(@Valid @RequestBody ArticleCreationDto inputDto) {
         final Article result = this.articleService.create(inputDto);
+        // INTERNAL SERVER ERROR should NOT occur
         final HttpStatus httpStatus = result == null ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.CREATED;
         return new ResponseEntity<>(result, httpStatus);
     }
