@@ -1,18 +1,17 @@
 package de.throsenheim.unlimited.stockeasilyapi.model;
 
-import org.hibernate.validator.constraints.Length;
-
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 public class Property {
 
     private long id;
 
-    @NotEmpty
-    @Length(min = 1, max = 30)
+    @NotEmpty(message = "Property name must not be null or empty")
+    @Size(min = 1, max = 30, message = "Property name must be between 1 and 30 characters")
     private String name;
 
-    @Length(max = 50)
+    @Size(max = 50, message = "Property description must be less than 50 characters")
     private String description;
 
     public long getId() {

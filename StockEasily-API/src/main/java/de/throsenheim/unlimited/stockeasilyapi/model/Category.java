@@ -1,17 +1,15 @@
 package de.throsenheim.unlimited.stockeasilyapi.model;
 
-import org.hibernate.validator.constraints.Length;
-
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 public class Category {
 
     private long id;
 
-    @NotEmpty
-    @Length(min = 1, max = 30)
+    @NotEmpty(message = "Category name must not be null or empty")
+    @Size(min = 1, max = 30, message = "Category name must be between 1 and 30 characters")
     private String name;
-
 
     public long getId() {
         return id;
