@@ -1,4 +1,6 @@
 <script>
+    import '../app.css';
+
     import {t} from "../i18n/i18n.js";
 
     const title = 'StockEasily';
