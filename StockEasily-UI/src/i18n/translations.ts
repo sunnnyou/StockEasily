@@ -25,7 +25,6 @@ export default {
         'about': 'About',
         'about.contact': 'Contact',
         'about.contribute': 'Contribute',
-        'about.copyrightNotice': 'source code under {license} license available at',
         'about.donate': 'Donate',
         'about.reportIssue': 'Report an issue',
         'about.sourceCode': 'Source code',
