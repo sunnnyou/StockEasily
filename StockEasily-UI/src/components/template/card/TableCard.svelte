@@ -18,7 +18,6 @@
     }
 </script>
 
-<!--Table Card-->
 <div class={parentClass}>
             <TemplateCard {title}>
             <table class="w-full p-5 text-gray-700">
@@ -60,4 +59,3 @@
             <slot/>
     </TemplateCard>
 </div>
-<!--/table Card-->

@@ -37,10 +37,6 @@
                             onClick={toggleMenu}
                     >
                         <FaIcon icon={faBars}/>
-                        <!--                        <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>-->
-                        <!--                            Menu</title>-->
-                        <!--                            <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/>-->
-                        <!--                        </svg>-->
                     </Button>
                 </div>
             </div>
@@ -50,10 +46,8 @@
         <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto lg:block mt-2 lg:mt-0 bg-white z-20{isMenuOpen ? '' : ' hidden'}"
              id="nav-content"
         >
-            <!--MainMenu-->
             <MainMenu/>
 
-            <!--SearchField-->
             <SearchField placeholder={$t('general.search')} title={$t('menu.search.tooltip')}></SearchField>
         </div>
 
