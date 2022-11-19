@@ -7,8 +7,9 @@
     import PageContent from '$components/common/PageContent.svelte';
     import A from '$components/html/a/A.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
+    import type {MetricCardType} from '../components/template/card/metric-card-type';
 
-    const metricCards: MetricCardBoard[] = [
+    const metricCards: MetricCardType[] = [
         {color: 'green', icon: faWallet, title: 'Total Revenue', value: '$3249'},
         {color: 'pink', icon: faUsers, title: 'Total Users', value: '249'},
         {color: 'yellow', icon: faUserPlus, title: 'New Users', value: '2'},
