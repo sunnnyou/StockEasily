@@ -1,0 +1,1 @@
+export type TableColumn = { i18n?: string, right?: boolean, text?: string, url?: string };
