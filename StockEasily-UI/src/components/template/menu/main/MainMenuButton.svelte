@@ -12,8 +12,8 @@
         return $page.url.pathname === button?.href;
     }
 
-    const selectedClass = 'text-pink-600 border-pink-600 hover:border-pink-600';
-    const normalClass= ' hover:border-orange-600';
+    const selectedClass = 'text-blue-500 border-blue-500 hover:border-blue-500';
+    const normalClass= ' hover:border-blue-500';
 </script>
 
 <A href={button?.href}

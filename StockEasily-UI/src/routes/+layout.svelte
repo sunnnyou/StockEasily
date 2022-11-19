@@ -2,9 +2,9 @@
     import '../app.css';
 
     import {t} from '$i18n/i18n';
-    import Body from '$components/adminlte/Body.svelte';
-    import NavBar from '$components/adminlte/NavBar.svelte';
-    import Footer from '$components/adminlte/menu/footer/Footer.svelte';
+    import Body from '$components/template/Body.svelte';
+    import NavBar from '$components/template/NavBar.svelte';
+    import Footer from '$components/template/menu/footer/Footer.svelte';
     import HtmlHead from '$components/html/HtmlHead.svelte';
 
     const title = 'StockEasily';
@@ -15,7 +15,12 @@
           {title}
 />
 
+<Body>
 
+<NavBar {title}/>
 
 <slot/>
 
+<Footer/>
+
+</Body>
