@@ -1,17 +1,21 @@
-<script>
+<script lang="ts">
     import '../app.css';
 
-    import {t} from "../i18n/i18n.js";
+    import {t} from '$i18n/i18n';
+    import Body from '$components/adminlte/Body.svelte';
+    import NavBar from '$components/adminlte/NavBar.svelte';
+    import Footer from '$components/adminlte/menu/footer/Footer.svelte';
+    import HtmlHead from '$components/html/HtmlHead.svelte';
 
     const title = 'StockEasily';
 </script>
 
-<svelte:head>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{title}</title>
-    <meta name="description" content={$t('app.description')}>
-    <meta name="keywords" content={$t('app.keywords')}>
-</svelte:head>
+<HtmlHead description={$t('app.description')}
+          keywords={$t('app.keywords')}
+          {title}
+/>
+
+
 
 <slot/>
 
