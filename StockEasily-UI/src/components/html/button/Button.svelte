@@ -7,7 +7,7 @@
     export let name = '';
     export let onClick: Function | undefined;
     export let type = ButtonType.Button;
-    export let value: string | undefined;
+    export let value = '';
 
     function onClickCallback() {
         if (onClick) {
