@@ -1,0 +1,1 @@
+export type MenuButton = {className?: string, href?: string, i18n?: string, icon?: any};

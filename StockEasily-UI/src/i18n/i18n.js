@@ -1,5 +1,5 @@
-import { derived, writable } from "svelte/store";
-import translations from "./translations";
+import { derived, writable } from 'svelte/store';
+import translations from './translations';
 
 export const locale = writable("en");
 export const locales = Object.keys(translations);
