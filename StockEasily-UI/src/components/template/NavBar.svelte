@@ -2,8 +2,8 @@
     import {t} from '$i18n/i18n';
     import {faBars, faTableColumns} from '@fortawesome/free-solid-svg-icons';
 
-    import SearchField from './/SearchField.svelte';
-    import FaIcon from '../common/FaIcon.svelte';
+    import SearchField from './SearchField.svelte';
+    import FaIcon from '$common/FaIcon.svelte';
     import Button from '../html/button/Button.svelte';
     import Nav from '../html/Nav.svelte';
     import UserMenu from './menu/user/UserMenu.svelte';
