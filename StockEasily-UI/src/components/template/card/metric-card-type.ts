@@ -1,0 +1,1 @@
+export type MetricCardType = {color: string, icon?: any, title: string, value: string};
