@@ -10,7 +10,7 @@
 </script>
 
 <span class="inline flex-container">
-    <i class="inline-block {className}">
+    <i class="inline-block{className ? ' ' + className : ''}">
         <Fa {icon} {fw} {color} {scale}/>
     </i>
     <span class="pb-1 md:pb-0 text-sm{slotClass ? ' ' + slotClass : ''}">
