@@ -49,7 +49,7 @@ public class ArticleCreationDto {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = (name != null ? name.trim() : null);
     }
 
     public void setCategory(Category category) {

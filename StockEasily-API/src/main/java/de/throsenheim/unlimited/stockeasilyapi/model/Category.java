@@ -24,7 +24,7 @@ public class Category {
     }
 
     public void setName(String name) {
-        this.name = name.trim();
+        this.name = (name != null ? name.trim() : null);
     }
 
 }
