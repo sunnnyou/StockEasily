@@ -30,7 +30,6 @@ public class ArticleServiceImpl implements ArticleService {
 
     private Article toModel(ArticleCreationDto inputDto) {
         Article result = new Article();
-        result.setId(1); // TODO get from DB
 
         MultipartFile image = inputDto.getImage();
         Blob imageBlob = null;
