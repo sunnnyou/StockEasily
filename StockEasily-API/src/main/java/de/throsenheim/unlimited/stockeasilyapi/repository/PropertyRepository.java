@@ -35,12 +35,18 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
         final String query = "SELECT id, description FROM properties WHERE name = ? LIMIT 1";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
+
             preparedStatement.setString(1, name);
+
             ResultSet resultSet = preparedStatement.executeQuery();
-            Property result = new Property();
-            result.setId(resultSet.getInt("id"));
-            result.setName(name);
-            result.setDescription(resultSet.getString("description"));
+
+            Property result = null;
+            if (resultSet.next()) {
+                result = new Property();
+                result.setId(resultSet.getInt("id"));
+                result.setName(name);
+                result.setDescription(resultSet.getString("description"));
+            }
             return result;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -73,13 +79,15 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
 
     @Override
     public Property save(Property property, boolean commit) {
-        return insert(property, commit);
+        final Property resultFound = findByName(property.getName());
+        return resultFound != null ? resultFound : insert(property, commit);
     }
 
     private Property insert(Property property, boolean commit) {
         try {
             final String query = "INSERT INTO properties(name,description) VALUES (?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
             preparedStatement.setString(1, property.getName());
             preparedStatement.setString(2, property.getDescription());
 

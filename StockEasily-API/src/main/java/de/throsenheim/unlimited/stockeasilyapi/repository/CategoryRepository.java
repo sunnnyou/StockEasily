@@ -35,9 +35,13 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
-            Category result = new Category();
-            result.setId(resultSet.getInt("id"));
-            result.setName(name);
+
+            Category result = null;
+            if (resultSet.next()) {
+                result = new Category();
+                result.setId(resultSet.getInt(1));
+                result.setName(name);
+            }
             return result;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -56,13 +60,15 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
 
     @Override
     public Category save(Category category, boolean commit) {
-        return insert(category, commit);
+        final Category resultFound = findByName(category.getName());
+        return resultFound != null ? resultFound : insert(category, commit);
     }
 
     private Category insert(Category category, boolean commit) {
         try {
             final String query = "INSERT INTO categories(name) VALUES (?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
             preparedStatement.setString(1, category.getName());
 
             if (preparedStatement.executeUpdate() == 1) {
@@ -80,5 +86,4 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
             throw new RuntimeException(e);
         }
     }
-
 }

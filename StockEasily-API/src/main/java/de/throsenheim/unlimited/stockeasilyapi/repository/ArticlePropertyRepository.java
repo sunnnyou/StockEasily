@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.Optional;
 
 @Component
-public class ArticlePropertyRepository implements HumaneRepository<ArticleProperty, Long> {
+public class ArticlePropertyRepository implements HumaneRepository<ArticleProperty, Long>, RelationRepository<ArticleProperty, Long> {
 
     private Connection connection;
 
@@ -53,7 +53,7 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
 
     @Override
     public ArticleProperty save(ArticleProperty relation, boolean commit) {
-        return insert(relation, commit);
+        return exists(relation) ? relation : insert(relation, commit);
     }
 
     private ArticleProperty insert(ArticleProperty relation, boolean commit) {
@@ -75,4 +75,31 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
         }
     }
 
+    @Override
+    public boolean exists(ArticleProperty relation) {
+        return find(relation) != null;
+    }
+
+    @Override
+    public ArticleProperty find(ArticleProperty relation) {
+        try {
+            final String query = "SELECT EXISTS(" +
+                    "SELECT 1 " +
+                    "FROM stockeasily.articles_properties " +
+                    "WHERE articleId = ? " +
+                    "AND propertyId = ?" +
+                    ")";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, relation.getArticleId());
+            preparedStatement.setLong(2, relation.getPropertyId());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next() && resultSet.getBoolean(1)) {
+                return relation;
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
