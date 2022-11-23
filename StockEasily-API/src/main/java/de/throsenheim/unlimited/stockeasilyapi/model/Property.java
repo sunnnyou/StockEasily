@@ -7,7 +7,7 @@ public class Property {
 
     private long id;
 
-    @NotEmpty(message = "Property name must not be null or empty")
+    @NotNull(message = "Property name is mandatory")
     @Size(min = 1, max = 30, message = "Property name must be between 1 and 30 characters")
     private String name;
 
