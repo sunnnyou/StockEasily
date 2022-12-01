@@ -1,5 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.dto.response;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.http.HttpStatus;
 
 import java.util.*;
@@ -7,8 +8,10 @@ import java.util.*;
 public class ApiErrorDto {
     private final Date timestamp;
 
+    @ApiModelProperty(notes = "HTTP status code", example = "500")
     private HttpStatus status;
 
+    @ApiModelProperty(notes = "Internal Server error", example = "Internal Server Error")
     private String message;
 
     private Map<String, Object> errors;

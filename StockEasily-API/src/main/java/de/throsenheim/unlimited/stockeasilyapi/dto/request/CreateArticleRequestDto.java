@@ -1,5 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.dto.request;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -10,6 +11,10 @@ import java.util.List;
 
 public class CreateArticleRequestDto {
 
+    @Valid
+    private CategoryRequestDto category;
+
+    @ApiModelProperty(notes = "Article name", example = "HDX42 Widescreen Monitor", required = true)
     @NotNull(message = "Name is mandatory")
     @Size(min = 1, max = 30, message = "Article name must be between 1 and 30 characters")
     private String name;
@@ -17,11 +22,9 @@ public class CreateArticleRequestDto {
     @Valid
     private List<PropertyRequestDto> properties;
 
-    @Valid
-    private CategoryRequestDto category;
-
     // Why zero as minimum? It might be used for memorable value
     // which is a common thing in terms of bookkeeping
+    @ApiModelProperty(notes = "Article quantity", example = "2")
     @Min(value = 0, message = "Quantity must greater than or equal to 0")
     private int quantity = 1;
 
