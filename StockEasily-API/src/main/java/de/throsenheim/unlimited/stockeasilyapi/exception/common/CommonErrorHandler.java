@@ -1,6 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.exception.common;
 
-import de.throsenheim.unlimited.stockeasilyapi.dto.ApiErrorDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.ApiErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

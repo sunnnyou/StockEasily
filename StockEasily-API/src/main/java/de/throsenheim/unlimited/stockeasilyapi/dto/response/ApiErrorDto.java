@@ -1,4 +1,4 @@
-package de.throsenheim.unlimited.stockeasilyapi.dto;
+package de.throsenheim.unlimited.stockeasilyapi.dto.response;
 
 import org.springframework.http.HttpStatus;
 
