@@ -1,13 +1,17 @@
 package de.throsenheim.unlimited.stockeasilyapi.dto.response;
 
 import de.throsenheim.unlimited.stockeasilyapi.model.Property;
+import io.swagger.annotations.ApiModelProperty;
 
 public class PropertyResponseDto {
 
+    @ApiModelProperty(notes = "Property ID", example = "78")
     private long id;
 
+    @ApiModelProperty(notes = "Property name", example = "Screen diagonal")
     private String name;
 
+    @ApiModelProperty(notes = "Property description", example = "30\"")
     private String description;
 
     public PropertyResponseDto() {

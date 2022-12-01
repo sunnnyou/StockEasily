@@ -12,13 +12,16 @@ public class CreateArticleResponseDto {
 
     private CategoryResponseDto category;
 
+    @ApiModelProperty(notes = "Article id", example = "123")
     private long id;
 
-    @ApiModelProperty(notes = "Article name", example = "HDX42 Widescreen Monitor", required = true)
+    @ApiModelProperty(notes = "Article name", example = "HDX42 Widescreen Monitor")
     private String name;
 
+    @ApiModelProperty(notes = "Article properties")
     private List<PropertyResponseDto> properties;
 
+    @ApiModelProperty(notes = "Article quantity", example = "2")
     private int quantity;
 
     public CreateArticleResponseDto(Article article) {
@@ -27,7 +30,7 @@ public class CreateArticleResponseDto {
             return;
         }
 
-        setCategory(article.getCategory());
+        setCategory(new CategoryResponseDto(article.getCategory()));
         setId(article.getId());
         setName(article.getName());
         setProperties(article.getProperties());
@@ -72,10 +75,6 @@ public class CreateArticleResponseDto {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    private void setCategory(Category category) {
-        this.category = new CategoryResponseDto(category);
     }
 
 }
