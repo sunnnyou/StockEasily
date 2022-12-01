@@ -1,8 +1,13 @@
 package de.throsenheim.unlimited.stockeasilyapi.model;
 
-import de.throsenheim.unlimited.stockeasilyapi.dto.CreateArticleDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.List;
 
 public class Article {
@@ -18,12 +23,12 @@ public class Article {
 
     }
 
-    public Article(CreateArticleDto createArticleRequest) {
-        setName(createArticleRequest.getName());
-//        setImage(createArticleRequest.getImage()); TODO convert image
-        setQuantity(createArticleRequest.getQuantity());
-        setCategory(new Category(createArticleRequest.getCategory()));
-        setProperties(Property.getProperties(createArticleRequest.getProperties()));
+    public Article(CreateArticleRequestDto request) {
+        setName(request.getName());
+        setImage(request.getImage());
+        setQuantity(request.getQuantity());
+        setCategory(new Category(request.getCategory()));
+        setProperties(Property.getProperties(request.getProperties()));
     }
 
     public Category getCategory() {
@@ -72,5 +77,16 @@ public class Article {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    private void setImage(MultipartFile file) {
+        if (file != null && !file.isEmpty()) {
+            try {
+                setImage(new SerialBlob(file.getBytes()));
+                System.out.println("Initialized image with new SerialBlob of length " + getImage().length());
+            } catch (SQLException | IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
