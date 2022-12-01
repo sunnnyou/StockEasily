@@ -1,5 +1,7 @@
 package de.throsenheim.unlimited.stockeasilyapi.model;
 
+import de.throsenheim.unlimited.stockeasilyapi.dto.CreateArticleDto;
+
 import java.sql.Blob;
 import java.util.List;
 
@@ -11,6 +13,18 @@ public class Article {
     private List<Property> properties;
     private int quantity;
     private Blob image;
+
+    public Article() {
+
+    }
+
+    public Article(CreateArticleDto createArticleRequest) {
+        setName(createArticleRequest.getName());
+//        setImage(createArticleRequest.getImage()); TODO convert image
+        setQuantity(createArticleRequest.getQuantity());
+        setCategory(new Category(createArticleRequest.getCategory()));
+        setProperties(Property.getProperties(createArticleRequest.getProperties()));
+    }
 
     public Category getCategory() {
         return category;

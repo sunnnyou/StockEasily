@@ -1,6 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.controller;
 
-import de.throsenheim.unlimited.stockeasilyapi.dto.ArticleCreationDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.CreateArticleDto;
 import de.throsenheim.unlimited.stockeasilyapi.exception.InvalidBodyException;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.service.article.ArticleService;

@@ -1,7 +1,5 @@
 package de.throsenheim.unlimited.stockeasilyapi.dto;
 
-import de.throsenheim.unlimited.stockeasilyapi.model.Category;
-import de.throsenheim.unlimited.stockeasilyapi.model.Property;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -10,17 +8,17 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-public class ArticleCreationDto {
+public class CreateArticleDto {
 
     @NotNull(message = "Name is mandatory")
     @Size(min = 1, max = 30, message = "Article name must be between 1 and 30 characters")
     private String name;
 
     @Valid
-    private List<Property> properties;
+    private List<PropertyRequestDto> properties;
 
     @Valid
-    private Category category;
+    private CategoryRequestDto category;
 
     // Why zero as minimum? It might be used for memorable value
     // which is a common thing in terms of bookkeeping
@@ -33,7 +31,7 @@ public class ArticleCreationDto {
         return name;
     }
 
-    public Category getCategory() {
+    public CategoryRequestDto getCategory() {
         return category;
     }
 
@@ -41,7 +39,7 @@ public class ArticleCreationDto {
         return image;
     }
 
-    public List<Property> getProperties() {
+    public List<PropertyRequestDto> getProperties() {
         return properties;
     }
 
@@ -53,7 +51,7 @@ public class ArticleCreationDto {
         this.name = (name != null ? name.trim() : null);
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(CategoryRequestDto category) {
         this.category = category;
     }
 
@@ -61,7 +59,7 @@ public class ArticleCreationDto {
         this.image = image;
     }
 
-    public void setProperties(List<Property> properties) {
+    public void setProperties(List<PropertyRequestDto> properties) {
         this.properties = properties;
     }
 
