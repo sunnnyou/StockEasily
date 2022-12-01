@@ -1,6 +1,7 @@
 package de.throsenheim.unlimited.stockeasilyapi.controller;
 
-import de.throsenheim.unlimited.stockeasilyapi.dto.CreateArticleDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.exception.InvalidBodyException;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.service.article.ArticleService;
@@ -34,7 +35,7 @@ public class ArticlesController {
 //            )
 //            @Parameter(description = "The new article to add", required = true,
 //                    example = ArticleCreationDto.getSample, schema = @Schema(type = SchemaType.STRING))
-            @Valid @RequestBody CreateArticleDto inputDto,
+            @Valid @RequestBody CreateArticleRequestDto inputDto,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidBodyException(bindingResult);

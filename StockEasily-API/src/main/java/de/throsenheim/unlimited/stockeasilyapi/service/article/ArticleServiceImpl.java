@@ -1,6 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.service.article;
 
-import de.throsenheim.unlimited.stockeasilyapi.dto.CreateArticleDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 
     @Override
-    public Article create(CreateArticleDto inputDto) {
-        return this.articleRepository.save(new Article(inputDto));
+    public Article create(CreateArticleRequestDto request) {
+        return this.articleRepository.save(new Article(request));
     }
 }

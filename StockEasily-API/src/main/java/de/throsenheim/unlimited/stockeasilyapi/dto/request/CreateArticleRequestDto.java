@@ -1,4 +1,4 @@
-package de.throsenheim.unlimited.stockeasilyapi.dto;
+package de.throsenheim.unlimited.stockeasilyapi.dto.request;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-public class CreateArticleDto {
+public class CreateArticleRequestDto {
 
     @NotNull(message = "Name is mandatory")
     @Size(min = 1, max = 30, message = "Article name must be between 1 and 30 characters")
