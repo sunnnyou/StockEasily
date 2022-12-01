@@ -1,6 +1,5 @@
 package de.throsenheim.unlimited.stockeasilyapi.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
 import org.springframework.web.multipart.MultipartFile;
 
