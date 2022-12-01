@@ -27,16 +27,16 @@ public class CreateArticleRequestDto {
 
     private MultipartFile image; // TODO validate size
 
-    public String getName() {
-        return name;
-    }
-
     public CategoryRequestDto getCategory() {
         return category;
     }
 
     public MultipartFile getImage() {
         return image;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public List<PropertyRequestDto> getProperties() {
@@ -47,16 +47,16 @@ public class CreateArticleRequestDto {
         return quantity;
     }
 
-    public void setName(String name) {
-        this.name = (name != null ? name.trim() : null);
-    }
-
     public void setCategory(CategoryRequestDto category) {
         this.category = category;
     }
 
     public void setImage(MultipartFile image) {
         this.image = image;
+    }
+
+    public void setName(String name) {
+        this.name = (name != null ? name.trim() : null);
     }
 
     public void setProperties(List<PropertyRequestDto> properties) {
