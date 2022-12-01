@@ -4,6 +4,7 @@ import de.throsenheim.unlimited.stockeasilyapi.dto.CreateArticleDto;
 import de.throsenheim.unlimited.stockeasilyapi.exception.InvalidBodyException;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.service.article.ArticleService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Api(tags = {"Articles"}) // Set correct heading
 @RestController
 @RequestMapping("/api/v1/articles")
 public class ArticlesController {
