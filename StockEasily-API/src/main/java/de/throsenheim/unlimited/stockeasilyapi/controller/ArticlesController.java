@@ -27,23 +27,16 @@ public class ArticlesController {
     }
 
     @PostMapping
-    public ResponseEntity<Article> createArticle(
-//            @ApiParam(
-//                    type = "ArticleCreationDto",
-//                    value = "The new article to add",
-//                    example = ""
-//            )
-//            @Parameter(description = "The new article to add", required = true,
-//                    example = ArticleCreationDto.getSample, schema = @Schema(type = SchemaType.STRING))
-            @Valid @RequestBody CreateArticleRequestDto inputDto,
+    public ResponseEntity<CreateArticleResponseDto> createArticle(
+            @Valid @RequestBody CreateArticleRequestDto request,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidBodyException(bindingResult);
         }
-        final Article result = this.articleService.create(inputDto);
+        final Article result = this.articleService.create(request);
         // INTERNAL SERVER ERROR should NOT occur
         final HttpStatus httpStatus = result == null ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.CREATED;
-        return new ResponseEntity<>(result, httpStatus);
+        return new ResponseEntity<>(new CreateArticleResponseDto(result), httpStatus);
     }
 
 }
