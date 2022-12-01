@@ -1,6 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.model;
 
-import de.throsenheim.unlimited.stockeasilyapi.dto.CategoryRequestDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.CategoryRequestDto;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;

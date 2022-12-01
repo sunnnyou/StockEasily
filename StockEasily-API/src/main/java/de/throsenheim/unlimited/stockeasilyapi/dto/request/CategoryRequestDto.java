@@ -1,4 +1,4 @@
-package de.throsenheim.unlimited.stockeasilyapi.dto;
+package de.throsenheim.unlimited.stockeasilyapi.dto.request;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
