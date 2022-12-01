@@ -20,7 +20,6 @@ public class Article {
     private Blob image;
 
     public Article() {
-
     }
 
     public Article(CreateArticleRequestDto request) {
