@@ -32,6 +32,7 @@ public class ArticlesController {
             @ApiResponse(code = 201, message = "Article added", response = CreateArticleResponseDto.class),
             @ApiResponse(code = 500, message = "Entity serialization error", response = ApiErrorDto.class)
     })
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ResponseEntity<CreateArticleResponseDto> createArticle(
             @Valid @RequestBody CreateArticleRequestDto request,
