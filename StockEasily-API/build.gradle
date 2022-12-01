@@ -10,6 +10,7 @@ sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
+    jcenter() // Swagger
 }
 
 dependencies {
@@ -23,6 +24,10 @@ dependencies {
 
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Swagger
+    // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
+    implementation "io.springfox:springfox-boot-starter:3.0.0"
 }
 
 tasks.named('test') {
