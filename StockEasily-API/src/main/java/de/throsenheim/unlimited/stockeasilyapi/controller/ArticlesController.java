@@ -1,11 +1,12 @@
 package de.throsenheim.unlimited.stockeasilyapi.controller;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.ApiErrorDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.exception.InvalidBodyException;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.service.article.ArticleService;
-import io.swagger.annotations.Api;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import javax.validation.Valid;
 
 @Api(tags = {"Articles"}) // Set correct heading
 @RestController
-@RequestMapping("/api/v1/articles")
+@RequestMapping(path = "/api/v1/articles", consumes = "application/json", produces = "application/json")
 public class ArticlesController {
 
     private final ArticleService articleService;
@@ -26,6 +27,11 @@ public class ArticlesController {
         this.articleService = articleService;
     }
 
+    @ApiOperation(value = "Add new article", response = CreateArticleResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Article added", response = CreateArticleResponseDto.class),
+            @ApiResponse(code = 500, message = "Entity serialization error", response = ApiErrorDto.class)
+    })
     @PostMapping
     public ResponseEntity<CreateArticleResponseDto> createArticle(
             @Valid @RequestBody CreateArticleRequestDto request,
