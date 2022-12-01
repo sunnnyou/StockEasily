@@ -26,7 +26,16 @@ public class ArticlesController {
     }
 
     @PostMapping
-    public ResponseEntity<Article> createArticle(@Valid @RequestBody ArticleCreationDto inputDto, BindingResult bindingResult) {
+    public ResponseEntity<Article> createArticle(
+//            @ApiParam(
+//                    type = "ArticleCreationDto",
+//                    value = "The new article to add",
+//                    example = ""
+//            )
+//            @Parameter(description = "The new article to add", required = true,
+//                    example = ArticleCreationDto.getSample, schema = @Schema(type = SchemaType.STRING))
+            @Valid @RequestBody CreateArticleDto inputDto,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidBodyException(bindingResult);
         }
