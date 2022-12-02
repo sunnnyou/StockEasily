@@ -30,12 +30,13 @@ public class ArticlesController {
     @ApiOperation(value = "Add new article", response = CreateArticleResponseDto.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Article added", response = CreateArticleResponseDto.class),
+            @ApiResponse(code = 400, message = "Parameter validation error", response = ApiErrorDto.class),
             @ApiResponse(code = 500, message = "Entity serialization error", response = ApiErrorDto.class)
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ResponseEntity<CreateArticleResponseDto> createArticle(
-            @Valid @RequestBody CreateArticleRequestDto request,
+            @ApiParam(name = "request") @Valid @RequestBody CreateArticleRequestDto request,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidBodyException(bindingResult);
