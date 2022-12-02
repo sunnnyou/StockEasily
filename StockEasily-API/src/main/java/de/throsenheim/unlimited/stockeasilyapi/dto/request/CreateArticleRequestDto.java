@@ -1,39 +1,34 @@
-package de.throsenheim.unlimited.stockeasilyapi.dto;
+package de.throsenheim.unlimited.stockeasilyapi.dto.request;
 
-import de.throsenheim.unlimited.stockeasilyapi.model.Category;
-import de.throsenheim.unlimited.stockeasilyapi.model.Property;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 
-public class ArticleCreationDto {
+public class CreateArticleRequestDto {
 
+    @Valid
+    private CategoryRequestDto category;
+
+    @ApiModelProperty(notes = "Article name", example = "HDX42 Widescreen Monitor", required = true)
     @NotNull(message = "Name is mandatory")
     @Size(min = 1, max = 30, message = "Article name must be between 1 and 30 characters")
     private String name;
 
     @Valid
-    private List<Property> properties;
-
-    @Valid
-    private Category category;
+    private List<PropertyRequestDto> properties;
 
     // Why zero as minimum? It might be used for memorable value
     // which is a common thing in terms of bookkeeping
-    @Min(value = 0, message = "Quantity must greater than or equal to 0")
+    @ApiModelProperty(notes = "Article quantity", example = "2")
+    @PositiveOrZero(message = "Quantity must greater than or equal to 0")
     private int quantity = 1;
 
     private MultipartFile image; // TODO validate size
 
-    public String getName() {
-        return name;
-    }
-
-    public Category getCategory() {
+    public CategoryRequestDto getCategory() {
         return category;
     }
 
@@ -41,7 +36,11 @@ public class ArticleCreationDto {
         return image;
     }
 
-    public List<Property> getProperties() {
+    public String getName() {
+        return name;
+    }
+
+    public List<PropertyRequestDto> getProperties() {
         return properties;
     }
 
@@ -49,11 +48,7 @@ public class ArticleCreationDto {
         return quantity;
     }
 
-    public void setName(String name) {
-        this.name = (name != null ? name.trim() : null);
-    }
-
-    public void setCategory(Category category) {
+    public void setCategory(CategoryRequestDto category) {
         this.category = category;
     }
 
@@ -61,7 +56,11 @@ public class ArticleCreationDto {
         this.image = image;
     }
 
-    public void setProperties(List<Property> properties) {
+    public void setName(String name) {
+        this.name = (name != null ? name.trim() : null);
+    }
+
+    public void setProperties(List<PropertyRequestDto> properties) {
         this.properties = properties;
     }
 

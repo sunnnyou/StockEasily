@@ -1,6 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.exception.common;
 
-import de.throsenheim.unlimited.stockeasilyapi.dto.ApiErrorDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.ApiErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -25,6 +25,11 @@ public class CommonErrorHandler {
 
     public ResponseEntity<Object> getInvalidFieldsErrorResponse(String message, Map<String, Object> fieldErrors) {
         final ApiErrorDto apiError = new ApiErrorDto(HttpStatus.BAD_REQUEST, message, fieldErrors);
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    public ResponseEntity<Object> getConstraintViolationResponse(String message) {
+        final ApiErrorDto apiError = new ApiErrorDto(HttpStatus.BAD_REQUEST, message);
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
