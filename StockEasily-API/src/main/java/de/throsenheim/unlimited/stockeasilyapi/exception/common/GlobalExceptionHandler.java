@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @ControllerAdvice
@@ -29,4 +30,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return commonErrorHandler.getInvalidFieldsErrorResponse("Validation error", commonErrorHandler.getFieldErrorResponse(ex.getResult()));
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<?> constraintViolationException(ConstraintViolationException ex) {
+        return commonErrorHandler.getConstraintViolationResponse(ex.getMessage());
+    }
 }

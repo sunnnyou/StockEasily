@@ -28,4 +28,9 @@ public class CommonErrorHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
+    public ResponseEntity<Object> getConstraintViolationResponse(String message) {
+        final ApiErrorDto apiError = new ApiErrorDto(HttpStatus.BAD_REQUEST, message);
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
 }
