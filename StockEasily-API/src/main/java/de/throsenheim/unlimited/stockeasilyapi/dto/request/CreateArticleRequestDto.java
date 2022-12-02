@@ -4,9 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 
 public class CreateArticleRequestDto {
@@ -25,7 +23,7 @@ public class CreateArticleRequestDto {
     // Why zero as minimum? It might be used for memorable value
     // which is a common thing in terms of bookkeeping
     @ApiModelProperty(notes = "Article quantity", example = "2")
-    @Min(value = 0, message = "Quantity must greater than or equal to 0")
+    @PositiveOrZero(message = "Quantity must greater than or equal to 0")
     private int quantity = 1;
 
     private MultipartFile image; // TODO validate size
