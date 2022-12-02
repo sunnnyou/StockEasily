@@ -8,10 +8,10 @@ import java.util.*;
 public class ApiErrorDto {
     private final Date timestamp;
 
-    @ApiModelProperty(notes = "HTTP status code", example = "500")
+    @ApiModelProperty(notes = "HTTP status", example = "INTERNAL_SERVER_ERROR")
     private HttpStatus status;
 
-    @ApiModelProperty(notes = "Internal Server error", example = "Internal Server Error")
+    @ApiModelProperty(notes = "An error that should not occur", example = "Unexpected Error")
     private String message;
 
     private Map<String, Object> errors;
