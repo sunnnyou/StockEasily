@@ -9,9 +9,12 @@
     export let id: string;
     export let label: string;
     export let addMarginTop = true;
+    export let min = Number.MIN_VALUE;
+    export let max = Number.MAX_VALUE;
     export let name: string;
     export let onClick: Function | undefined;
     export let placeholder = '';
+    export let step = 1;
     export let type = InputType.ExternalSelect;
 
     let showLabel = true;

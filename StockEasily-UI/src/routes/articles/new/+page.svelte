@@ -20,6 +20,7 @@
             <LabeledInput id="article-quantity"
                           className="w-full"
                           label={$t('page.addArticle.quantity')}
+                          min={0}
                           type={InputType.Number}
                           slot="right"
             />
