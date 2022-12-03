@@ -1,17 +1,17 @@
 package de.throsenheim.unlimited.stockeasilyapi.factory;
 
+import de.throsenheim.unlimited.stockeasilyapi.abstraction.SqlConnection;
+import org.slf4j.Logger;
 import org.springframework.core.env.Environment;
-
-import java.sql.Connection;
 
 public interface DatabaseConnectionFactory {
 
-    Connection getConnection();
+    SqlConnection getConnection(Class<?> repositoryClass, Class<?> modelClass, Logger logger);
 
-    Connection getConnection(boolean autoCommit);
+    SqlConnection getConnection(boolean autoCommit, Class<?> repositoryClass, Class<?> modelClass, Logger logger);
 
-    Connection getConnection(Environment environment);
+    SqlConnection getConnection(Environment environment, Class<?> repositoryClass, Class<?> modelClass, Logger logger);
 
-    Connection getConnection(Environment environment, boolean autoCommit);
+    SqlConnection getConnection(Environment environment, boolean autoCommit, Class<?> repositoryClass, Class<?> modelClass, Logger logger);
 
 }

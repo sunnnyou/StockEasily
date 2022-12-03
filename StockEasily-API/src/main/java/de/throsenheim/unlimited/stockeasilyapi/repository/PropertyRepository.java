@@ -1,7 +1,12 @@
 package de.throsenheim.unlimited.stockeasilyapi.repository;
 
+import de.throsenheim.unlimited.stockeasilyapi.abstraction.SqlConnection;
+import de.throsenheim.unlimited.stockeasilyapi.common.logging.LogUtil;
+import de.throsenheim.unlimited.stockeasilyapi.common.logging.CommittedSqlCommand;
 import de.throsenheim.unlimited.stockeasilyapi.factory.DatabaseConnectionFactory;
 import de.throsenheim.unlimited.stockeasilyapi.model.Property;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,11 +18,13 @@ import java.util.Optional;
 @Component
 public class PropertyRepository implements HumaneRepository<Property, Long> {
 
-    private final Connection connection;
+    private static final Logger LOGGER = LoggerFactory.getLogger(PropertyRepository.class);
+
+    private final SqlConnection connection;
 
     @Autowired
     public PropertyRepository(DatabaseConnectionFactory databaseConnectionFactory) {
-        this.connection = databaseConnectionFactory.getConnection(false);
+        this.connection = databaseConnectionFactory.getConnection(false, PropertyRepository.class, PropertyRepository.class, LOGGER);
     }
 
     @Override
@@ -37,6 +44,8 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setString(1, name);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -59,16 +68,12 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
         for (Property property : properties) {
             Property resultProperty = save(property);
             if (resultProperty == null) {
-                System.out.println("Skipping Property " + property.getId());
+                LOGGER.debug("Skipping property with ID " + property.getId() + " on saveAll");
                 continue;
             }
             result.add(resultProperty);
         }
-        try {
-            connection.commit();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        connection.commit(CommittedSqlCommand.INSERT);
         return result;
     }
 
@@ -79,30 +84,42 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
 
     @Override
     public Property save(Property property, boolean commit) {
-        final Property resultFound = findByName(property.getName());
-        return resultFound != null ? resultFound : insert(property, commit);
+        Property result = findByName(property.getName());
+        // TODO implement updating the article
+        if (result == null || !result.getDescription().equals(property.getDescription())) {
+            result = insert(property, commit);
+            LOGGER.debug("Saved new property with ID " + result.getId());
+            return result;
+        }
+        LOGGER.debug("Using existing property with ID " + result.getId() + " instead of saving");
+        return result;
     }
 
     private Property insert(Property property, boolean commit) {
+        PreparedStatement preparedStatement = null;
+        final String query = "INSERT INTO properties(name,description) VALUES (?,?)";
         try {
-            final String query = "INSERT INTO properties(name,description) VALUES (?,?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, property.getName());
             preparedStatement.setString(2, property.getDescription());
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
             if (preparedStatement.executeUpdate() == 1) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
                     if (commit) {
-                        this.connection.commit();
+                        this.connection.commit(CommittedSqlCommand.INSERT);
                     }
                     property.setId(resultSet.getLong("insert_id"));
+                    LogUtil.traceFetchId(Property.class, property.getId(), LOGGER);
                     return property;
                 }
             }
             return null;
         } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);
         }
     }

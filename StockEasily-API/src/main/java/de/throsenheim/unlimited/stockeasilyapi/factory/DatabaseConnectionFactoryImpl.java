@@ -1,6 +1,8 @@
 package de.throsenheim.unlimited.stockeasilyapi.factory;
 
+import de.throsenheim.unlimited.stockeasilyapi.abstraction.SqlConnection;
 import de.throsenheim.unlimited.stockeasilyapi.service.config.ConfigService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -23,34 +25,47 @@ public class DatabaseConnectionFactoryImpl implements DatabaseConnectionFactory 
     }
 
     @Override
-    public Connection getConnection() {
-        return getConnection(true);
+    public SqlConnection getConnection(final Class<?> repositoryClass, final Class<?> modelClass, final Logger logger) {
+        return getConnection(true, repositoryClass, modelClass, logger);
     }
 
     @Override
-    public Connection getConnection(boolean autoCommit) {
-        return getConnection(this.environment, autoCommit);
+    public SqlConnection getConnection(final boolean autoCommit, final Class<?> repositoryClass, final Class<?> modelClass, final Logger logger) {
+        return getConnection(this.environment, autoCommit, repositoryClass, modelClass, logger);
     }
 
     @Override
-    public Connection getConnection(Environment environment) {
-        return getConnection(environment, true);
+    public SqlConnection getConnection(final Environment environment,
+                                       final Class<?> repositoryClass,
+                                       final Class<?> modelClass,
+                                       final Logger logger) {
+        return getConnection(environment, true, repositoryClass, modelClass, logger);
     }
 
     @Override
-    public Connection getConnection(Environment environment, boolean autoCommit) {
+    public SqlConnection getConnection(final Environment environment,
+                                       final boolean autoCommit,
+                                       final Class<?> repositoryClass,
+                                       final Class<?> modelClass,
+                                       final Logger logger) {
+        logger.debug("Opening new database connection");
         final String username = configService.getDbConfig("username");
         final String password = configService.getDbConfig("password");
-        Connection result = null;
+        SqlConnection result;
         try {
-            result = DriverManager.getConnection(getConnectionString(environment, configService), username, password);
+            final String connectionString = getConnectionString(environment, configService);
+            logger.trace("Using connection string " + connectionString);
+            Connection connection = DriverManager.getConnection(connectionString, username, password);
+            result = new SqlConnection(connection, modelClass, logger);
             if (!autoCommit) {
-                disableAutoCommit(result);
+                result.setAutoCommit(false);
+            } else {
+                logger.debug("Keeping non-controlled auto-commit mode on");
             }
             return result;
         } catch (SQLException e) {
-            String message = "Could not ";
-            message += result != null ? "disable auto commit in database" : "initialize a new database connection";
+            String message = "Could not initialize new database connection";
+            logger.error(message);
             throw new RuntimeException(message, e);
         }
     }
@@ -60,9 +75,5 @@ public class DatabaseConnectionFactoryImpl implements DatabaseConnectionFactory 
         final String port = configService.getDbConfig("port", environment);
         final String database = configService.getDbConfig("name", environment);
         return "jdbc:mariadb://" + host + ":" + port + "/" + database;
-    }
-
-    private void disableAutoCommit(Connection connection) throws SQLException {
-        connection.setAutoCommit(false);
     }
 }

@@ -1,10 +1,16 @@
 package de.throsenheim.unlimited.stockeasilyapi.repository;
 
+import de.throsenheim.unlimited.stockeasilyapi.abstraction.SqlConnection;
+import de.throsenheim.unlimited.stockeasilyapi.common.logging.LogUtil;
+import de.throsenheim.unlimited.stockeasilyapi.common.logging.CommittedSqlCommand;
+import de.throsenheim.unlimited.stockeasilyapi.exception.NotImplementedException;
 import de.throsenheim.unlimited.stockeasilyapi.factory.DatabaseConnectionFactory;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.model.ArticleProperty;
 import de.throsenheim.unlimited.stockeasilyapi.model.Category;
 import de.throsenheim.unlimited.stockeasilyapi.model.Property;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,8 +22,12 @@ import java.util.Optional;
 @Repository
 public class ArticleRepository implements HumaneRepository<Article, Long> {
 
-    private final Connection connection;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleRepository.class);
+
+    private final SqlConnection connection;
+
     private final PropertyRepository propertyRepository;
+
     private final CategoryRepository categoryRepository;
 
     private final ArticlePropertyRepository articlePropertyRepository;
@@ -27,7 +37,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
                              PropertyRepository propertyRepository,
                              CategoryRepository categoryRepository,
                              ArticlePropertyRepository articlePropertyRepository) {
-        this.connection = databaseConnectionFactory.getConnection(false);
+        this.connection = databaseConnectionFactory.getConnection(false, ArticleRepository.class, Article.class, LOGGER);
         this.propertyRepository = propertyRepository;
         this.categoryRepository = categoryRepository;
         this.articlePropertyRepository = articlePropertyRepository;
@@ -82,20 +92,23 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
     @Override
     public Iterable<Article> saveAll(Iterable<Article> articles) {
-        for (Article article : articles) {
-            save(article);
-        }
-        return null;
+        // TODO currently unused?
+//        for (Article article : articles) {
+//            save(article);
+//        }
+//        return null;
+        throw new NotImplementedException();
     }
 
     private Article insert(Article article, boolean commit) {
-        try {
-            final Long categoryId = article.getCategory() == null ? null : article.getCategory().getId();
-            final String query = "INSERT INTO " +
-                    "articles(name,quantity,image" + (categoryId == null ? "" : ",categoryId") + ") " +
-                    "VALUES (?,?,?" + (categoryId == null ? "" : ",?") + ")";
+        PreparedStatement preparedStatement = null;
+        final Long categoryId = article.getCategory() == null ? null : article.getCategory().getId();
+        final String query = "INSERT INTO " +
+                "articles(name,quantity,image" + (categoryId == null ? "" : ",categoryId") + ") " +
+                "VALUES (?,?,?" + (categoryId == null ? "" : ",?") + ")";
 
-            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, article.getName());
             preparedStatement.setInt(2, article.getQuantity());
@@ -104,18 +117,23 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
                 preparedStatement.setLong(4, categoryId);
             }
 
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
             if (preparedStatement.executeUpdate() == 1) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
                     if (commit) {
-                        this.connection.commit();
+                        this.connection.commit(CommittedSqlCommand.INSERT);
                     }
                     article.setId(resultSet.getLong("insert_id"));
+                    LogUtil.traceFetchId(Article.class, article.getId(), LOGGER);
                     return article;
                 }
             }
+            LOGGER.debug("Returning empty Article model");
             return null;
         } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);
         }
     }

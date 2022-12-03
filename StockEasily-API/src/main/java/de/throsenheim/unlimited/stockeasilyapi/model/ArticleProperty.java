@@ -23,4 +23,12 @@ public class ArticleProperty {
         this.propertyId = propertyId;
     }
 
+
+    @Override
+    public String toString() {
+        return "ArticleProperty{" +
+                "articleId=" + articleId +
+                ", propertyId=" + propertyId +
+                '}';
+    }
 }
