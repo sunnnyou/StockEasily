@@ -1,10 +1,8 @@
 package de.throsenheim.unlimited.stockeasilyapi.factory;
 
 import de.throsenheim.unlimited.stockeasilyapi.abstraction.SqlConnection;
-import de.throsenheim.unlimited.stockeasilyapi.service.config.ConfigService;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -14,14 +12,26 @@ import java.sql.SQLException;
 @Component
 public class DatabaseConnectionFactoryImpl implements DatabaseConnectionFactory {
 
-    private final Environment environment;
+    private final String hostname;
 
-    private final ConfigService configService;
+    private final int port;
 
-    @Autowired
-    public DatabaseConnectionFactoryImpl(Environment environment, ConfigService configService) {
-        this.environment = environment;
-        this.configService = configService;
+    private final String schema;
+
+    private final String username;
+
+    private final String password;
+
+    public DatabaseConnectionFactoryImpl(@Value("${database.hostname}") String hostname,
+                                         @Value("${database.port}") int port,
+                                         @Value("${database.name}") String schema,
+                                         @Value("${database.username}") String username,
+                                         @Value("${database.password}") String password) {
+        this.hostname = hostname;
+        this.port = port;
+        this.schema = schema;
+        this.username = username;
+        this.password = password;
     }
 
     @Override
@@ -30,30 +40,14 @@ public class DatabaseConnectionFactoryImpl implements DatabaseConnectionFactory 
     }
 
     @Override
-    public SqlConnection getConnection(final boolean autoCommit, final Class<?> repositoryClass, final Class<?> modelClass, final Logger logger) {
-        return getConnection(this.environment, autoCommit, repositoryClass, modelClass, logger);
-    }
-
-    @Override
-    public SqlConnection getConnection(final Environment environment,
-                                       final Class<?> repositoryClass,
-                                       final Class<?> modelClass,
-                                       final Logger logger) {
-        return getConnection(environment, true, repositoryClass, modelClass, logger);
-    }
-
-    @Override
-    public SqlConnection getConnection(final Environment environment,
-                                       final boolean autoCommit,
+    public SqlConnection getConnection(final boolean autoCommit,
                                        final Class<?> repositoryClass,
                                        final Class<?> modelClass,
                                        final Logger logger) {
         logger.debug("Opening new database connection");
-        final String username = configService.getDbConfig("username");
-        final String password = configService.getDbConfig("password");
         SqlConnection result;
         try {
-            final String connectionString = getConnectionString(environment, configService);
+            final String connectionString = getConnectionString();
             logger.trace("Using connection string " + connectionString);
             Connection connection = DriverManager.getConnection(connectionString, username, password);
             result = new SqlConnection(connection, modelClass, logger);
@@ -70,10 +64,7 @@ public class DatabaseConnectionFactoryImpl implements DatabaseConnectionFactory 
         }
     }
 
-    private static String getConnectionString(Environment environment, ConfigService configService) {
-        final String host = configService.getDbConfig("hostname", environment);
-        final String port = configService.getDbConfig("port", environment);
-        final String database = configService.getDbConfig("name", environment);
-        return "jdbc:mariadb://" + host + ":" + port + "/" + database;
+    private String getConnectionString() {
+        return "jdbc:mariadb://" + hostname + ":" + port + "/" + schema;
     }
 }
