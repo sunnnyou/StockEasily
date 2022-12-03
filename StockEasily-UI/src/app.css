@@ -12,6 +12,14 @@
     height: 42px;
 }
 
+.w-70p {
+    width: 70%;
+}
+
+.w-30p {
+    width: 29%;
+}
+
 /* Use style from svelte-select */
 
 input {
