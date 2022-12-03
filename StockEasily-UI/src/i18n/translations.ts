@@ -11,7 +11,7 @@ export default {
         // menu
         'menu.analytics': 'Analytics',
         'menu.home': 'Home',
-        'menu.add_article': 'Add Article',
+        'menu.addArticle': 'Add Article',
         'menu.payments': 'Payments',
         'menu.search': 'Search',
         'menu.search.tooltip': 'Search anything you want',

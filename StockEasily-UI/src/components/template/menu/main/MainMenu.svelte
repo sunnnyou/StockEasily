@@ -15,7 +15,7 @@
         },
         {
             href: '/articles/new',
-            i18n: 'menu.add_article',
+            i18n: 'menu.addArticle',
             icon: faPlus,
         },
         {
