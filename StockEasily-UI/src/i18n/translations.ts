@@ -21,6 +21,13 @@ export default {
         'menu.user.logout': 'Logout',
         'menu.user.notifications': 'Notifications',
 
+        // pages
+
+        // /articles/new
+        'page.addArticle.name': 'Name',
+        'page.addArticle.quantity': 'Quantity',
+        'page.addArticle.category': 'Category',
+
         // footer
         'about': 'About',
         'about.contact': 'Contact',

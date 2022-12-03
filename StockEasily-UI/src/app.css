@@ -4,3 +4,22 @@
 @tailwind components;
 /*noinspection CssInvalidAtRule*/
 @tailwind utilities;
+
+/* Tailwind cheatsheet: https://tailwindcomponents.com/cheatsheet/ */
+
+/* Tailwind extensions */
+.h-10-5 {
+    height: 42px;
+}
+
+/* Use style from svelte-select */
+
+input {
+    border: 1px solid #d8dbdf;
+    border-radius: 3px;
+    padding: 0 1rem;
+}
+
+input::-webkit-scrollbar-thumb { /* Foreground */
+    background: #999;
+}
