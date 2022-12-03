@@ -48,13 +48,20 @@
     {/if}
     <div>
         {#if type !== InputType.ExternalSelect}
-            <Input className="{className}{(className?.length > 0 ? ' ' : '') + getInputHeightClass()}" {id}
-                   name={getName()} {placeholder} {type} value="1"/>
+            <Input className="{className}{(className?.length > 0 ? ' ' : '') + getInputHeightClass()}"
+                   {id}
+                   {min}
+                   {max}
+                   name={getName()}
+                   {placeholder}
+                   {step}
+                   {type}
+                   value={type === InputType.Number ? '1' : ''}
+            />
         {:else}
             <Select isClearable={true}
                     placeholderAlwaysShow={true}
                     {placeholder}
-
                     on:select={event => onClickCallback(event)}
             />
         {/if}
