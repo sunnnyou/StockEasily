@@ -21,5 +21,4 @@
     div.inline-flex.w-full {
         gap: 1%;
     }
-
 </style>
