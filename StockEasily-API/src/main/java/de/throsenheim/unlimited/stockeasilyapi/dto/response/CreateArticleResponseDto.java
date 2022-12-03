@@ -1,14 +1,17 @@
 package de.throsenheim.unlimited.stockeasilyapi.dto.response;
 
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
-import de.throsenheim.unlimited.stockeasilyapi.model.Category;
 import de.throsenheim.unlimited.stockeasilyapi.model.Property;
 import io.swagger.annotations.ApiModelProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CreateArticleResponseDto {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CreateArticleResponseDto.class);
 
     private CategoryResponseDto category;
 
@@ -26,7 +29,7 @@ public class CreateArticleResponseDto {
 
     public CreateArticleResponseDto(Article article) {
         if (article == null) {
-            System.out.println("Could not initialize CreateArticleResponseDto, article is null");
+            LOGGER.error("Could not initialize CreateArticleResponseDto, article is null");
             return;
         }
 

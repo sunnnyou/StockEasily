@@ -1,6 +1,8 @@
 package de.throsenheim.unlimited.stockeasilyapi.model;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -10,6 +12,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Article {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(Article.class);
 
     private long id;
     private String name;
@@ -81,7 +85,7 @@ public class Article {
         if (file != null && !file.isEmpty()) {
             try {
                 setImage(new SerialBlob(file.getBytes()));
-                System.out.println("Initialized image with new SerialBlob of length " + getImage().length());
+                LOGGER.debug("Initialized image with new SerialBlob of length " + getImage().length());
             } catch (SQLException | IOException e) {
                 throw new RuntimeException(e);
             }
