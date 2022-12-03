@@ -10,7 +10,10 @@
 
 <PageContent>
     <PageCard title={$t('menu.addArticle')}>
-        <LabeledInput id="article-name" label={$t('page.addArticle.name')} addMarginTop={false}/>
+        <LabeledInput id="article-name"
+                      label={$t('page.addArticle.name')}
+                      addMarginTop={false}
+        />
 
         <InputFlexContainer>
             <LabeledInput id="article-category"

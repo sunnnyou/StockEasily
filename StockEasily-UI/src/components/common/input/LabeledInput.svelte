@@ -39,7 +39,8 @@
 
 <div class="flex-container">
     {#if showLabel && label}
-        <div id="left-wrapper" class="mb-2{addMarginTop ? ' mt-2' : ''}">
+        <div id="left-wrapper"
+             class="mb-2{addMarginTop ? ' mt-2' : ''}">
             <Label for={id}>
                 {label}
             </Label>
