@@ -4,7 +4,6 @@
 
     import Input from '$components/html/input/Input.svelte';
     import Label from '$components/html/input/Label.svelte';
-    // import Select from 'svelte-select';
 
     export let addMarginTop = true;
     export let className = '';
