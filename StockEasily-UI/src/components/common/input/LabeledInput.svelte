@@ -9,7 +9,7 @@
     export let className = '';
     export let forName: string | undefined = undefined;
     export let id: string;
-    export let labelClass: string | undefined;
+    export let labelClass: string | undefined = undefined;
     export let label: string;
     export let max = '';
     export let min = '';
