@@ -11,7 +11,7 @@
         </div>
     {/if}
     {#if $$slots.right}
-        <div class={shrinkRight ? 'w-30p' : ''}>
+        <div class={shrinkRight ? 'w-29p' : ''}>
             <slot name="right"/>
         </div>
     {/if}

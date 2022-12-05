@@ -5,22 +5,6 @@
 /*noinspection CssInvalidAtRule*/
 @tailwind utilities;
 
-/* Tailwind cheatsheet: https://tailwindcomponents.com/cheatsheet/ */
-
-/* Tailwind extensions */
-.h-10-5 {
-    height: 42px;
-}
-
-.w-70p {
-    width: 70%;
-}
-
-.w-30p {
-    width: 29%;
-}
-
-
 /*noinspection CssInvalidAtRule*/
 .btn {
     @apply font-bold py-2 px-4 rounded;
@@ -51,4 +35,5 @@ input {
 
 input::-webkit-scrollbar-thumb { /* Foreground */
     background: #999;
+    width: 200%;
 }
