@@ -7,6 +7,7 @@
     export let id = '';
     export let min = '';
     export let max = '';
+    export let maxLength: string | undefined = undefined;
     export let name = '';
     export let placeholder = '';
     export let step = 1;
@@ -36,6 +37,7 @@
 {:else if containsPlaceholder(type)}
     <input class={className}
            {id}
+           maxlength={maxLength}
            {name}
            {placeholder}
            {title}
