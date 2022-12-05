@@ -7,6 +7,8 @@ export default {
         // general
         'general.guest': 'Guest',
         'general.search': 'Search',
+        'general.nextStep': 'Next step',
+        'general.step': 'Step',
 
         // menu
         'menu.analytics': 'Analytics',
@@ -27,6 +29,7 @@ export default {
         'page.addArticle.name': 'Name',
         'page.addArticle.quantity': 'Quantity',
         'page.addArticle.category': 'Category',
+        'page.addArticle.add': 'Add',
 
         // footer
         'about': 'About',
