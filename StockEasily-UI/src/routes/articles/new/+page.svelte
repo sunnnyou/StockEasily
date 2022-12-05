@@ -71,7 +71,8 @@
                 </LabeledNumericInput>
             </InputFlexContainer>
 
-            <Button type={ButtonType.Submit}
+            <Button className="mt-7"
+                    type={ButtonType.Submit}
                     priority={ButtonPriority.Primary}
             >
                 {$t('page.addArticle.add')}
