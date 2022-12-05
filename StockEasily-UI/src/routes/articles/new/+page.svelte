@@ -43,40 +43,56 @@
 
 <PageContent>
     <PageCard title={$t('menu.addArticle')}>
-        <Form on:submit={() => handleOnSubmit()}>
-            <LabeledInput id="article-name"
-                          addMarginTop={false}
-                          label={$t('page.addArticle.name')}
-                          on:select={event => {
+
+        <Form className="inline-block"
+              on:submit={() => handleOnSubmit()}>
+            <!-- Submit button -->
+            <div class="float-left">
+                <div class="float-left">
+                    <div>
+                        <!-- input name -->
+                        <LabeledInput id="article-name"
+                                      addMarginTop={false}
+                                      label={$t('page.addArticle.name')}
+                                      on:select={event => {
                               console.log('name change try, param:', event);
                               formData.name = event.target.value}}
-            />
+                        />
 
-            <InputFlexContainer>
-                <LabeledInput id="article-category"
-                              label={$t('page.addArticle.category')}
-                              on:select={event => formData.category.name = event.target.value}
-                              slot="left"
-                />
+                        <!-- input category, quantity -->
+                        <InputFlexContainer>
+                            <LabeledInput id="article-category"
+                                          label={$t('page.addArticle.category')}
+                                          on:select={event => formData.category.name = event.target.value}
+                                          slot="left"
+                            />
 
-                <LabeledNumericInput id="article-quantity"
-                                     className="w-full text-sm"
-                                     iconParentClass="pr-1 mt-1.5 text-sm"
-                                     label={$t('page.addArticle.quantity')}
-                                     min={0}
-                                     offerSmallerSteps={true}
-                                     on:change={event => formData.quantity = to_number(event.target.value)}
-                                     slot="right"
+                            <LabeledNumericInput id="article-quantity"
+                                                 className="w-full text-sm"
+                                                 iconParentClass="pr-1 mt-1.5 text-sm"
+                                                 label={$t('page.addArticle.quantity')}
+                                                 min={0}
+                                                 offerSmallerSteps={true}
+                                                 on:change={event => formData.quantity = to_number(event.target.value)}
+                                                 slot="right"
+                            >
+                            </LabeledNumericInput>
+                        </InputFlexContainer>
+                    </div>
+                </div>
+
+
+                <div class="float-left h5/6">
+                    test
+                </div>
+
+                <Button className="mt-7"
+                        type={ButtonType.Submit}
+                        priority={ButtonPriority.Primary}
                 >
-                </LabeledNumericInput>
-            </InputFlexContainer>
-
-            <Button className="mt-7"
-                    type={ButtonType.Submit}
-                    priority={ButtonPriority.Primary}
-            >
-                {$t('page.addArticle.add')}
-            </Button>
+                    {$t('page.addArticle.add')}
+                </Button>
+            </div>
         </Form>
     </PageCard>
 </PageContent>
