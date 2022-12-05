@@ -6,6 +6,7 @@
     export let id = '';
     export let name = '';
     export let priority: ButtonPriority = ButtonPriority.Secondary;
+    export let title = '';
     export let type = ButtonType.Button;
     export let value = '';
 
@@ -28,6 +29,7 @@
 <button class="{getButtonClass()} {getPriorityClass() + (className?.length > 0 ? ' ' + className : '')}"
         {id}
         {name}
+        {title}
         {type}
         on:click
 >

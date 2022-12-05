@@ -16,6 +16,7 @@
     export let name = '';
     export let placeholder = '';
     export let step = 1;
+    export let title = '';
     export let type = InputType.Text;
     export let value = '';
 
@@ -67,6 +68,7 @@
                on:input
                {placeholder}
                {step}
+               {title}
                {type}
                value={internalValue}
         />

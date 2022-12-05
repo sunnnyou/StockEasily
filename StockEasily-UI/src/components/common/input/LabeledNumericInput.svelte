@@ -19,6 +19,7 @@
     export let offerSmallerSteps = false;
     export let placeholder = '';
     export let step = 1;
+    export let title = '';
 
     const DEFAULT_STEP = 1;
     const STEPS = [100, 10, DEFAULT_STEP, 0.1, 0.01, 0.001];
@@ -75,6 +76,7 @@
               on:change
               {placeholder}
               step={offerSmallerSteps ? currentStep : step}
+              {title}
               type={InputType.Number}
 >
     {#if offerSmallerSteps}

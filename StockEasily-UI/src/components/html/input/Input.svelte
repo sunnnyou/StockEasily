@@ -10,6 +10,7 @@
     export let name = '';
     export let placeholder = '';
     export let step = 1;
+    export let title = '';
     export let type = InputType.Text;
     export let value = '';
 
@@ -25,6 +26,7 @@
            max={max?.length > 0 ? max : ''}
            {name}
            {step}
+           {title}
            {type}
            use:typeAction
            {value}
@@ -36,6 +38,7 @@
            {id}
            {name}
            {placeholder}
+           {title}
            {type}
            use:typeAction
            {value}
@@ -47,6 +50,7 @@
            {id}
            {name}
            {placeholder}
+           {title}
            {type}
            use:typeAction
            {value}
