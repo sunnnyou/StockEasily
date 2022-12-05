@@ -1,9 +1,11 @@
 <script lang="ts">
+    import {ButtonPriority} from "$components/html/button/button-priority.js";
     import {faArrowDown, faArrowUp} from '@fortawesome/free-solid-svg-icons';
     import {InputType} from '$components/html/input/input-type';
     import {onMount} from 'svelte';
     import {t} from '$i18n/i18n';
 
+    import Button from "$components/html/button/Button.svelte";
     import FaIcon from '$components/common/FaIcon.svelte';
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
 
@@ -76,8 +78,9 @@
               type={InputType.Number}
 >
     {#if offerSmallerSteps}
-        <div class="cursor-pointer inline-flex font-sm"
+        <Button class="cursor-pointer inline-flex font-sm"
              title={$t('general.nextStep') + ': ' + STEPS[getNextStepIndex(currentStep, decrementSteps)]}
+             priority={ButtonPriority.Transparent}
              on:click={switchStepSize}
              on:keydown={switchStepSize}
         >
@@ -89,7 +92,7 @@
             <span class="text-right text-gray-500">
                 {$t('general.step') + ': ' + currentStep}
             </span>
-        </div>
+        </Button>
     {/if}
 </LabeledInput>
 
