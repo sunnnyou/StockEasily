@@ -29,12 +29,6 @@
         }
         return id;
     }
-
-    function onClickCallback(event: Event) {
-        if (onClick) {
-            onClick(event);
-        }
-    }
 </script>
 
 <div class="flex-container">
@@ -47,24 +41,38 @@
         </div>
     {/if}
     <div>
-        {#if type !== InputType.ExternalSelect}
+        <!--{#if type !== InputType.ExternalSelect}-->
             <Input className="{className}{(className?.length > 0 ? ' ' : '') + getInputHeightClass()}"
                    {id}
                    {min}
                    {max}
                    name={getName()}
+                   on:change
+                   on:input
                    {placeholder}
                    {step}
                    {type}
-                   value={type === InputType.Number ? '1' : ''}
+                   value={internalValue}
             />
-        {:else}
-            <Select isClearable={true}
-                    placeholderAlwaysShow={true}
-                    {placeholder}
-                    on:select={event => onClickCallback(event)}
-            />
-        {/if}
+        <!--{:else}-->
+
+<!--            <Input className="h-10-5 {className}{(className?.length > 0 ? ' ' : '') + getInputHeightClass()}"-->
+<!--                   {id}-->
+<!--                   name={getName()}-->
+<!--                   on:change-->
+<!--                   on:input-->
+<!--                   {placeholder}-->
+<!--                   {step}-->
+<!--                   {type}-->
+<!--                   value={internalValue}-->
+<!--            />-->
+<!--                        <Select isClearable={true}-->
+<!--                                placeholderAlwaysShow={true}-->
+<!--                                {placeholder}-->
+<!--                                on:select={event => console.log('event',event)}-->
+<!--                                value={internalValue}-->
+<!--                        />-->
+        <!--{/if}-->
     </div>
 </div>
 

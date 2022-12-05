@@ -35,7 +35,9 @@
 </script>
 
 <div class="relative text-sm">
-    <UserButton {isMenuOpen} onClick={toggleMenu}/>
+    <UserButton {isMenuOpen}
+                on:click={toggleMenu}
+    />
 
     <div id="userMenu"
          class="bg-white rounded shadow-md mt-2 absolute mt-12 top-0 right-0 min-w-full overflow-auto z-30{isMenuOpen ? '' : ' invisible'}"
