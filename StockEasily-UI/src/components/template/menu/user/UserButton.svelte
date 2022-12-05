@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {ButtonPriority} from '$components/html/button/button-priority.js';
+    import {ButtonPriority} from '$components/html/button/button-priority';
     import {faAngleDown, faAngleUp} from '@fortawesome/free-solid-svg-icons';
     import {t} from '$i18n/i18n';
 

@@ -1,9 +1,9 @@
 <script lang="ts">
-    import {ButtonPriority} from '$components/html/button/button-priority.js';
-    import {ButtonType} from '$components/html/button/button-type.js';
+    import {ButtonPriority} from '$components/html/button/button-priority';
+    import {ButtonType} from '$components/html/button/button-type';
+    import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
-    import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
 
     import Button from '$components/html/button/Button.svelte';
     import Form from '$components/html/Form.svelte';
