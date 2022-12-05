@@ -103,6 +103,7 @@
 <style>
     div.vr {
         border-left: 1px solid #d8dbdf;
-        width:1px;
+        height: 90%;
+        display: inline-table;
     }
 </style>
