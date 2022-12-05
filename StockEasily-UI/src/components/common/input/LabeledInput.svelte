@@ -32,7 +32,7 @@
     {#if showLabel && label}
         <div class="flex items-end h-10 mb-2{addMarginTop ? ' mt-2' : ''}">
             <div class="w-1/2">
-                <Label class={labelClass}
+                <Label className={labelClass}
                        {forName}
                        {id}
                 >
