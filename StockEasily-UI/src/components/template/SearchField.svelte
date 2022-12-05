@@ -16,7 +16,7 @@
            type={InputType.Search}
            className="w-full bg-gray-100 text-sm text-gray-800 transition border focus:outline-none focus:border-gray-700 rounded py-1 px-2 pl-10 appearance-none leading-normal"
     />
-    <div class="absolute search-icon left-7 top-1.5">
+    <div class="absolute search-icon left-7 top-3">
         <FaIcon icon={faMagnifyingGlass}/>
     </div>
 </div>
