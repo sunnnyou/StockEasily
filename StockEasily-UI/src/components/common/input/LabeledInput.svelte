@@ -38,10 +38,9 @@
     }
 </script>
 
-<div class="flex-container">
+<div class="flex flex-col">
     {#if showLabel && label}
-        <div id="left-wrapper"
-             class="mb-2{addMarginTop ? ' mt-2' : ''}">
+        <div class="flex items-end h-10 mb-2{addMarginTop ? ' mt-2' : ''}">
             <div class="w-1/2">
                 <Label class={labelClass}
                        {forName}
@@ -73,19 +72,3 @@
         />
     </div>
 </div>
-
-<style>
-    .flex-container {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .flex-container > div {
-        height: 40px;
-    }
-
-    #left-wrapper {
-        display: flex;
-        align-items: flex-end;
-    }
-</style>
