@@ -70,4 +70,10 @@
         align-items: center;
         width: 100%;
     }
+
+    input[type=file] {
+        padding: 1rem;
+        height: 10rem;
+        width: 10rem;
+    }
 </style>
