@@ -50,7 +50,6 @@
 
     function switchToNextStep() {
         currentStep = goNextStep();
-        console.debug('Switched to step', currentStep);
     }
 
     function updateStepTranslation() {
