@@ -78,11 +78,11 @@
               type={InputType.Number}
 >
     {#if offerSmallerSteps}
-        <Button class="cursor-pointer inline-flex font-sm"
-             title={$t('general.nextStep') + ': ' + STEPS[getNextStepIndex(currentStep, decrementSteps)]}
-             priority={ButtonPriority.Transparent}
-             on:click={switchStepSize}
-             on:keydown={switchStepSize}
+        <Button className="cursor-pointer inline-flex font-sm"
+                title={$t('general.nextStep') + ': ' + STEPS[getNextStepIndex(currentStep, decrementSteps)]}
+                priority={ButtonPriority.Transparent}
+                on:click={switchStepSize}
+                on:keydown={switchStepSize}
         >
             <div>
                 <FaIcon className="text-gray-500"
