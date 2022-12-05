@@ -5,6 +5,7 @@
     import FaIcon from '$components/common/FaIcon.svelte';
     import Input from '$components/html/input/Input.svelte';
 
+    export let maxLength = 240;
     export let placeholder = '';
     export let title = '';
 </script>
@@ -13,6 +14,7 @@
      {title}
 >
     <Input className="w-full bg-gray-100 text-sm text-gray-800 transition border focus:outline-none focus:border-gray-700 rounded py-1 px-2 pl-10 appearance-none leading-normal"
+           {maxLength}
            {placeholder}
            type={InputType.Search}
     />
