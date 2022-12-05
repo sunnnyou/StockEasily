@@ -1,4 +1,6 @@
 <script lang="ts">
+    import {containsMinMaxStep} from '$components/html/input/input-type';
+    import {containsPlaceholder} from '$components/html/input/input-type';
     import {InputType} from './input-type';
 
     export let className = '';
@@ -8,6 +10,7 @@
     export let name = '';
     export let placeholder = '';
     export let step = 1;
+    export let type = InputType.Text;
     export let value = '';
 
     function typeAction(node) {
