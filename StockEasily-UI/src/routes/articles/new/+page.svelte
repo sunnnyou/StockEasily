@@ -38,5 +38,11 @@
                 </LabeledNumericInput>
             </InputFlexContainer>
 
+            <Button type={ButtonType.Submit}
+                    priority={ButtonPriority.Primary}
+            >
+                {$t('page.addArticle.add')}
+            </Button>
+        </Form>
     </PageCard>
 </PageContent>
