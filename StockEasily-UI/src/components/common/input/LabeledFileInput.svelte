@@ -8,6 +8,7 @@
     export let forName = '';
     export let id = '';
     export let label: string;
+    export let labelClass: string | undefined = undefined;
     export let name = '';
     export let parentClass: string | undefined = undefined;
 </script>
@@ -17,6 +18,7 @@
               {forName}
               {id}
               {label}
+              labelClass={labelClass}
               {name}
               {parentClass}
               type={InputType.File}
