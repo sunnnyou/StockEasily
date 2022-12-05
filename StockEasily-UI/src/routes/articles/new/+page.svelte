@@ -8,6 +8,7 @@
     import Button from '$components/html/button/Button.svelte';
     import Form from '$components/html/Form.svelte';
     import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
+    import LabeledFileInput from '$components/common/input/LabeledFileInput.svelte';
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
     import LabeledNumericInput from '$components/common/input/LabeledNumericInput.svelte';
     import PageCard from '$components/common/PageCard.svelte';
@@ -44,12 +45,11 @@
 <PageContent>
     <PageCard title={$t('menu.addArticle')}>
 
-        <Form className="inline-block"
+        <Form className="inline-block w-full"
               on:submit={() => handleOnSubmit()}>
             <!-- Submit button -->
-            <div class="float-left">
-                <div class="float-left">
-                    <div>
+            <div class="float-left w-full">
+                <div class="float-left w-1/2">
                         <!-- input name -->
                         <LabeledInput id="article-name"
                                       addMarginTop={false}
@@ -78,21 +78,30 @@
                             >
                             </LabeledNumericInput>
                         </InputFlexContainer>
-                    </div>
                 </div>
 
+                <div class="float-left h-5/6 vr">Test</div>
 
-                <div class="float-left h-5/6">
-                    test
+                <div class="float-left w-1/2 pl-10">
+                    <LabeledFileInput
+                        label={$t('page.addArticle.image')}
+                    />
+
+                    <Button className="mt-7 float-right"
+                            type={ButtonType.Submit}
+                            priority={ButtonPriority.Primary}
+                    >
+                        {$t('page.addArticle.add')}
+                    </Button>
                 </div>
-
-                <Button className="mt-7"
-                        type={ButtonType.Submit}
-                        priority={ButtonPriority.Primary}
-                >
-                    {$t('page.addArticle.add')}
-                </Button>
             </div>
         </Form>
     </PageCard>
 </PageContent>
+
+<style>
+    div.vr {
+        border-left: 1px solid #d8dbdf;
+        width:1px;
+    }
+</style>
