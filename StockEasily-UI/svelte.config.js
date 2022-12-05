@@ -16,6 +16,7 @@ const config = {
 		alias: {
 			$components: 'src/components',
 			$common: 'src/common',
+ 			$dto: 'src/dto',
 			$i18n: 'src/i18n',
 		},
 	}

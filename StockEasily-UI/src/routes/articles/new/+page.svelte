@@ -2,8 +2,8 @@
     import {ButtonPriority} from '$components/html/button/button-priority.js';
     import {ButtonType} from '$components/html/button/button-type.js';
     import {t} from '$i18n/i18n';
-    import {to_number} from "svelte/internal";
-    import {CreateArticleRequestDto} from '../../../dto/create-article-request-dto';
+    import {to_number} from 'svelte/internal';
+    import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
 
     import Button from '$components/html/button/Button.svelte';
     import Form from '$components/html/Form.svelte';
