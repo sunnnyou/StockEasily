@@ -5,5 +5,6 @@ export class CreateArticleRequestDto {
     name = '';
     quantity = 1;
     category = new CategoryRequestDto();
+    image: string | ArrayBuffer | undefined;
     properties: PropertyRequestDto[] = [];
 }
