@@ -80,12 +80,12 @@
                         </InputFlexContainer>
                 </div>
 
-                <div class="float-left h-5/6 vr">Test</div>
 
-                <div class="float-left w-1/2 pl-10">
-                    <LabeledFileInput
-                        label={$t('page.addArticle.image')}
-                    />
+                <div class="float-left h-full w-1/2 pl-10">
+
+                    <div class="w-full pl-10 p-4 m-auto vr">
+                        <LabeledFileInput parentClass="mt-2" label={$t('page.addArticle.image')}
+                        />
 
                     <Button className="mt-7 float-right"
                             type={ButtonType.Submit}
