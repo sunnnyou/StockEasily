@@ -1,11 +1,44 @@
 <script lang="ts">
-    import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
-    import {InputType} from '$components/html/input/input-type';
+    import {ButtonPriority} from '$components/html/button/button-priority.js';
+    import {ButtonType} from '$components/html/button/button-type.js';
     import {t} from '$i18n/i18n';
+    import {to_number} from "svelte/internal";
+    import {CreateArticleRequestDto} from '../../../dto/create-article-request-dto';
 
+    import Button from '$components/html/button/Button.svelte';
+    import Form from '$components/html/Form.svelte';
+    import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
-    import PageContent from '$components/common/PageContent.svelte';
+    import LabeledNumericInput from '$components/common/input/LabeledNumericInput.svelte';
     import PageCard from '$components/common/PageCard.svelte';
+    import PageContent from '$components/common/PageContent.svelte';
+
+    let formData = new CreateArticleRequestDto();
+
+    function handleOnSubmit() {
+        console.log('onSubmit', formData);
+    }
+
+    // function changeValue(key: string, event: Event) {
+    //     console.log(event);
+    //     // console.log(event['value);
+    //     const KEYS = key.split('.');
+    //
+    //     let iterator = formData;
+    //     const lastIndex = KEYS.length - 1;
+    //     for (let i = 0; i < KEYS.length; ++i) {
+    //         const KEY = KEYS[i];
+    //         if (formData.hasOwnProperty(KEY)) {
+    //             if (i != lastIndex) {
+    //                 iterator = iterator[KEY];
+    //             } else {
+    //                 // formData[KEY] = eventvalue;
+    //                 console.debug('Set formData[', KEY, '] to ');
+    //             }
+    //         }
+    //     }
+    //
+    // }
 </script>
 
 <PageContent>
