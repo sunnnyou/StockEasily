@@ -14,6 +14,7 @@
     export let max = '';
     export let min = '';
     export let name = '';
+    export let parentClass = '';
     export let placeholder = '';
     export let step = 1;
     export let title = '';
@@ -28,7 +29,7 @@
     });
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col{parentClass ? ' ' + parentClass : ''}">
     {#if showLabel && label}
         <div class="flex items-end h-10 mb-2{addMarginTop ? ' mt-2' : ''}">
             <div class="w-1/2">

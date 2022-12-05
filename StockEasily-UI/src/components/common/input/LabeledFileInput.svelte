@@ -9,6 +9,7 @@
     export let id = '';
     export let label: string;
     export let name = '';
+    export let parentClass: string | undefined = undefined;
 </script>
 
 <LabeledInput {addMarginTop}
@@ -17,5 +18,6 @@
               {id}
               {label}
               {name}
+              {parentClass}
               type={InputType.File}
 />
