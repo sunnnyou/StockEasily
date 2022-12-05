@@ -50,8 +50,7 @@ input.file::-webkit-file-upload-button {
     visibility: hidden;
 }
 
-input.file::after {
-    content: 'Select some files';
+input.file::before {
     /*display: inline-block;*/
     background: linear-gradient(top, #f9f9f9, #e3e3e3);
     border: 1px solid #999;
@@ -66,10 +65,10 @@ input.file::after {
     font-size: 10pt;
 }
 
-input.file:hover::after {
+input.file:hover::before {
     border-color: black;
 }
 
-input.file:active::after {
+input.file:active::before {
     background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
 }
