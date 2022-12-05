@@ -26,10 +26,16 @@ export default {
         // pages
 
         // /articles/new
-        'page.addArticle.name': 'Name',
-        'page.addArticle.quantity': 'Quantity',
-        'page.addArticle.category': 'Category',
         'page.addArticle.add': 'Add',
+        'page.addArticle.category': 'Category',
+        'page.addArticle.image': 'Image',
+        'page.addArticle.name': 'Name',
+        'page.addArticle.props': 'Properties',
+        'page.addArticle.props.name': 'Name',
+        'page.addArticle.props.name.placeholder': 'Short name',
+        'page.addArticle.props.description': 'Description',
+        'page.addArticle.props.description.placeholder': 'Description/Value',
+        'page.addArticle.quantity': 'Quantity',
 
         // footer
         'about': 'About',
