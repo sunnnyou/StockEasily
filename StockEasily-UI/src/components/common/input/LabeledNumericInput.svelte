@@ -25,7 +25,7 @@
     const STEPS_MAX_INDEX = STEPS.length - 1;
 
     let currentStep = step;
-    let decrementSteps = true;
+    let decrementSteps = false;
     let stepTranslation = '';
 
     function getNextStepIndex(previousStep: number, decrement: boolean): number {
