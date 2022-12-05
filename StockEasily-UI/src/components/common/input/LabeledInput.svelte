@@ -11,6 +11,7 @@
     export let id: string;
     export let labelClass: string | undefined = undefined;
     export let label: string;
+    export let labelAfterInput = false;
     export let max = '';
     export let min = '';
     export let name = '';
@@ -32,20 +33,34 @@
 <div class="flex flex-col{parentClass ? ' ' + parentClass : ''}">
     {#if showLabel && label}
         <div class="flex items-end h-10 mb-2{addMarginTop ? ' mt-2' : ''}">
-            <div class="w-1/2">
-                <Label className={labelClass}
-                       {forName}
-                       {id}
-                >
-                    {label}
-                </Label>
-            </div>
+            {#if !labelAfterInput}
+                <div class="w-1/2">
+                    <Label className={labelClass}
+                           {forName}
+                           {id}
+                    >
+                        {label}
+                    </Label>
+                </div>
+            {/if}
 
             {#if $$slots.default}
                 <div class="text-right w-1/2 inline-flex justify-end">
                     <slot/>
                 </div>
             {/if}
+
+            {#if labelAfterInput}
+                <div class="w-1/2">
+                    <Label className={labelClass}
+                           {forName}
+                           {id}
+                    >
+                        {label}
+                    </Label>
+                </div>
+            {/if}
+
         </div>
     {/if}
     <div class="h-10">
