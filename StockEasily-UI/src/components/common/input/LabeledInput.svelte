@@ -8,7 +8,9 @@
 
     export let addMarginTop = true;
     export let className = '';
+    export let forName: string | undefined = undefined;
     export let id: string;
+    export let labelClass: string | undefined;
     export let label: string;
     export let max = '';
     export let min = '';
@@ -42,7 +44,10 @@
         <div id="left-wrapper"
              class="mb-2{addMarginTop ? ' mt-2' : ''}">
             <div class="w-1/2">
-                <Label forName={id}>
+                <Label class={labelClass}
+                       {forName}
+                       {id}
+                >
                     {label}
                 </Label>
             </div>
