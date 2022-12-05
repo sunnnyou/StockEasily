@@ -14,7 +14,7 @@
 </script>
 
 <LabeledInput {addMarginTop}
-              className="hidden file {(className?.length > 0 ? ' ' + className : '')}"
+              className="hidden file{(className?.length > 0 ? ' ' + className : '')}"
               {forName}
               {id}
               {label}
