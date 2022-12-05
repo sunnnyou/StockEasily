@@ -1,23 +1,29 @@
 <script lang="ts">
     import {InputType} from '$components/html/input/input-type';
+    import {onMount} from 'svelte';
 
     import Input from '$components/html/input/Input.svelte';
     import Label from '$components/html/input/Label.svelte';
-    import Select from 'svelte-select';
+    // import Select from 'svelte-select';
 
+    export let addMarginTop = true;
     export let className = '';
     export let id: string;
     export let label: string;
-    export let addMarginTop = true;
-    export let min = Number.MIN_VALUE;
     export let max = Number.MAX_VALUE;
-    export let name: string;
-    export let onClick: Function | undefined;
+    export let min = Number.MIN_VALUE;
+    export let name = '';
     export let placeholder = '';
     export let step = 1;
-    export let type = InputType.ExternalSelect;
+    export let type = InputType.Text;
+    export let value = '';
 
     let showLabel = true;
+    let internalValue = undefined;
+
+    onMount(() => {
+        internalValue = value?.length > 0 ? value : (type == InputType.Number ? '1' : '');
+    });
 
     function getInputHeightClass() {
         return type === InputType.Number ? 'h-10-5' : '';
@@ -35,9 +41,17 @@
     {#if showLabel && label}
         <div id="left-wrapper"
              class="mb-2{addMarginTop ? ' mt-2' : ''}">
-            <Label for={id}>
-                {label}
-            </Label>
+            <div class="w-1/2">
+                <Label forName={id}>
+                    {label}
+                </Label>
+            </div>
+
+            {#if $$slots.default}
+                <div class="text-right w-1/2 inline-flex justify-end">
+                    <slot/>
+                </div>
+            {/if}
         </div>
     {/if}
     <div>

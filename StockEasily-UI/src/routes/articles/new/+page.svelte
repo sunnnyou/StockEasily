@@ -10,24 +10,33 @@
 
 <PageContent>
     <PageCard title={$t('menu.addArticle')}>
-        <LabeledInput id="article-name"
-                      label={$t('page.addArticle.name')}
-                      addMarginTop={false}
-        />
+        <Form on:submit={() => handleOnSubmit()}>
+            <LabeledInput id="article-name"
+                          addMarginTop={false}
+                          label={$t('page.addArticle.name')}
+                          on:select={event => {
+                              console.log('name change try, param:', event);
+                              formData.name = event.target.value}}
+            />
 
-        <InputFlexContainer>
-            <LabeledInput id="article-category"
-                          label={$t('page.addArticle.category')}
-                          slot="left"
-            />
-            <LabeledInput id="article-quantity"
-                          className="w-full"
-                          label={$t('page.addArticle.quantity')}
-                          min={0}
-                          type={InputType.Number}
-                          slot="right"
-            />
-        </InputFlexContainer>
+            <InputFlexContainer>
+                <LabeledInput id="article-category"
+                              label={$t('page.addArticle.category')}
+                              on:select={event => formData.category.name = event.target.value}
+                              slot="left"
+                />
+
+                <LabeledNumericInput id="article-quantity"
+                                     className="w-full text-sm"
+                                     iconParentClass="pr-1 mt-1.5 text-sm"
+                                     label={$t('page.addArticle.quantity')}
+                                     min={0}
+                                     offerSmallerSteps={true}
+                                     on:change={event => formData.quantity = to_number(event.target.value)}
+                                     slot="right"
+                >
+                </LabeledNumericInput>
+            </InputFlexContainer>
 
     </PageCard>
 </PageContent>
