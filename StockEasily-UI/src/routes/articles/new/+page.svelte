@@ -82,7 +82,7 @@
                 </div>
 
 
-                <div class="float-left h5/6">
+                <div class="float-left h-5/6">
                     test
                 </div>
 
