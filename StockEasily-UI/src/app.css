@@ -39,7 +39,6 @@ input::-webkit-scrollbar-thumb { /* Foreground */
 }
 
 input.file {
-    background-color: deeppink;
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100%;
