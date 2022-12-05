@@ -86,7 +86,7 @@
                 on:click={switchStepSize}
                 on:keydown={switchStepSize}
         >
-            <div>
+            <div class="mb-1">
                 <FaIcon className="text-gray-500"
                         icon={decrementSteps? faArrowDown : faArrowUp}
                         parentClass={iconParentClass}/>
@@ -99,9 +99,6 @@
 </LabeledInput>
 
 <style>
-    div.cursor-pointer > div {
-        margin-bottom: 4px;
-    }
 
     @media only screen and (max-width: 767px) {
         span {

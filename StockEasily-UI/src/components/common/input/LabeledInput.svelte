@@ -26,17 +26,6 @@
     onMount(() => {
         internalValue = value?.length > 0 ? value : (type == InputType.Number ? '1' : '');
     });
-
-    function getInputHeightClass() {
-        return type === InputType.Number ? 'h-10-5' : '';
-    }
-
-    function getName() {
-        if (name?.length > 0) {
-            return name;
-        }
-        return id;
-    }
 </script>
 
 <div class="flex flex-col">
@@ -58,12 +47,12 @@
             {/if}
         </div>
     {/if}
-    <div>
-        <Input className="{className}{(className?.length > 0 ? ' ' : '') + getInputHeightClass()}"
+    <div class="h-10">
+        <Input {className}
                {id}
                {max}
                {min}
-               name={getName()}
+               name={name?.length > 0 ? name : id}
                on:change
                on:input
                {placeholder}
