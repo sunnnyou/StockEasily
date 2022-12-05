@@ -12,8 +12,8 @@
     export let iconParentClass: string | undefined;
     export let id: string;
     export let label: string;
-    export let max = Number.MAX_VALUE;
-    export let min = Number.MIN_VALUE;
+    export let max = '';
+    export let min = '';
     export let offerSmallerSteps = false;
     export let placeholder = '';
     export let step = 1;

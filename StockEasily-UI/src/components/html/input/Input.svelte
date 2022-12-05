@@ -1,11 +1,10 @@
 <script lang="ts">
     import {InputType} from './input-type';
 
-    export let type = InputType.Text;
     export let className = '';
     export let id = '';
-    export let min = Number.MIN_VALUE;
-    export let max = Number.MAX_VALUE;
+    export let min = '';
+    export let max = '';
     export let name = '';
     export let placeholder = '';
     export let step = 1;
@@ -16,19 +15,42 @@
     }
 </script>
 
-<input class={className}
-       {id}
-       min={min === Number.MIN_VALUE ? '' : min}
-       max={max === Number.MAX_VALUE ? '' : max}
-       {name}
-       {placeholder}
-       {step}
-       {type}
-       use:typeAction
-       {value}
-       on:change
-       on:input
->
+{#if containsMinMaxStep(type)}
+    <input class={className}
+           {id}
+           min={min?.length > 0 ? min : ''}
+           max={max?.length > 0 ? max : ''}
+           {name}
+           {step}
+           {type}
+           use:typeAction
+           {value}
+           on:change
+           on:input
+    >
+{:else if containsPlaceholder(type)}
+    <input class={className}
+           {id}
+           {name}
+           {placeholder}
+           {type}
+           use:typeAction
+           {value}
+           on:change
+           on:input
+    >
+{:else}
+    <input class={className}
+           {id}
+           {name}
+           {placeholder}
+           {type}
+           use:typeAction
+           {value}
+           on:change
+           on:input
+    >
+{/if}
 
 <style>
     input[type=number], input[type=text], input[type=search] {

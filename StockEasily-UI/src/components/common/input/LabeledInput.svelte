@@ -10,8 +10,8 @@
     export let className = '';
     export let id: string;
     export let label: string;
-    export let max = Number.MAX_VALUE;
-    export let min = Number.MIN_VALUE;
+    export let max = '';
+    export let min = '';
     export let name = '';
     export let placeholder = '';
     export let step = 1;
@@ -55,38 +55,18 @@
         </div>
     {/if}
     <div>
-        <!--{#if type !== InputType.ExternalSelect}-->
-            <Input className="{className}{(className?.length > 0 ? ' ' : '') + getInputHeightClass()}"
-                   {id}
-                   {min}
-                   {max}
-                   name={getName()}
-                   on:change
-                   on:input
-                   {placeholder}
-                   {step}
-                   {type}
-                   value={internalValue}
-            />
-        <!--{:else}-->
-
-<!--            <Input className="h-10-5 {className}{(className?.length > 0 ? ' ' : '') + getInputHeightClass()}"-->
-<!--                   {id}-->
-<!--                   name={getName()}-->
-<!--                   on:change-->
-<!--                   on:input-->
-<!--                   {placeholder}-->
-<!--                   {step}-->
-<!--                   {type}-->
-<!--                   value={internalValue}-->
-<!--            />-->
-<!--                        <Select isClearable={true}-->
-<!--                                placeholderAlwaysShow={true}-->
-<!--                                {placeholder}-->
-<!--                                on:select={event => console.log('event',event)}-->
-<!--                                value={internalValue}-->
-<!--                        />-->
-        <!--{/if}-->
+        <Input className="{className}{(className?.length > 0 ? ' ' : '') + getInputHeightClass()}"
+               {id}
+               {max}
+               {min}
+               name={getName()}
+               on:change
+               on:input
+               {placeholder}
+               {step}
+               {type}
+               value={internalValue}
+        />
     </div>
 </div>
 
