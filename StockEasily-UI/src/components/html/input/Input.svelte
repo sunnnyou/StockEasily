@@ -56,7 +56,8 @@
 {/if}
 
 <style>
-    input[type=number], input[type=text], input[type=search] {
+    /* Extend needed styles here! */
+    input[type=number], input[type=file], input[type=text], input[type=search] {
         border: 1px solid #d8dbdf;
         box-sizing: border-box;
         height: 40px;
