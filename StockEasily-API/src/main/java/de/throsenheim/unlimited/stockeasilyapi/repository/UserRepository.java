@@ -6,6 +6,7 @@ import de.throsenheim.unlimited.stockeasilyapi.common.logging.LogUtil;
 import de.throsenheim.unlimited.stockeasilyapi.factory.DatabaseConnectionFactory;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.model.User;
+import de.throsenheim.unlimited.stockeasilyapi.model.UserArticle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,22 +16,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserRepository implements HumaneRepository<User, Long>{
+public class UserRepository implements HumaneRepository<User, Long> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRepository.class);
 
     private final ArticleRepository articleRepository;
+    private final UserArticleRepository userArticleRepository;
     private final SqlConnection connection;
 
     @Autowired
-    public UserRepository(DatabaseConnectionFactory databaseConnectionFactory, ArticleRepository articleRepository) {
+    public UserRepository(DatabaseConnectionFactory databaseConnectionFactory, ArticleRepository articleRepository, UserArticleRepository userArticleRepository) {
         this.articleRepository = articleRepository;
         this.connection = databaseConnectionFactory.getConnection(false, UserRepository.class, User.class, LOGGER);
+        this.userArticleRepository = userArticleRepository;
     }
 
     @Override
@@ -55,25 +58,37 @@ public class UserRepository implements HumaneRepository<User, Long>{
 
     @Override
     public User save(User entity) {
-        return null;
+        return save(entity, true);
     }
 
     @Override
     public User save(User user, boolean commit) {
         List<Article> articleList = user.getArticles();
-        List<Article> articleResult = new ArrayList<>();
-        for(Article article: articleList) {
-            articleResult.add(articleRepository.save(article));
+
+
+        if (articleList != null) {
+            List<Article> articleResult = new LinkedList<>();
+            if (!articleList.isEmpty()) {
+                for (Article article : articleList) {
+                    articleResult.add(articleRepository.save(article));
+                }
+            }
+            user.setArticles(articleResult);
         }
+
         User result = insert(user, commit);
-        result.setArticles(articleResult);
+        if (result == null) {
+            return null;
+        }
+        List<UserArticle> userArticleRelations = getUserArticleRelations(result);
+        userArticleRepository.saveAll(userArticleRelations);
         return result;
     }
 
     public User insert(User user, boolean commit) {
         PreparedStatement preparedStatement = null;
         final String query = "INSERT INTO " +
-                "articles(emailAddress,password,isNotified,loginDate"  + ") " +
+                "articles(emailAddress,password,isNotified,loginDate" + ") " +
                 "VALUES (?,?,?,?" + ")";
 
         try {
@@ -102,5 +117,16 @@ public class UserRepository implements HumaneRepository<User, Long>{
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);
         }
+    }
+
+    private List<UserArticle> getUserArticleRelations(User user) {
+        List<UserArticle> result = new LinkedList<>();
+        for (Article article : user.getArticles()) {
+            UserArticle relation = new UserArticle();
+            relation.setUserId(user.getId());
+            relation.setArticleId(article.getId());
+            result.add(relation);
+        }
+        return result;
     }
 }

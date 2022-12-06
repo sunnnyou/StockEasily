@@ -9,6 +9,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Article {
@@ -31,6 +32,14 @@ public class Article {
         setQuantity(request.getQuantity());
         setCategory(new Category(request.getCategory()));
         setProperties(Property.getProperties(request.getProperties()));
+    }
+
+    public static List<Article> getArticles(List<CreateArticleRequestDto> articleRequests) {
+        List<Article> result = new LinkedList<>();
+        for (CreateArticleRequestDto articleRequest : articleRequests) {
+            result.add(new Article(articleRequest));
+        }
+        return result;
     }
 
     public Category getCategory() {

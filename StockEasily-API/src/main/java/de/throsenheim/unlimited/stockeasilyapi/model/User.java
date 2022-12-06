@@ -1,5 +1,7 @@
 package de.throsenheim.unlimited.stockeasilyapi.model;
 
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.UserRequestDto;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,6 +14,13 @@ public class User {
     private List<Article> articles;
 
     public User() {
+    }
+
+    public User(UserRequestDto request) {
+        setEmailAddress(request.getEmailAddress());
+        setPassword(request.getPassword());
+        setNotified(request.isNotified());
+        setArticles(Article.getArticles(request.getArticles()));
     }
 
     public long getId() {
