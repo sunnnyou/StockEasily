@@ -28,8 +28,8 @@ public class UserRepository implements HumaneRepository<User, Long>{
     private final SqlConnection connection;
 
     @Autowired
-    public UserRepository(DatabaseConnectionFactory databaseConnectionFactory, PropertyRepository propertyRepository, CategoryRepository categoryRepository, ArticlePropertyRepository articlePropertyRepository, ArticleRepository articleRepository) {
-        this.articleRepository = new ArticleRepository(databaseConnectionFactory, propertyRepository, categoryRepository, articlePropertyRepository);
+    public UserRepository(DatabaseConnectionFactory databaseConnectionFactory, ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
         this.connection = databaseConnectionFactory.getConnection(false, UserRepository.class, User.class, LOGGER);
     }
 
