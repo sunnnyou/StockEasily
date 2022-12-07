@@ -88,7 +88,7 @@ public class UserRepository implements HumaneRepository<User, Long> {
     public User insert(User user, boolean commit) {
         PreparedStatement preparedStatement = null;
         final String query = "INSERT INTO " +
-                "users_table(emailAddress,password,isNotified,loginDate" + ") " +
+                "users(emailAddress,password,isNotified,loginDate" + ") " +
                 "VALUES (?,?,?,?" + ")";
 
         try {

@@ -85,10 +85,10 @@ CREATE TABLE `properties` (
 -- Table structure for table `user_table`
 --
 
-DROP TABLE IF EXISTS `users_table`;
+DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `users_table` (
+CREATE TABLE `users` (
                                `id` bigint(20) NOT NULL AUTO_INCREMENT,
                                `emailAddress` varchar(50) NOT NULL,
                                `password` char(64) NOT NULL,
@@ -113,7 +113,7 @@ CREATE TABLE `users_articles` (
                                   `articleId` bigint(20) NOT NULL,
                                   PRIMARY KEY (`userId`,`articleId`),
                                   KEY `users_articles_users_null_fk` (`userId`),
-                                  CONSTRAINT `users_articles_users_null_fk` FOREIGN KEY (`userId`) REFERENCES `users_table` (`id`),
+                                  CONSTRAINT `users_articles_users_null_fk` FOREIGN KEY (`userId`) REFERENCES `users` (`id`),
                                   CONSTRAINT `users_articles_articles_null_fk` FOREIGN KEY (`articleId`) REFERENCES `articles` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
