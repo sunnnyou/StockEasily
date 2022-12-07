@@ -88,7 +88,7 @@ public class UserRepository implements HumaneRepository<User, Long> {
     public User insert(User user, boolean commit) {
         PreparedStatement preparedStatement = null;
         final String query = "INSERT INTO " +
-                "articles(emailAddress,password,isNotified,loginDate" + ") " +
+                "users_table(emailAddress,password,isNotified,loginDate" + ") " +
                 "VALUES (?,?,?,?" + ")";
 
         try {
@@ -97,6 +97,7 @@ public class UserRepository implements HumaneRepository<User, Long> {
             preparedStatement.setString(1, user.getEmailAddress());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setBoolean(3, user.isNotified());
+            preparedStatement.setDate(4, null);
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
