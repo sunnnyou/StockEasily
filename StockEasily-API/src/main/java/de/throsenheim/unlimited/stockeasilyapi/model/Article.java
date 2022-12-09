@@ -3,6 +3,7 @@ package de.throsenheim.unlimited.stockeasilyapi.model;
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -13,7 +14,10 @@ import java.util.List;
 
 public class Article {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(Article.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Article.class);
+
+    @Value(value = "article.image.maxsize")
+    private static long IMAGE_MAXIMUM_SIZE;
 
     private long id;
     private String name;
@@ -82,7 +86,7 @@ public class Article {
     }
 
     private void setImage(MultipartFile file) {
-        if (file != null && !file.isEmpty()) {
+        if (file != null && !file.isEmpty() && file.getSize() <= IMAGE_MAXIMUM_SIZE) {
             try {
                 setImage(new SerialBlob(file.getBytes()));
                 LOGGER.debug("Initialized image with new SerialBlob of length " + getImage().length());
