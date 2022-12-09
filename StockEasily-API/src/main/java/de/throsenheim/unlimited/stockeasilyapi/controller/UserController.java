@@ -34,18 +34,23 @@ public class UserController {
             @ApiResponse(code = 500, message = "Entity serialization error", response = ApiErrorDto.class)
     })
     @ResponseStatus(HttpStatus.CREATED)
-    @PutMapping
+    @PutMapping(value = "/{userId}")
     public ResponseEntity<UserResponseDto> editUser(
+            @PathVariable("userId") long id,
             @ApiParam(name = "request") @Valid @RequestBody UserRequestDto request,
             BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new InvalidBodyException(bindingResult);
+        User user = userService.find(id);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            if (bindingResult.hasErrors()) {
+                throw new InvalidBodyException(bindingResult);
+            }
+            final User result = this.userService.edit(request, id);
+            // INTERNAL SERVER ERROR should NOT occur
+            final HttpStatus httpStatus = result == null ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.OK;
+            return new ResponseEntity<>(new UserResponseDto(result), httpStatus);
         }
-        final User result = this.userService.edit(request);
-        // INTERNAL SERVER ERROR should NOT occur
-        final HttpStatus httpStatus = result == null ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.OK;
-        return new ResponseEntity<>(new UserResponseDto(result), httpStatus);
     }
-
 
 }

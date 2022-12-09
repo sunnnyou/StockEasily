@@ -93,7 +93,7 @@ CREATE TABLE `users` (
                                `emailAddress` varchar(50) NOT NULL,
                                `password` char(64) NOT NULL,
                                `isNotified` boolean DEFAULT NULL,
-                               `loginDate` date DEFAULT NULL,
+                               `loginDate` timestamp DEFAULT NULL,
                                `articleId` bigint(20) DEFAULT NULL,
                                PRIMARY KEY (`id`),
                                KEY `users_articles_null_fk` (`articleId`),

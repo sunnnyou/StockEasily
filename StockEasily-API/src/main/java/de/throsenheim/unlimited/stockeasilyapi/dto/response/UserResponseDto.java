@@ -1,13 +1,9 @@
 package de.throsenheim.unlimited.stockeasilyapi.dto.response;
 
-import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.model.User;
 import io.swagger.annotations.ApiModelProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserResponseDto {
 
@@ -25,9 +21,9 @@ public class UserResponseDto {
     @ApiModelProperty(notes = "Does user want to be notified of article changes?", example = "true")
     private boolean isNotified;
 
-    @ApiModelProperty(notes = "User articles")
-    // TODO use EditArticleResponseDto
-    private List<CreateArticleResponseDto> articles;
+//    @ApiModelProperty(notes = "User articles")
+//    // TODO use EditArticleResponseDto
+//    private List<CreateArticleResponseDto> articles;
 
     public UserResponseDto(User user) {
         if (user == null) {
@@ -39,7 +35,6 @@ public class UserResponseDto {
         setEmailAddress(user.getEmailAddress());
         setPassword(user.getPassword());
         setNotified(user.isNotified());
-        setArticles(user.getArticles());
     }
 
     public long getId() {
@@ -74,11 +69,11 @@ public class UserResponseDto {
         isNotified = notified;
     }
 
-    public List<CreateArticleResponseDto> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(List<Article> articles) {
-        this.articles = articles.stream().map(CreateArticleResponseDto::new).collect(Collectors.toList());
-    }
+//    public List<CreateArticleResponseDto> getArticles() {
+//        return articles;
+//    }
+//
+//    public void setArticles(List<Article> articles) {
+//        this.articles = articles.stream().map(CreateArticleResponseDto::new).collect(Collectors.toList());
+//    }
 }

@@ -2,7 +2,7 @@ package de.throsenheim.unlimited.stockeasilyapi.model;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.UserRequestDto;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class User {
@@ -10,7 +10,7 @@ public class User {
     private String emailAddress;
     private String password;
     private boolean isNotified;
-    private LocalDateTime loginDate;
+    private Timestamp loginDate;
     private List<Article> articles;
 
     public User() {
@@ -20,7 +20,7 @@ public class User {
         setEmailAddress(request.getEmailAddress());
         setPassword(request.getPassword());
         setNotified(request.isNotified());
-        setArticles(Article.getArticles(request.getArticles()));
+        setLoginDate(request.getLoginDate());
     }
 
     public long getId() {
@@ -55,11 +55,11 @@ public class User {
         isNotified = notified;
     }
 
-    public LocalDateTime getLoginDate() {
+    public Timestamp getLoginDate() {
         return loginDate;
     }
 
-    public void setLoginDate(LocalDateTime loginDate) {
+    public void setLoginDate(Timestamp loginDate) {
         this.loginDate = loginDate;
     }
 
@@ -69,5 +69,17 @@ public class User {
 
     public void setArticles(List<Article> articles) {
         this.articles = articles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", password='" + password + '\'' +
+                ", isNotified=" + isNotified +
+                ", loginDate=" + loginDate +
+                ", articles=" + articles +
+                '}';
     }
 }

@@ -4,5 +4,7 @@ import de.throsenheim.unlimited.stockeasilyapi.dto.request.UserRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.model.User;
 
 public interface UserService {
-    User edit(UserRequestDto request);
+    User edit(UserRequestDto request, long id);
+
+    User find(long id);
 }

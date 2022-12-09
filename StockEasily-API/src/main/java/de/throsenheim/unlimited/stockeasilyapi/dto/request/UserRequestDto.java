@@ -2,10 +2,9 @@ package de.throsenheim.unlimited.stockeasilyapi.dto.request;
 
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.sql.Timestamp;
 
 public class UserRequestDto {
 
@@ -21,8 +20,16 @@ public class UserRequestDto {
     @ApiModelProperty(notes = "Does user want to be notified of article changes?", example = "true")
     private boolean isNotified;
 
-    @Valid
-    private List<CreateArticleRequestDto> articles;
+    @ApiModelProperty(notes = "Last time user logged in")
+    private Timestamp loginDate;
+
+    public Timestamp getLoginDate() {
+        return loginDate;
+    }
+
+    public void setLoginDate(Timestamp loginDate) {
+        this.loginDate = loginDate;
+    }
 
     public String getEmailAddress() {
         return emailAddress;
@@ -46,13 +53,5 @@ public class UserRequestDto {
 
     public void setNotified(boolean notified) {
         isNotified = notified;
-    }
-
-    public List<CreateArticleRequestDto> getArticles() {
-        return articles;
-    }
-
-    public void setArticles(List<CreateArticleRequestDto> articles) {
-        this.articles = articles;
     }
 }
