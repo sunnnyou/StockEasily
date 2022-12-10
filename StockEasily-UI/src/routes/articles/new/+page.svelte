@@ -14,11 +14,18 @@
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
 
-    let formData = new CreateArticleRequestDto();
+    const IMAGE_MAXIMUM_SIZE = 524288;
+
+    let inputData = new CreateArticleRequestDto();
+    let selectedFileName = '';
+
+    function isValid() {
+        // TODO implement
+        return false;
+    }
 
     function handleOnSubmit() {
-        console.log('onSubmit', formData);
-    }
+        console.log('onSubmit', inputData);
 
     // function changeValue(key: string, event: Event) {
     //     console.log(event);
@@ -54,16 +61,14 @@
                     <LabeledInput id="article-name"
                                   addMarginTop={false}
                                   label={$t('page.addArticle.name')}
-                                  on:select={event => {
-                              console.log('name change try, param:', event);
-                              formData.name = event.target.value}}
+                                  on:change={event => inputData.name = event.target.value}
                     />
 
                     <!-- input category, quantity -->
                     <InputFlexContainer>
                         <LabeledInput id="article-category"
                                       label={$t('page.addArticle.category')}
-                                      on:select={event => formData.category.name = event.target.value}
+                                      on:change={event => inputData.category.name = event.target.value}
                                       slot="left"
                         />
 
@@ -73,7 +78,7 @@
                                              label={$t('page.addArticle.quantity')}
                                              min={'0'}
                                              offerSmallerSteps={true}
-                                             on:change={event => formData.quantity = to_number(event.target.value)}
+                                             on:change={event => inputData.quantity = to_number(event.target.value)}
                                              slot="right"
                         >
                         </LabeledNumericInput>
