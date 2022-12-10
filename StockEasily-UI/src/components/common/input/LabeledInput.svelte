@@ -1,6 +1,7 @@
 <script lang="ts">
     import {AcceptType} from './file/accept-type';
     import {InputType} from '$components/html/input/input-type';
+    import {LabelOptions} from './label-options';
     import {onMount} from 'svelte';
     import {PreviewImageOptions} from './preview-image-options';
 
@@ -14,9 +15,7 @@
     export let className = '';
     export let forName: string | undefined = undefined;
     export let id: string;
-    export let labelClass: string | undefined = undefined;
-    export let label: string;
-    export let labelAfterInput = false;
+    export let labelOptions: LabelOptions = {className: '', placeAfterInput: false, text: ''};
     export let max = '';
     export let min = '';
     export let name = '';
@@ -28,57 +27,58 @@
     export let type = InputType.Text;
     export let value = '';
 
-    let showLabel = true;
     let internalValue = undefined;
 
     onMount(() => {
         internalValue = value?.length > 0 ? value : (type == InputType.Number ? '1' : '');
     });
+
+    function getLabelParentClass() {
+        return type === InputType.File ? 'w-1/2 mx-auto text-center' : '';
+    }
 </script>
 
 <div class="flex flex-col{parentClass ? ' ' + parentClass : ''}">
-    {#if showLabel && label}
-        <div class="flex items-end h-10 mb-2{addMarginTop ? ' mt-2' : ''}">
-            {#if !labelAfterInput}
-                <div class="w-1/2 mx-auto text-center">
-                    <Label className={labelClass}
-                           {forName}
-                           {id}
-                    >
-                        {#if $$slots.label}
-                            <slot name="label"/>
-                        {/if}
-                        {#if label}
-                            {label}
-                        {/if}
-                    </Label>
-                </div>
-            {/if}
+    <div class="flex items-end h-10 mb-2{addMarginTop ? ' mt-2' : ''}">
+        {#if labelOptions && !labelOptions.placeAfterInput}
+            <div class={getLabelParentClass()}>
+                <Label className={labelOptions.className}
+                       {forName}
+                       {id}
+                >
+                    {#if $$slots.label}
+                        <slot name="label"/>
+                    {/if}
+                    {#if labelOptions.text}
+                        {labelOptions.text}
+                    {/if}
+                </Label>
+            </div>
+        {/if}
 
-            {#if $$slots.inner}
-                <div class="text-right w-1/2 inline-flex justify-end">
-                    <slot name="inner"/>
-                </div>
-            {/if}
+        {#if $$slots.inner}
+            <div class="text-right w-1/2 inline-flex justify-end">
+                <slot name="inner"/>
+            </div>
+        {/if}
 
-            {#if labelAfterInput}
-                <div class="w-1/2 mx-auto text-center">
-                    <Label className={labelClass}
-                           {forName}
-                           {id}
-                    >
-                        {#if $$slots.label}
-                            <slot name="label"/>
-                        {/if}
-                        {#if label}
-                            {label}
-                        {/if}
-                    </Label>
-                </div>
-            {/if}
+        {#if labelOptions?.placeAfterInput}
+            <div class={getLabelParentClass()}>
+                <Label className={labelOptions?.className || ''}
+                       {forName}
+                       {id}
+                >
+                    {#if $$slots.label}
+                        <slot name="label"/>
+                    {/if}
+                    {#if labelOptions?.text}
+                        {labelOptions.text}
+                    {/if}
+                </Label>
+            </div>
+        {/if}
 
-        </div>
-    {/if}
+    </div>
     <div class={'max-h-min'}>
         <Input {accept}
                {allowMultiple}

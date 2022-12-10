@@ -61,14 +61,14 @@
                     <!-- input name -->
                     <LabeledInput id="article-name"
                                   addMarginTop={false}
-                                  label={$t('general.name')}
+                                  labelOptions={{text: $t('general.name')}}
                                   on:change={event => inputData.name = event.target.value}
                     />
 
                     <!-- input category, quantity -->
                     <InputFlexContainer>
                         <LabeledInput id="article-category"
-                                      label={$t('general.category')}
+                                      labelOptions={{text: $t('general.category')}}
                                       on:change={event => inputData.category.name = event.target.value}
                                       slot="left"
                         />
@@ -76,7 +76,7 @@
                         <LabeledNumericInput id="article-quantity"
                                              className="w-full text-sm"
                                              iconParentClass="pr-1 mt-1.5 text-sm"
-                                             label={$t('general.quantity')}
+                                             labelOptions={{text: $t('general.quantity')}}
                                              min={'0'}
                                              offerSmallerSteps={true}
                                              on:change={event => inputData.quantity = to_number(event.target.value)}
@@ -94,7 +94,7 @@
                                           addMarginTop={false}
                                           allowMultiple={false}
                                           className="h-full"
-                                          label={$t('general.image')}
+                                          labelOptions={{text: $t('general.image')}}
                                           previewImageOptions={{
                                             alt: selectedFileName,
                                             show: true,

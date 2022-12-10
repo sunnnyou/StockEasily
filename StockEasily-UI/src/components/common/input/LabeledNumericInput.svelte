@@ -2,6 +2,7 @@
     import {ButtonPriority} from '$components/html/button/button-priority.js';
     import {faArrowDown, faArrowUp} from '@fortawesome/free-solid-svg-icons';
     import {InputType} from '$components/html/input/input-type';
+    import {LabelOptions} from './label-options';
     import {onMount} from 'svelte';
     import {t} from '$i18n/i18n';
 
@@ -13,7 +14,7 @@
     export let className = '';
     export let iconParentClass: string | undefined;
     export let id: string;
-    export let label: string;
+    export let labelOptions: LabelOptions = {className: '', placeAfterInput: false, text: ''};
     export let max = '';
     export let min = '';
     export let offerSmallerSteps = false;
@@ -69,7 +70,7 @@
 <LabeledInput {addMarginTop}
               {className}
               {id}
-              {label}
+              {labelOptions}
               {max}
               {min}
               on:select

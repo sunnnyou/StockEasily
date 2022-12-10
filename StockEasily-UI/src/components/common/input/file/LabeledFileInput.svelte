@@ -1,6 +1,7 @@
 <script lang="ts">
     import {AcceptType} from './accept-type';
     import {InputType} from '$components/html/input/input-type';
+    import {LabelOptions} from '../label-options';
     import {PreviewImageOptions} from '../preview-image-options';
 
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
@@ -12,9 +13,7 @@
     export let files: File[] = [];
     export let forName = '';
     export let id = '';
-    export let label: string;
-    export let labelAfterInput = true;
-    export let labelClass: string | undefined = undefined;
+    export let labelOptions: LabelOptions = {className: '', placeAfterInput: false, text: ''};
     export let name = '';
     export let parentClass: string | undefined = undefined;
     export let previewImageOptions: PreviewImageOptions = {alt: '', show: false, src: ''};
@@ -26,9 +25,7 @@
               className="hidden file{(className?.length > 0 ? ' ' + className : '')}"
               {forName}
               {id}
-              {label}
-              {labelAfterInput}
-              {labelClass}
+              {labelOptions}
               {name}
               {parentClass}
               {previewImageOptions}
