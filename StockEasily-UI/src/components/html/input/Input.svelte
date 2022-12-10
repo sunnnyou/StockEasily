@@ -101,8 +101,8 @@
                use:typeAction
         >
     {/if}
-    <div class="cursor-pointer w-14 h-14" on:click={() => inputRef.click()}>
-        <FaIcon icon={faFileArrowUp} scale="3"></FaIcon>
+    <div class="w-14 h-14 mx-auto cursor-pointer" on:click={() => inputRef.click()}>
+        <FaIcon className="inset-0 w-14 h-14 flex justify-center items-center" icon={faFileArrowUp} scale="3"></FaIcon>
     </div>
 {:else}
     <input class={className}
@@ -134,12 +134,5 @@
         padding: 1rem;
         height: 50px;
         width: 50px;
-    }
-
-    div {
-        display: none;
-        width: 155px;
-        border: 2px dashed #333;
-        margin-bottom: 20px;
     }
 </style>
