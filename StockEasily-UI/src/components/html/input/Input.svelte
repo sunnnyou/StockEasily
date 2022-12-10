@@ -10,6 +10,7 @@
     export let maxLength: string | undefined = undefined;
     export let name = '';
     export let placeholder = '';
+    export let previewImageOptions: PreviewImageOptions = {alt: '', show: false, src: ''};
     export let step = 1;
     export let title = '';
     export let type = InputType.Text;

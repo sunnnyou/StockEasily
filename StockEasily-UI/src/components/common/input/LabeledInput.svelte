@@ -17,6 +17,7 @@
     export let name = '';
     export let parentClass = '';
     export let placeholder = '';
+    export let previewImageOptions: PreviewImageOptions = {alt: '', show: false, src: ''};
     export let step = 1;
     export let title = '';
     export let type = InputType.Text;
@@ -72,6 +73,7 @@
                on:change
                on:input
                {placeholder}
+               {previewImageOptions}
                {step}
                {title}
                {type}
