@@ -61,14 +61,14 @@
                     <!-- input name -->
                     <LabeledInput id="article-name"
                                   addMarginTop={false}
-                                  label={$t('page.addArticle.name')}
+                                  label={$t('general.name')}
                                   on:change={event => inputData.name = event.target.value}
                     />
 
                     <!-- input category, quantity -->
                     <InputFlexContainer>
                         <LabeledInput id="article-category"
-                                      label={$t('page.addArticle.category')}
+                                      label={$t('general.category')}
                                       on:change={event => inputData.category.name = event.target.value}
                                       slot="left"
                         />
@@ -76,7 +76,7 @@
                         <LabeledNumericInput id="article-quantity"
                                              className="w-full text-sm"
                                              iconParentClass="pr-1 mt-1.5 text-sm"
-                                             label={$t('page.addArticle.quantity')}
+                                             label={$t('general.quantity')}
                                              min={'0'}
                                              offerSmallerSteps={true}
                                              on:change={event => inputData.quantity = to_number(event.target.value)}
@@ -106,7 +106,7 @@
                                 type={ButtonType.Submit}
                                 priority={ButtonPriority.Primary}
                         >
-                            {$t('page.addArticle.add')}
+                            {$t('general.add')}
                         </Button>
                     </div>
                 </div>

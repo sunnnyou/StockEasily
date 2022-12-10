@@ -5,9 +5,18 @@ export default {
         'app.keywords': 'StockEasily,stock,organize,organization,sort,articles,inventory',
 
         // general
+        'general.add': 'Add',
+        'general.category': 'Category',
+        'general.description': 'Description',
+        'general.chooseImage': 'Choose image',
         'general.guest': 'Guest',
-        'general.search': 'Search',
+        'general.image': 'Image',
+        'general.name': 'Name',
         'general.nextStep': 'Next step',
+        'general.previewImage': 'Preview image',
+        'general.props': 'Properties',
+        'general.quantity': 'Quantity',
+        'general.search': 'Search',
         'general.step': 'Step',
 
         // menu
@@ -26,17 +35,9 @@ export default {
         // pages
 
         // /articles/new
-        'page.addArticle.add': 'Add',
-        'page.addArticle.category': 'Category',
-        'page.addArticle.image': 'Image',
-        'page.addArticle.name': 'Name',
-        'page.addArticle.props': 'Properties',
-        'page.addArticle.props.name': 'Name',
-        'page.addArticle.props.name.placeholder': 'Short name',
-        'page.addArticle.props.description': 'Description',
-        'page.addArticle.props.description.placeholder': 'Description/Value',
-        'page.addArticle.quantity': 'Quantity',
-        'page.addArticle.previewImage': 'Preview image',
+        'page.addArticle.name.placeholder': 'Short name',
+        'page.addArticle.description.placeholder': 'Description/Value',
+
 
         // footer
         'about': 'About',

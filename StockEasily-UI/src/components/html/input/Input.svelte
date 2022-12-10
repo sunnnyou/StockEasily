@@ -66,8 +66,10 @@
     >
 {:else if type === InputType.File}
     {#if previewImageOptions?.show && previewImageOptions?.src}
-        <img class="mx-auto max-w-sm max-h-80" src={previewImageOptions.src}
-             alt={previewImageOptions?.alt || $t('page.addArticle.previewImage')}>
+        <img alt={previewImageOptions?.alt || $t('general.previewImage')}
+             class="mx-auto max-w-sm max-h-80"
+             src={previewImageOptions.src}
+        >
     {/if}
     {#if allowMultiple}
         <input {accept}
