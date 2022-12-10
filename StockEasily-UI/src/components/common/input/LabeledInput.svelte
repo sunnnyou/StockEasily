@@ -69,7 +69,7 @@
 
         </div>
     {/if}
-    <div class={'h-10'}>
+    <div class={'max-h-min'}>
         <Input {accept}
                {allowMultiple}
                {className}
