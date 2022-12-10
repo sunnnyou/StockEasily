@@ -100,7 +100,8 @@
                                             show: true,
                                             src: inputData.image
                                           }}
-                                          on:change={event => onImageSelected(event)}/>
+                                          on:change={event => onImageSelected(event)}
+                        />
 
                         <Button className="mt-7 float-right"
                                 type={ButtonType.Submit}
