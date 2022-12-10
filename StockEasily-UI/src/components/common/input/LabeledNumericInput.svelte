@@ -85,6 +85,7 @@
                 priority={ButtonPriority.Transparent}
                 on:click={switchStepSize}
                 on:keydown={switchStepSize}
+                slot="inner"
         >
             <div class="mb-1">
                 <FaIcon className="text-gray-500"

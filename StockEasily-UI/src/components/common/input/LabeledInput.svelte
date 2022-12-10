@@ -45,14 +45,19 @@
                            {forName}
                            {id}
                     >
-                        {label}
+                        {#if $$slots.label}
+                            <slot name="label"/>
+                        {/if}
+                        {#if label}
+                            {label}
+                        {/if}
                     </Label>
                 </div>
             {/if}
 
-            {#if $$slots.default}
+            {#if $$slots.inner}
                 <div class="text-right w-1/2 inline-flex justify-end">
-                    <slot/>
+                    <slot name="inner"/>
                 </div>
             {/if}
 
@@ -62,7 +67,12 @@
                            {forName}
                            {id}
                     >
-                        {label}
+                        {#if $$slots.label}
+                            <slot name="label"/>
+                        {/if}
+                        {#if label}
+                            {label}
+                        {/if}
                     </Label>
                 </div>
             {/if}

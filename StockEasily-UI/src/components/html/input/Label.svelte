@@ -7,7 +7,5 @@
 
 <!--suppress XmlInvalidId -->
 <label for={forName || name} {id} class={className}>
-    {#if $$slots.default}
-        <slot/>
-    {/if}
+    <slot/>
 </label>

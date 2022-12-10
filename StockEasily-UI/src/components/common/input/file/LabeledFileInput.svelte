@@ -35,7 +35,6 @@
               type={InputType.File}
               on:change
               bind:files>
-    {#if $$slots.default}
-        <slot/>
-    {/if}
+    <slot name="label"/>
+    <slot name="inner"/>
 </LabeledInput>
