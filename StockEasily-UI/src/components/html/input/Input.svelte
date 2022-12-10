@@ -68,7 +68,6 @@
     {#if previewImageOptions?.show && previewImageOptions?.src}
         <img class="mx-auto max-w-sm max-h-80" src={previewImageOptions.src}
              alt={previewImageOptions?.alt || $t('page.addArticle.previewImage')}>
-        <!--        <div bind:this={previewRef}></div>-->
     {/if}
     {#if allowMultiple}
         <input {accept}
