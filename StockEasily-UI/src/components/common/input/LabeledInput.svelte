@@ -40,7 +40,7 @@
     {#if showLabel && label}
         <div class="flex items-end h-10 mb-2{addMarginTop ? ' mt-2' : ''}">
             {#if !labelAfterInput}
-                <div class="w-1/2">
+                <div class="w-1/2 mx-auto text-center">
                     <Label className={labelClass}
                            {forName}
                            {id}
@@ -57,7 +57,7 @@
             {/if}
 
             {#if labelAfterInput}
-                <div class="w-1/2">
+                <div class="w-1/2 mx-auto text-center">
                     <Label className={labelClass}
                            {forName}
                            {id}
