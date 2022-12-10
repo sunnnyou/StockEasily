@@ -1,11 +1,16 @@
 <script lang="ts">
+    import {AcceptType} from './file/accept-type';
     import {InputType} from '$components/html/input/input-type';
     import {onMount} from 'svelte';
+    import {PreviewImageOptions} from './preview-image-options';
 
     import Input from '$components/html/input/Input.svelte';
     import Label from '$components/html/input/Label.svelte';
 
+    export let accept = AcceptType.Any;
     export let addMarginTop = true;
+    export let allowMultiple = true;
+    export let files: File[] = [];
     export let className = '';
     export let forName: string | undefined = undefined;
     export let id: string;
@@ -64,20 +69,23 @@
 
         </div>
     {/if}
-    <div class="h-10">
-        <Input {className}
+    <div class={'h-10'}>
+        <Input {accept}
+               {allowMultiple}
+               {className}
                {id}
                {max}
                {min}
                name={name?.length > 0 ? name : id}
-               on:change
-               on:input
                {placeholder}
                {previewImageOptions}
                {step}
                {title}
                {type}
                value={internalValue}
+               bind:files
+               on:change
+               on:input
         />
     </div>
 </div>

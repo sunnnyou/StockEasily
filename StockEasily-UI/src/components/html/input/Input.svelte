@@ -1,9 +1,18 @@
 <script lang="ts">
+    import {AcceptType} from '$components/common/input/file/accept-type';
     import {containsMinMaxStep} from '$components/html/input/input-type';
     import {containsPlaceholder} from '$components/html/input/input-type';
+    import {faFileArrowUp} from '@fortawesome/free-solid-svg-icons';
     import {InputType} from './input-type';
+    import {PreviewImageOptions} from '../../common/input/preview-image-options';
+    import {t} from '$i18n/i18n';
 
+    import FaIcon from '$components/common/FaIcon.svelte';
+
+    export let accept = AcceptType.Any;
+    export let allowMultiple = true;
     export let className = '';
+    export let files: File[] = [];
     export let id = '';
     export let min = '';
     export let max = '';
@@ -16,9 +25,16 @@
     export let type = InputType.Text;
     export let value = '';
 
+    function handleInput(e: any) {
+        console.log(e);
+        files = type.match(/^(number|range)$/) ? +e.target.value : e.target.value;
+    }
+
     function typeAction(node) {
         node.type = type;
     }
+
+    let inputRef: HTMLElement;
 </script>
 
 {#if containsMinMaxStep(type)}
@@ -30,10 +46,10 @@
            {step}
            {title}
            {type}
-           use:typeAction
            {value}
            on:change
            on:input
+           use:typeAction
     >
 {:else if containsPlaceholder(type)}
     <input class={className}
@@ -43,11 +59,50 @@
            {placeholder}
            {title}
            {type}
-           use:typeAction
            {value}
            on:change
            on:input
+           use:typeAction
     >
+{:else if type === InputType.File}
+    {#if previewImageOptions?.show && previewImageOptions?.src}
+        <img class="mx-auto max-w-sm max-h-80" src={previewImageOptions.src}
+             alt={previewImageOptions?.alt || $t('page.addArticle.previewImage')}>
+        <!--        <div bind:this={previewRef}></div>-->
+    {/if}
+    {#if allowMultiple}
+        <input {accept}
+               multiple=""
+               class={className}
+               {id}
+               {name}
+               {title}
+               {type}
+               {value}
+               bind:this={inputRef}
+               on:change
+               on:keydown
+               on:input={handleInput}
+               use:typeAction
+        >
+    {:else}
+        <input {accept}
+               class={className}
+               {id}
+               {name}
+               {title}
+               {type}
+               {value}
+               bind:this={inputRef}
+               on:change
+               on:keydown
+               on:input={handleInput}
+               use:typeAction
+        >
+    {/if}
+    <div class="cursor-pointer w-14 h-14" on:click={() => inputRef.click()}>
+        <FaIcon icon={faFileArrowUp} scale="3"></FaIcon>
+    </div>
 {:else}
     <input class={className}
            {id}
@@ -55,10 +110,11 @@
            {placeholder}
            {title}
            {type}
-           use:typeAction
            {value}
            on:change
+           on:keydown
            on:input
+           use:typeAction
     >
 {/if}
 
@@ -69,14 +125,20 @@
         box-sizing: border-box;
         height: 40px;
         position: relative;
-        display: flex;
         align-items: center;
         width: 100%;
     }
 
     input[type=file] {
         padding: 1rem;
-        height: 10rem;
-        width: 10rem;
+        height: 50px;
+        width: 50px;
+    }
+
+    div {
+        display: none;
+        width: 155px;
+        border: 2px dashed #333;
+        margin-bottom: 20px;
     }
 </style>
