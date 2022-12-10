@@ -36,6 +36,7 @@ export default {
         'page.addArticle.props.description': 'Description',
         'page.addArticle.props.description.placeholder': 'Description/Value',
         'page.addArticle.quantity': 'Quantity',
+        'page.addArticle.previewImage': 'Preview image',
 
         // footer
         'about': 'About',
