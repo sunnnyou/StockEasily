@@ -42,7 +42,6 @@ input.file {
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100%;
-    background-image: url('/img/file-dropzone.svg');
 }
 
 input.file::-webkit-file-upload-button {
