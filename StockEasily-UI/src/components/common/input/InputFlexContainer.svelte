@@ -4,14 +4,14 @@
 
 <div class="inline-flex w-full">
     {#if $$slots.left}
-        <div class={shrinkRight ? 'w-70p' : ''}>
+        <div class={shrinkRight ? 'w-65p' : ''}>
             <div class="w-full">
                 <slot name="left"/>
             </div>
         </div>
     {/if}
     {#if $$slots.right}
-        <div class={shrinkRight ? 'w-29p' : ''}>
+        <div class={shrinkRight ? 'w-34p' : ''}>
             <slot name="right"/>
         </div>
     {/if}
