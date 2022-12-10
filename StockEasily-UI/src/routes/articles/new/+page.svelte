@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {AcceptType} from '$components/common/input/file/accept-type';
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {ButtonType} from '$components/html/button/button-type';
     import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
@@ -8,7 +9,7 @@
     import Button from '$components/html/button/Button.svelte';
     import Form from '$components/html/Form.svelte';
     import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
-    import LabeledFileInput from '$components/common/input/LabeledFileInput.svelte';
+    import LabeledFileInput from '$components/common/input/file/LabeledFileInput.svelte';
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
     import LabeledNumericInput from '$components/common/input/LabeledNumericInput.svelte';
     import PageCard from '$components/common/PageCard.svelte';
@@ -88,9 +89,18 @@
 
                 <div class="float-left h-full w-1/2 pl-10">
 
-                    <div class="w-full pl-10 p-4 m-auto vr">
-                        <LabeledFileInput parentClass="mt-2" label={$t('page.addArticle.image')}
-                        />
+                    <div class="w-full px-10 m-auto vr h-full">
+                        <LabeledFileInput accept={AcceptType.Image}
+                                          addMarginTop={false}
+                                          allowMultiple={false}
+                                          className="h-full"
+                                          label={$t('general.image')}
+                                          previewImageOptions={{
+                                            alt: selectedFileName,
+                                            show: true,
+                                            src: inputData.image
+                                          }}
+                                          on:change={event => onImageSelected(event)}/>
 
                         <Button className="mt-7 float-right"
                                 type={ButtonType.Submit}
