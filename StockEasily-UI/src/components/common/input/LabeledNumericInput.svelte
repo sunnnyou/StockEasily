@@ -80,23 +80,24 @@
               {title}
               type={InputType.Number}
 >
-    <div slot="inner">
-    {#if offerSmallerSteps}
-        <div class="cursor-pointer inline-flex font-sm"
-             title={$t('general.nextStep') + ': ' + STEPS[getNextStepIndex(currentStep, decrementSteps)]}
-             on:click={switchStepSize}
-             on:keydown={switchStepSize}
-        >
-            <div class="mb-1">
-                <FaIcon className="text-gray-500"
-                        icon={decrementSteps? faArrowDown : faArrowUp}
-                        parentClass={iconParentClass}/>
-            </div>
-            <span class="text-right text-gray-500">
+    <div class="inline-flex"
+         slot="inner">
+        {#if offerSmallerSteps}
+            <div class="cursor-pointer inline-flex font-sm"
+                 title={$t('general.nextStep') + ': ' + STEPS[getNextStepIndex(currentStep, decrementSteps)]}
+                 on:click={switchStepSize}
+                 on:keydown={switchStepSize}
+            >
+                <div class="mb-1">
+                    <FaIcon className="text-gray-500"
+                            icon={decrementSteps? faArrowDown : faArrowUp}
+                            parentClass={iconParentClass}/>
+                </div>
+                <span class="text-right text-gray-500">
                 {$t('general.step') + ': ' + currentStep}
             </span>
-        </div>
-    {/if}
+            </div>
+        {/if}
     </div>
 </LabeledInput>
 
