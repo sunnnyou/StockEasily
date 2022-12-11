@@ -80,13 +80,12 @@
               {title}
               type={InputType.Number}
 >
+    <div slot="inner">
     {#if offerSmallerSteps}
-        <Button className="cursor-pointer inline-flex font-sm"
-                title={$t('general.nextStep') + ': ' + STEPS[getNextStepIndex(currentStep, decrementSteps)]}
-                priority={ButtonPriority.Transparent}
-                on:click={switchStepSize}
-                on:keydown={switchStepSize}
-                slot="inner"
+        <div class="cursor-pointer inline-flex font-sm"
+             title={$t('general.nextStep') + ': ' + STEPS[getNextStepIndex(currentStep, decrementSteps)]}
+             on:click={switchStepSize}
+             on:keydown={switchStepSize}
         >
             <div class="mb-1">
                 <FaIcon className="text-gray-500"
@@ -96,8 +95,9 @@
             <span class="text-right text-gray-500">
                 {$t('general.step') + ': ' + currentStep}
             </span>
-        </Button>
+        </div>
     {/if}
+    </div>
 </LabeledInput>
 
 <style>
