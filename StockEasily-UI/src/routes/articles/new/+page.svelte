@@ -112,6 +112,23 @@
                     </InputFlexContainer>
 
                     <HorizontalRuler className="border-b-1 border-gray-300 mt-8 mx-4"></HorizontalRuler>
+
+                    {#each inputData?.properties as property, i}
+                        <PropertyInput id={{name: 'prop-name' + i, description: 'prop-description' + i}}
+                                       leftLabelOptions={{
+                                           className: 'text-gray-600',
+                                           isBold: true,
+                                           text: $t('props.name')
+                                       }}
+                                       parentId="prop-parent{i}"
+                                       {property}
+                                       rightLabelOptions={{
+                                           className: 'text-gray-600',
+                                           isBold: true,
+                                           text: $t('props.description')
+                                       }}
+                        />
+                    {/each}
                 </div>
 
 

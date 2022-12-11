@@ -1,5 +1,6 @@
 <script lang="ts">
     import {LabelOptions} from './label-options';
+    import {PropertyRequestDto} from '../../../dto/property-request-dto';
     import {t} from '$i18n/i18n';
 
     import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
@@ -13,6 +14,7 @@
     export let parentLabelOptions: LabelOptions = {className: 'text-gray-600 font-bold mt-10', isBold: true};
     export let leftLabelOptions: LabelOptions = {className: '', isBold: true, placeAfterInput: false, text: ''};
     export let leftPlaceholder = '';
+    export let property: PropertyRequestDto;
     export let rightLabelOptions: LabelOptions = {className: '', isBold: true, placeAfterInput: false, text: ''};
     export let rightPlaceholder = '';
 </script>
@@ -37,7 +39,7 @@
             <LabeledInput id={id.name}
                           labelOptions={leftLabelOptions}
                           placeholder={leftPlaceholder || $t('props.name.placeholder')}
-                          on:change
+                          on:change={event => property.name = event.target.value}
                           slot="left">
 
 
@@ -47,7 +49,7 @@
             <LabeledInput id={id.description}
                           labelOptions={rightLabelOptions}
                           placeholder={rightPlaceholder || $t('props.description.placeholder')}
-                          on:change
+                          on:change={event => property.description = event.target.value}
                           slot="right"
             />
         </InputFlexContainer>
