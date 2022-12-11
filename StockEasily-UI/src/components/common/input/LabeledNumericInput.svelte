@@ -80,7 +80,7 @@
               {title}
               type={InputType.Number}
 >
-    <div class="inline-flex"
+    <div class="text-right w-full inline-flex justify-end"
          slot="inner">
         {#if offerSmallerSteps}
             <div class="cursor-pointer inline-flex font-sm"

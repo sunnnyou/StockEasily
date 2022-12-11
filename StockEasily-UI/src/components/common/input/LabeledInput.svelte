@@ -57,9 +57,7 @@
         {/if}
 
         {#if $$slots.inner}
-            <div class="text-right w-1/2 inline-flex justify-end">
-                <slot name="inner"/>
-            </div>
+            <slot name="inner"/>
         {/if}
 
         {#if labelOptions?.placeAfterInput}
