@@ -77,7 +77,7 @@
                                              className="w-full text-sm"
                                              iconParentClass="pr-1 mt-1.5 text-sm"
                                              labelOptions={{text: $t('general.quantity')}}
-                                             min={'0'}
+                                             min={0}
                                              offerSmallerSteps={true}
                                              on:change={event => inputData.quantity = to_number(event.target.value)}
                                              slot="right"
