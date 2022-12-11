@@ -1,5 +1,6 @@
 <script lang="ts">
     import {AcceptType} from '$components/common/input/file/accept-type';
+    import PropertyInput from '$components/common/input/PropertyInput.svelte';
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {ButtonType} from '$components/html/button/button-type';
     import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
@@ -88,6 +89,16 @@
                         >
                         </LabeledNumericInput>
                     </InputFlexContainer>
+
+                    <PropertyInput id={{name: 'nameidhalt', description: 'descidhalt'}}
+                                   leftLabelOptions={{
+                                       className: 'text-gray-600',
+                                       isBold: true,
+                                       text: $t('props.name')
+                                   }}
+                                   parentId="abcid"
+                                   rightLabelOptions={{className: 'text-gray-600', isBold: true, text: $t('props.description')}}
+                    />
                 </div>
 
 

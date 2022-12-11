@@ -18,7 +18,6 @@ export default {
         'general.name.placeholder': 'Name of article',
         'general.nextStep': 'Next step',
         'general.previewImage': 'Preview image',
-        'general.props': 'Properties',
         'general.quantity': 'Quantity',
         'general.search': 'Search',
         'general.step': 'Step',
@@ -36,12 +35,12 @@ export default {
         'menu.user.logout': 'Logout',
         'menu.user.notifications': 'Notifications',
 
-        // pages
-
-        // /articles/new
-        'page.addArticle.name.placeholder': 'Short name',
-        'page.addArticle.description.placeholder': 'Description/Value',
-
+        // props
+        'props': 'Properties',
+        'props.description': 'Description',
+        'props.description.placeholder': 'Short description / value',
+        'props.name': 'Name',
+        'props.name.placeholder': 'Short name',
 
         // footer
         'about': 'About',
