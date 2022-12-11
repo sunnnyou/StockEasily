@@ -26,7 +26,6 @@
     export let value = '';
 
     function handleInput(e: any) {
-        console.log(e);
         files = type.match(/^(number|range)$/) ? +e.target.value : e.target.value;
     }
 
@@ -65,11 +64,18 @@
            use:typeAction
     >
 {:else if type === InputType.File}
-    {#if previewImageOptions?.show && previewImageOptions?.src}
-        <img alt={previewImageOptions?.alt || $t('general.previewImage')}
-             class="mx-auto max-w-sm max-h-80"
-             src={previewImageOptions.src}
-        >
+    {#if previewImageOptions?.show}
+        {#if previewImageOptions.src}
+            <img alt={previewImageOptions.alt || $t('general.previewImage')}
+                 class="mx-auto max-w-sm max-h-80"
+                 src={previewImageOptions.src }
+            >
+        {:else}
+
+            <div class="text-center mt-10 mb-5">
+                {$t('general.input.noImageSelected')}
+            </div>
+        {/if}
     {/if}
     {#if allowMultiple}
         <input {accept}
@@ -101,8 +107,12 @@
                use:typeAction
         >
     {/if}
-    <div class="w-14 h-14 mx-auto cursor-pointer" on:click={() => inputRef.click()}>
-        <FaIcon className="inset-0 w-14 h-14 flex justify-center items-center" icon={faFileArrowUp} scale="3"></FaIcon>
+    <div class="mt-5 w-full cursor-pointer" on:click={() => inputRef.click()}>
+        <div class="w-14 h-14 mx-auto">
+            <FaIcon className="inset-0 w-14 h-14 flex justify-center items-center" icon={faFileArrowUp}
+                    scale="3"></FaIcon>
+        </div>
+        <div class="text-center">{$t(files?.length > 0 ? 'general.replaceImage' : 'general.chooseImage')}</div>
     </div>
 {:else}
     <input class={className}
