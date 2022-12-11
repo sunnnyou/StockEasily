@@ -13,7 +13,7 @@
     export let files: File[] = [];
     export let forName = '';
     export let id = '';
-    export let labelOptions: LabelOptions = {className: '', placeAfterInput: false, text: ''};
+    export let labelOptions: LabelOptions = {className: '', isBold: true, placeAfterInput: false, text: ''};
     export let name = '';
     export let parentClass: string | undefined = undefined;
     export let previewImageOptions: PreviewImageOptions = {alt: '', show: false, src: ''};

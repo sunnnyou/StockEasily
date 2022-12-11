@@ -1,4 +1,5 @@
 <script lang="ts">
+    export let bold = false;
     export let className = '';
     export let forName: string | undefined = undefined;
     export let id = '';
@@ -6,6 +7,6 @@
 </script>
 
 <!--suppress XmlInvalidId -->
-<label for={forName || name} {id} class={className}>
+<label for={forName || name} {id} class={(bold ? 'font-bold ' : '') + className}>
     <slot/>
 </label>

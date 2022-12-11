@@ -59,9 +59,10 @@
             <div class="float-left w-full">
                 <div class="float-left w-1/2">
                     <!-- input name -->
-                    <LabeledInput id="article-name"
-                                  addMarginTop={false}
-                                  labelOptions={{text: $t('general.name')}}
+                    <LabeledInput addMarginTop={false}
+                                  id="article-name"
+                                  labelOptions={{className: 'text-gray-600', isBold: true, text: $t('general.name')}}
+                                  placeholder={$t('general.name.placeholder')}
                                   on:change={event => inputData.name = event.target.value}
                     />
 
@@ -70,7 +71,8 @@
                                         rightClass="w-34p"
                     >
                         <LabeledInput id="article-category"
-                                      labelOptions={{text: $t('general.category')}}
+                                      labelOptions={{className: 'text-gray-600', isBold: true, text: $t('general.category')}}
+                                      placeholder={$t('general.category.placeholder')}
                                       on:change={event => inputData.category.name = event.target.value}
                                       slot="left"
                         />
@@ -78,7 +80,7 @@
                         <LabeledNumericInput id="article-quantity"
                                              className="w-full text-sm"
                                              iconParentClass="pr-1 mt-1.5 text-sm"
-                                             labelOptions={{text: $t('general.quantity')}}
+                                             labelOptions={{className: 'text-gray-600', isBold: true, text: $t('general.quantity')}}
                                              min="0"
                                              offerSmallerSteps={true}
                                              on:change={event => inputData.quantity = to_number(event.target.value)}
@@ -96,7 +98,7 @@
                                           addMarginTop={false}
                                           allowMultiple={false}
                                           className="h-full"
-                                          labelOptions={{text: $t('general.image')}}
+                                          labelOptions={{className: 'text-gray-600', isBold: true, text: $t('general.image')}}
                                           previewImageOptions={{
                                             alt: selectedFileName,
                                             show: true,

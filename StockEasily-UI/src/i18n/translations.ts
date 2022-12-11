@@ -7,6 +7,7 @@ export default {
         // general
         'general.add': 'Add',
         'general.category': 'Category',
+        'general.category.placeholder': 'e.g. Cables, Preserving jars, …',
         'general.description': 'Description',
         'general.chooseImage': 'Choose image',
         'general.replaceImage': 'Replace image',
@@ -14,6 +15,7 @@ export default {
         'general.image': 'Image',
         'general.input.noImageSelected': 'No image selected',
         'general.name': 'Name',
+        'general.name.placeholder': 'Name of article',
         'general.nextStep': 'Next step',
         'general.previewImage': 'Preview image',
         'general.props': 'Properties',

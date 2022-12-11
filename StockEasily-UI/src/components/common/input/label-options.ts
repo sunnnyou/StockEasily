@@ -1,5 +1,6 @@
 export class LabelOptions {
-    className = '';
-    placeAfterInput = false;
-    text = '';
+    className? = '';
+    isBold = true;
+    placeAfterInput?: boolean = false;
+    text? = '';
 }

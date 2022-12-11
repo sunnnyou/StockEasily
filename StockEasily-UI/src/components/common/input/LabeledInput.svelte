@@ -15,7 +15,7 @@
     export let className = '';
     export let forName: string | undefined = undefined;
     export let id: string;
-    export let labelOptions: LabelOptions = {className: '', placeAfterInput: false, text: ''};
+    export let labelOptions: LabelOptions = {className: '', isBold: true, placeAfterInput: false, text: ''};
     export let max = '';
     export let min = '';
     export let name = '';
@@ -42,7 +42,8 @@
     <div class="flex items-end h-10 mb-2{addMarginTop ? ' mt-2' : ''}">
         {#if labelOptions && !labelOptions.placeAfterInput}
             <div class={getLabelParentClass()}>
-                <Label className={labelOptions.className}
+                <Label bold={labelOptions.isBold}
+                       className={labelOptions.className || ''}
                        {forName}
                        {id}
                 >
@@ -64,7 +65,8 @@
 
         {#if labelOptions?.placeAfterInput}
             <div class={getLabelParentClass()}>
-                <Label className={labelOptions.className || ''}
+                <Label bold={labelOptions.isBold}
+                       className={labelOptions.className || ''}
                        {forName}
                        {id}
                 >
