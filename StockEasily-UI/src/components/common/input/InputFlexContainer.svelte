@@ -1,12 +1,12 @@
 <script lang="ts">
-    export let id: string | undefined;
+    export let parentId: string | undefined;
     export let leftClass: string | undefined;
     export let parentClass: string = 'inline-flex w-full';
     export let rightClass: string | undefined;
 </script>
 
 <div class={parentClass}
-     {id}
+     id={parentId || ''}
 >
     {#if $$slots.left}
         <div class={leftClass || ''}>
