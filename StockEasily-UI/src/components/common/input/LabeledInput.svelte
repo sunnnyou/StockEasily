@@ -47,12 +47,11 @@
                        {forName}
                        {id}
                 >
-                    {#if $$slots.label}
-                        <slot name="label"/>
-                    {/if}
-                    {#if labelOptions.text}
-                        {labelOptions.text}
-                    {/if}
+                    <slot name="label">
+                        {#if labelOptions.text}
+                            {labelOptions.text}
+                        {/if}
+                    </slot>
                 </Label>
             </div>
         {/if}
@@ -70,12 +69,11 @@
                        {forName}
                        {id}
                 >
-                    {#if $$slots.label}
-                        <slot name="label"/>
-                    {/if}
-                    {#if labelOptions.text}
-                        {labelOptions.text}
-                    {/if}
+                    <slot name="label">
+                        {#if labelOptions.text}
+                            {labelOptions.text}
+                        {/if}
+                    </slot>
                 </Label>
             </div>
         {/if}
@@ -101,6 +99,6 @@
         />
     </div>
     {#if false}
-        <slot></slot>
+        <!--        <slot></slot>-->
     {/if}
 </div>
