@@ -36,47 +36,53 @@
     function getLabelParentClass() {
         return type === InputType.File ? 'w-1/2 mx-auto text-center' : '';
     }
+
+    function showLabel() {
+        return labelOptions !== undefined && !labelOptions.hide;
+    }
 </script>
 
 <div class="flex flex-col{parentClass ? ' ' + parentClass : ''}">
-    <div class="flex items-end h-10 mb-2{addMarginTop ? ' mt-2' : ''}">
-        {#if labelOptions && !labelOptions.placeAfterInput}
-            <div class={getLabelParentClass()}>
-                <Label bold={labelOptions.isBold}
-                       className={labelOptions.className || ''}
-                       {forName}
-                       {id}
-                >
-                    <slot name="label">
-                        {#if labelOptions.text}
-                            {labelOptions.text}
-                        {/if}
-                    </slot>
-                </Label>
-            </div>
-        {/if}
+    {#if showLabel()}
+        <div class="flex items-end h-10 mb-2{addMarginTop ? ' mt-2' : ''}">
+            {#if !labelOptions.placeAfterInput}
+                <div class={getLabelParentClass()}>
+                    <Label bold={labelOptions.isBold}
+                           className={labelOptions.className || ''}
+                           {forName}
+                           {id}
+                    >
+                        <slot name="label">
+                            {#if labelOptions.text}
+                                {labelOptions.text}
+                            {/if}
+                        </slot>
+                    </Label>
+                </div>
+            {/if}
 
-        {#if $$slots.inner}
-            <slot name="inner"/>
-        {/if}
+            {#if $$slots.inner}
+                <slot name="inner"/>
+            {/if}
 
-        {#if labelOptions?.placeAfterInput}
-            <div class={getLabelParentClass()}>
-                <Label bold={labelOptions.isBold}
-                       className={labelOptions.className || ''}
-                       {forName}
-                       {id}
-                >
-                    <slot name="label">
-                        {#if labelOptions.text}
-                            {labelOptions.text}
-                        {/if}
-                    </slot>
-                </Label>
-            </div>
-        {/if}
+            {#if labelOptions.placeAfterInput}
+                <div class={getLabelParentClass()}>
+                    <Label bold={labelOptions.isBold}
+                           className={labelOptions.className || ''}
+                           {forName}
+                           {id}
+                    >
+                        <slot name="label">
+                            {#if labelOptions.text}
+                                {labelOptions.text}
+                            {/if}
+                        </slot>
+                    </Label>
+                </div>
+            {/if}
+        </div>
+    {/if}
 
-    </div>
     <div class={'max-h-min'}>
         <Input {accept}
                {allowMultiple}
