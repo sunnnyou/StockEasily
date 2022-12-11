@@ -3,6 +3,7 @@
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {ButtonType} from '$components/html/button/button-type';
+    import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
     import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
@@ -110,15 +111,7 @@
                         </LabeledNumericInput>
                     </InputFlexContainer>
 
-                    <PropertyInput id={{name: 'nameidhalt', description: 'descidhalt'}}
-                                   leftLabelOptions={{
-                                       className: 'text-gray-600',
-                                       isBold: true,
-                                       text: $t('props.name')
-                                   }}
-                                   parentId="abcid"
-                                   rightLabelOptions={{className: 'text-gray-600', isBold: true, text: $t('props.description')}}
-                    />
+                    <HorizontalRuler className="border-b-1 border-gray-300 mt-8 mx-4"></HorizontalRuler>
                 </div>
 
 
