@@ -29,26 +29,46 @@
     function handleOnSubmit() {
         console.log('onSubmit', inputData);
 
-    // function changeValue(key: string, event: Event) {
-    //     console.log(event);
-    //     // console.log(event['value);
-    //     const KEYS = key.split('.');
-    //
-    //     let iterator = formData;
-    //     const lastIndex = KEYS.length - 1;
-    //     for (let i = 0; i < KEYS.length; ++i) {
-    //         const KEY = KEYS[i];
-    //         if (formData.hasOwnProperty(KEY)) {
-    //             if (i != lastIndex) {
-    //                 iterator = iterator[KEY];
-    //             } else {
-    //                 // formData[KEY] = eventvalue;
-    //                 console.debug('Set formData[', KEY, '] to ');
-    //             }
-    //         }
-    //     }
-    //
-    // }
+        // console.log(imageInputRef.getFirstFile());
+        // if (isValid()) {
+        //
+        //
+        //     let formData = new FormData();
+        //     formData.append('name', inputData.name);
+        //     formData.append('category', inputData.category);
+        //     formData.append('image', inputData.image);
+        //     formData.append('quantity', inputData.quantity);
+        //     formData.append('', inputData.image);
+        //
+        //     const upload = fetch('http://localhost:8080/file', {
+        //         method: 'POST',
+        //         body: formData
+        //     }).then((response) => response.json()).then((result) => {
+        //         console.log('Success:', result);
+        //     })
+        //         .catch((error) => {
+        //             console.error('Error:', error);
+        //         });
+        // }
+    }
+
+    function onImageSelected(event) {
+        const image = event.target.files[0];
+        console.log('image size:', image.size);
+        if (image.size > IMAGE_MAXIMUM_SIZE) {
+            console.warn('Image select is too big', '(' + image.size + ' bytes or', image.size / 1024 + 'KB )', 'image maximum size: ', IMAGE_MAXIMUM_SIZE / 1024, 'bytes');
+            return;
+        }
+
+        // console.log(image, image);
+        let reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = e => {
+            inputData.image = e.target.result;
+            selectedFileName = image.name;
+            console.log('selected file:', image.name);
+        };
+    }
 </script>
 
 <PageContent>
