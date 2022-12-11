@@ -24,7 +24,7 @@
                 {#if parentLabelOptions?.text?.length > 0}
                     {parentLabelOptions.text}
                 {:else}
-                    {$t('props')}
+                    {$t('props') + ':'}
                 {/if}
             </Label>
         </div>
