@@ -64,14 +64,14 @@
 
         {#if labelOptions?.placeAfterInput}
             <div class={getLabelParentClass()}>
-                <Label className={labelOptions?.className || ''}
+                <Label className={labelOptions.className || ''}
                        {forName}
                        {id}
                 >
                     {#if $$slots.label}
                         <slot name="label"/>
                     {/if}
-                    {#if labelOptions?.text}
+                    {#if labelOptions.text}
                         {labelOptions.text}
                     {/if}
                 </Label>
