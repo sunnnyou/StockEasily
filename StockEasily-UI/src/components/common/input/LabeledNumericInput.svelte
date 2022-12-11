@@ -108,4 +108,10 @@
             display: none;
         }
     }
+
+    @media only screen and (max-width: 1023px) {
+        span {
+            display: none;
+        }
+    }
 </style>
