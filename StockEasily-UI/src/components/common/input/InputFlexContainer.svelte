@@ -1,23 +1,29 @@
 <script lang="ts">
-    export let shrinkRight = true;
+    export let id: string | undefined;
+    export let leftClass: string | undefined;
+    export let parentClass: string = 'inline-flex w-full';
+    export let rightClass: string | undefined;
 </script>
 
-<div class="inline-flex w-full">
+<div class={parentClass}
+     {id}
+>
     {#if $$slots.left}
-        <div class={shrinkRight ? 'w-65p' : ''}>
+        <div class={leftClass || ''}>
             <div class="w-full">
                 <slot name="left"/>
             </div>
         </div>
     {/if}
     {#if $$slots.right}
-        <div class={shrinkRight ? 'w-34p' : ''}>
+        <div class={rightClass || ''}>
             <slot name="right"/>
         </div>
     {/if}
 </div>
 
 <style>
+    /*noinspection CssUnusedSymbol*/
     div.inline-flex.w-full {
         gap: 1%;
     }

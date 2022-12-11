@@ -66,7 +66,9 @@
                     />
 
                     <!-- input category, quantity -->
-                    <InputFlexContainer>
+                    <InputFlexContainer leftClass="w-65p"
+                                        rightClass="w-34p"
+                    >
                         <LabeledInput id="article-category"
                                       labelOptions={{text: $t('general.category')}}
                                       on:change={event => inputData.category.name = event.target.value}
