@@ -70,27 +70,46 @@
     </div>
     <div class="w-full flex flex-row">
         <div class="w-11/12">
-            <InputFlexContainer {parentId}
-                                leftClass="w-1/2"
-                                rightClass="w-1/2"
-            >
-                <LabeledInput id={id.name}
-                              labelOptions={leftLabelOptions}
-                              placeholder={leftPlaceholder || $t('props.name.placeholder')}
-                              on:change={event => property.name = event.target.value}
-                              value={property.name}
-                              slot="left"
-                />
+            {#if edit}
+                <InputFlexContainer {parentId}
+                                    leftClass="w-1/2"
+                                    rightClass="w-1/2"
+                >
+                    <LabeledInput id={id.name}
+                                  labelOptions={leftLabelOptions}
+                                  placeholder={leftPlaceholder || $t('props.name.placeholder')}
+                                  on:change={event => property.name = event.target.value}
+                                  value={property.name}
+                                  slot="left"
+                    />
 
 
-                <LabeledInput id={id.description}
-                              labelOptions={rightLabelOptions}
-                              placeholder={rightPlaceholder || $t('props.description.placeholder')}
-                              on:change={event => property.description = event.target.value}
-                              value={property.description}
-                              slot="right"
-                />
-            </InputFlexContainer>
+                    <LabeledInput id={id.description}
+                                  labelOptions={rightLabelOptions}
+                                  placeholder={rightPlaceholder || $t('props.description.placeholder')}
+                                  on:change={event => property.description = event.target.value}
+                                  value={property.description}
+                                  slot="right"
+                    />
+                </InputFlexContainer>
+            {:else}
+                <InputFlexContainer {parentId}
+                                    leftClass="w-1/2"
+                                    rightClass="w-1/2"
+                >
+                    <p class="h-10 leading-10"
+                       slot="left"
+                    >
+                        {property.name}
+                    </p>
+
+                    <p class="h-10 leading-10"
+                       slot="right"
+                    >
+                        {property.description}
+                    </p>
+                </InputFlexContainer>
+            {/if}
         </div>
         <Button
                 className="self-end h-10"
