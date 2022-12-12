@@ -81,46 +81,28 @@
     </div>
     <div class="w-full flex flex-row">
         <div class="w-11/12">
-            {#if edit}
-                <InputFlexContainer {parentId}
-                                    leftClass="w-1/2"
-                                    rightClass="w-1/2"
-                >
-                    <LabeledInput id={id.name}
-                                  labelOptions={leftLabelOptions}
-                                  placeholder={leftPlaceholder || $t('props.name.placeholder')}
-                                  on:change={event => property.name = event.target.value}
-                                  value={property.name}
-                                  slot="left"
-                    />
+            <InputFlexContainer {parentId}
+                                leftClass="w-1/2"
+                                rightClass="w-1/2"
+            >
+                <LabeledInput disabled={!edit}
+                              id={id.name}
+                              labelOptions={leftLabelOptions}
+                              placeholder={leftPlaceholder || $t('props.name.placeholder')}
+                              value={property?.name || ''}
+                              on:change={event => property.name = event.target.value}
+                              slot="left"
+                />
 
-
-                    <LabeledInput id={id.description}
-                                  labelOptions={rightLabelOptions}
-                                  placeholder={rightPlaceholder || $t('props.description.placeholder')}
-                                  on:change={event => property.description = event.target.value}
-                                  value={property.description}
-                                  slot="right"
-                    />
-                </InputFlexContainer>
-            {:else}
-                <InputFlexContainer {parentId}
-                                    leftClass="w-1/2"
-                                    rightClass="w-1/2"
-                >
-                    <span class="bg-blue-100 text-blue-800 text-l font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 h-10 leading-10 mt-5 pl-2"
-                          slot="left"
-                    >
-                        {property?.name || ''}
-                    </span>
-
-                    <span class="bg-gray-100 text-gray-800 text-l font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300 h-10 leading-10 mt-5 pl-2"
-                          slot="right"
-                    >
-                        {property?.description || ''}
-                    </span>
-                </InputFlexContainer>
-            {/if}
+                <LabeledInput disabled={!edit}
+                              id={id.description}
+                              labelOptions={rightLabelOptions}
+                              placeholder={rightPlaceholder || $t('props.description.placeholder')}
+                              value={property?.description}
+                              on:change={event => property.description = event.target.value}
+                              slot="right"
+                />
+            </InputFlexContainer>
         </div>
         <Button
                 className="self-end h-10"
