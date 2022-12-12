@@ -56,7 +56,11 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
     @Override
     public Article findByName(String name) {
-        return null;
+        return selectName(name);
+    }
+
+    public List<Article> findAllByName(String name) {
+        return selectAllName(name);
     }
 
     @Override
@@ -141,7 +145,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
     public Article selectId(long id) {
         PreparedStatement preparedStatement = null;
-        final String query = "select id, name, quantity, image, categoryId from articles where id = ?";
+        final String query = "select name, quantity, image, categoryId from articles where id = ?";
 
         try {
             preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -152,7 +156,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 Article article = new Article();
-                article.setId(resultSet.getLong("id"));
+                article.setId(id);
                 article.setName(resultSet.getString("name"));
                 article.setQuantity(resultSet.getInt("quantity"));
                 article.setImage(resultSet.getBlob("image"));
@@ -175,6 +179,93 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             }
             LOGGER.debug("Returning empty Article model");
             return null;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Article selectName(String name) {
+        PreparedStatement preparedStatement = null;
+        final String query = "select id, quantity, image, categoryId from articles where name = ?";
+
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, name);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                Article article = new Article();
+                article.setId(resultSet.getLong("id"));
+                article.setName(name);
+                article.setQuantity(resultSet.getInt("quantity"));
+                article.setImage(resultSet.getBlob("image"));
+
+                // Setting category
+                Optional<Category> categoryOptional = categoryRepository.findById(resultSet.getLong("categoryId"));
+                categoryOptional.ifPresent(article::setCategory);
+
+                // Setting properties
+                List<Long> propertyIdList = articlePropertyRepository.findAllByArticleId(article.getId());
+                List<Property> properties = new ArrayList<>(propertyIdList.size());
+                for(long propertyId : propertyIdList) {
+                    Optional<Property> propertyOptional = propertyRepository.findById(propertyId);
+                    propertyOptional.ifPresent(properties::add);
+                }
+                article.setProperties(properties);
+
+                LogUtil.traceFetchId(Article.class, article.getId(), LOGGER);
+                return article;
+            }
+            LOGGER.debug("Returning empty Article model");
+            return null;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Article> selectAllName(String name) {
+        PreparedStatement preparedStatement = null;
+        final String query = "select id, quantity, image, categoryId from articles where name = ?";
+
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, name);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<Article> articleList = new ArrayList<>(resultSet.getFetchSize());
+
+            while (resultSet.next()) {
+                Article article = new Article();
+                article.setId(resultSet.getLong("id"));
+                article.setName(name);
+                article.setQuantity(resultSet.getInt("quantity"));
+                article.setImage(resultSet.getBlob("image"));
+
+                // Setting category
+                Optional<Category> categoryOptional = categoryRepository.findById(resultSet.getLong("categoryId"));
+                categoryOptional.ifPresent(article::setCategory);
+
+                // Setting properties
+                List<Long> propertyIdList = articlePropertyRepository.findAllByArticleId(article.getId());
+                List<Property> properties = new ArrayList<>(propertyIdList.size());
+                for(long propertyId : propertyIdList) {
+                    Optional<Property> propertyOptional = propertyRepository.findById(propertyId);
+                    propertyOptional.ifPresent(properties::add);
+                }
+                article.setProperties(properties);
+
+                LogUtil.traceFetchId(Article.class, article.getId(), LOGGER);
+                articleList.add(article);
+            }
+            LOGGER.debug("Returning empty Article model");
+            return articleList;
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);

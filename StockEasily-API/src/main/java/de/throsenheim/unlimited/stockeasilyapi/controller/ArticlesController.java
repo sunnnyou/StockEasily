@@ -1,6 +1,7 @@
 package de.throsenheim.unlimited.stockeasilyapi.controller;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.SearchArticleByNameRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.ApiErrorDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.SearchArticleResponse;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Api(tags = {"Articles"}) // Set correct heading
@@ -57,10 +59,27 @@ public class ArticlesController {
             final Optional<Article> resultOptional = articleService.search(Long.parseLong(articleId));
             if(resultOptional.isPresent()) {
                 final Article result = resultOptional.get();
-                final HttpStatus httpStatus = HttpStatus.CREATED;
+                final HttpStatus httpStatus = HttpStatus.OK;
                 return new ResponseEntity<>(new SearchArticleResponse(result), httpStatus);
             } else {
                 return ResponseEntity.notFound().build();
+            }
+        } catch (NumberFormatException ex) {
+            // log
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Article>> searchAllArticlesByName(
+            @ApiParam(name = "request") @Valid @RequestBody SearchArticleByNameRequestDto request) {
+        try {
+            final List<Article> resultList = articleService.searchAllByName(request.getName());
+            if(resultList.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            } else {
+                final HttpStatus httpStatus = HttpStatus.OK;
+                return new ResponseEntity<>(resultList, httpStatus);
             }
         } catch (NumberFormatException ex) {
             // log
