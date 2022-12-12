@@ -15,7 +15,13 @@
     export let className = '';
     export let forName: string | undefined = undefined;
     export let id: string;
-    export let labelOptions: LabelOptions = {className: '', isBold: true, placeAfterInput: false, text: ''};
+    export let labelOptions: LabelOptions = {
+        className: '',
+        hide: false,
+        isBold: true,
+        placeAfterInput: false,
+        text: '',
+    };
     export let max = '';
     export let min = '';
     export let name = '';
