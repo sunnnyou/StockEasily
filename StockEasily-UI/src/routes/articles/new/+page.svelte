@@ -134,7 +134,6 @@
 
 
                 <div class="float-left h-full w-1/2 pl-10">
-
                     <div class="w-full px-10 m-auto vr h-full">
                         <LabeledFileInput accept={AcceptType.Image}
                                           addMarginTop={false}
