@@ -55,6 +55,16 @@
         edit = !edit;
         setHideProp();
     }
+
+    function onButtonClick() {
+
+        toggleEdit();
+        console.log('changed to edit: ', edit);
+
+        if (!edit && onAdd) {
+            onAdd(property);
+        }
+    }
 </script>
 
 <div>
@@ -115,11 +125,7 @@
         <Button
                 className="self-end h-10"
                 priority={ButtonPriority.Transparent}
-                on:click={() => {
-                    toggleEdit();
-                    console.log('changed to edit: ', edit);
-                }
-                }
+                on:click={() => onButtonClick()}
         >
             <FaIcon icon={edit ? faPlus : faPen}
                     parentClass="mx-1"
