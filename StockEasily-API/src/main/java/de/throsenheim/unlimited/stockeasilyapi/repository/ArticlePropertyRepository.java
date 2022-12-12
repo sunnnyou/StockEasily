@@ -106,10 +106,10 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
         PreparedStatement preparedStatement = null;
         final String query = "SELECT EXISTS(" +
                 "SELECT 1 " +
-                "FROM stockeasily.articles_properties " +
+                "FROM articles_properties " +
                 "WHERE articleId = ? " +
                 "AND propertyId = ?" +
-                ")";
+                ") AS 'exists'";
         String errorMessage = "Could not insert " + ArticleRepository.class.getSimpleName() + " relations";
 
         try {
@@ -120,7 +120,7 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
+            if (resultSet.next() && resultSet.getLong("exists") == 1) {
                 return relation;
             }
             LOGGER.error(errorMessage);
