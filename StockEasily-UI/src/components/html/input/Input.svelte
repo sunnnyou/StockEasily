@@ -12,6 +12,7 @@
     export let accept = AcceptType.Any;
     export let allowMultiple = true;
     export let className = '';
+    export let disabled = false;
     export let files: File[] = [];
     export let id = '';
     export let min = '';
@@ -114,6 +115,20 @@
         </div>
         <div class="text-center">{$t(files?.length > 0 ? 'general.replaceImage' : 'general.chooseImage')}</div>
     </div>
+{:else if disabled}
+    <input class={className}
+           disabled
+           {id}
+           {name}
+           {placeholder}
+           {title}
+           {type}
+           {value}
+           on:change
+           on:keydown
+           on:input
+           use:typeAction
+    >
 {:else}
     <input class={className}
            {id}

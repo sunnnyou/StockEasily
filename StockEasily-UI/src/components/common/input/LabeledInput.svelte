@@ -11,6 +11,7 @@
     export let accept = AcceptType.Any;
     export let addMarginTop = true;
     export let allowMultiple = true;
+    export let disabled = false;
     export let files: File[] = [];
     export let className = '';
     export let forName: string | undefined = undefined;
@@ -93,6 +94,7 @@
         <Input {accept}
                {allowMultiple}
                {className}
+               {disabled}
                {id}
                {max}
                {min}
