@@ -78,16 +78,16 @@
                               labelOptions={leftLabelOptions}
                               placeholder={leftPlaceholder || $t('props.name.placeholder')}
                               on:change={event => property.name = event.target.value}
-                              slot="left">
-
-
-                </LabeledInput>
+                              value={property.name}
+                              slot="left"
+                />
 
 
                 <LabeledInput id={id.description}
                               labelOptions={rightLabelOptions}
                               placeholder={rightPlaceholder || $t('props.description.placeholder')}
                               on:change={event => property.description = event.target.value}
+                              value={property.description}
                               slot="right"
                 />
             </InputFlexContainer>
