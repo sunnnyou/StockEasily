@@ -130,6 +130,21 @@
                                        }}
                         />
                     {/each}
+                    <PropertyInput editInitially={true}
+                                   id={{name: 'prop-name', description: 'prop-description'}}
+                                   leftLabelOptions={{
+                                           className: 'text-gray-600 ml-2',
+                                           isBold: true,
+                                           text: $t('props.name')
+                                       }}
+                                   parentId="prop-parent-new"
+                                   rightLabelOptions={{
+                                           className: 'text-gray-600 ml-2',
+                                           isBold: true,
+                                           text: $t('props.description')
+                                       }}
+                                   onAdd={property => onAddProperty(property)}
+                    />
                 </div>
 
 
