@@ -109,6 +109,6 @@
         />
     </div>
     {#if false}
-        <!--        <slot></slot>-->
+        <slot/>
     {/if}
 </div>
