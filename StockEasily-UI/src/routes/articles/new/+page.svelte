@@ -117,14 +117,14 @@
                         <PropertyInput editInitially={true}
                                        id={{name: 'prop-name' + i, description: 'prop-description' + i}}
                                        leftLabelOptions={{
-                                           className: 'text-gray-600',
+                                           className: 'text-gray-600 ml-2',
                                            isBold: true,
                                            text: $t('props.name')
                                        }}
                                        parentId="prop-parent{i}"
                                        {property}
                                        rightLabelOptions={{
-                                           className: 'text-gray-600',
+                                           className: 'text-gray-600 ml-2',
                                            isBold: true,
                                            text: $t('props.description')
                                        }}
