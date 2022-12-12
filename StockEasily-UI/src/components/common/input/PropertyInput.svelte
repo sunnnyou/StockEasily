@@ -1,6 +1,6 @@
 <script lang="ts">
     import {ButtonPriority} from '$components/html/button/button-priority';
-    import {faPlus} from '@fortawesome/free-solid-svg-icons';
+    import {faPen, faPlus} from '@fortawesome/free-solid-svg-icons';
     import {onMount} from 'svelte';
     import {LabelOptions} from './label-options';
     import {PropertyRequestDto} from '../../../dto/property-request-dto';
@@ -120,7 +120,7 @@
                 }
                 }
         >
-            <FaIcon icon={faPlus}
+            <FaIcon icon={edit ? faPlus : faPen}
                     parentClass="mx-1"
             />
         </Button>
