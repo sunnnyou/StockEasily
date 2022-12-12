@@ -6,6 +6,7 @@
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
     import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
     import {t} from '$i18n/i18n';
+    import {onMount} from 'svelte';
     import {to_number} from 'svelte/internal';
 
     import Button from '$components/html/button/Button.svelte';
@@ -70,6 +71,10 @@
             console.log('selected file:', image.name);
         };
     }
+
+    onMount(() => {
+        console.debug('Showing', inputData.properties.length, 'properties');
+    });
 </script>
 
 <PageContent>
