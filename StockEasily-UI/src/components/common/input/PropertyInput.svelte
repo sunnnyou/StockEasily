@@ -23,7 +23,7 @@
         text: '',
     };
     export let leftPlaceholder = '';
-    export let onAdd: Function | undefined = undefined;
+    export let onSave: Function | undefined = undefined;
     export let parentClass: string | undefined = undefined;
     export let parentId: string | undefined;
     export let parentLabelOptions: LabelOptions = {className: 'text-gray-600 font-bold mt-10', isBold: true};
@@ -61,8 +61,8 @@
         toggleEdit();
         console.log('changed to edit: ', edit);
 
-        if (!edit && onAdd) {
-            onAdd(property);
+        if (!edit && onSave) {
+            onSave(property);
         }
     }
 </script>

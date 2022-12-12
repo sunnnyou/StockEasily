@@ -55,6 +55,10 @@
         // }
     }
 
+    function onSaveProperty(property: PropertyRequestDto) {
+        console.log('new property', property);
+    }
+
     function onImageSelected(event) {
         const image = event.target.files[0];
         console.log('image size:', image.size);
@@ -149,7 +153,7 @@
                                            isBold: true,
                                            text: $t('props.description')
                                        }}
-                                   onAdd={property => onAddProperty(property)}
+                                   onSave={property => onSaveProperty(property)}
                     />
                 </div>
 
