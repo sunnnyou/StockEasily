@@ -3,10 +3,12 @@ package de.throsenheim.unlimited.stockeasilyapi.controller;
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.ApiErrorDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.SearchArticleResponse;
 import de.throsenheim.unlimited.stockeasilyapi.exception.InvalidBodyException;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.service.article.ArticleService;
 import io.swagger.annotations.*;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Api(tags = {"Articles"}) // Set correct heading
 @RestController
@@ -45,6 +48,24 @@ public class ArticlesController {
         // INTERNAL SERVER ERROR should NOT occur
         final HttpStatus httpStatus = result == null ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.CREATED;
         return new ResponseEntity<>(new CreateArticleResponseDto(result), httpStatus);
+    }
+
+    @GetMapping(path = "/{articleId}", consumes = {"*/*"})
+    public ResponseEntity<SearchArticleResponse> searchArticle(
+            @PathVariable String articleId) {
+        try {
+            final Optional<Article> resultOptional = articleService.search(Long.parseLong(articleId));
+            if(resultOptional.isPresent()) {
+                final Article result = resultOptional.get();
+                final HttpStatus httpStatus = HttpStatus.CREATED;
+                return new ResponseEntity<>(new SearchArticleResponse(result), httpStatus);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (NumberFormatException ex) {
+            // log
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }

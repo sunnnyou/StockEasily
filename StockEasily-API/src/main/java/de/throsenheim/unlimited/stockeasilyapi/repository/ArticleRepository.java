@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +51,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
     @Override
     public Optional<Article> findById(Long aLong) {
-        return Optional.empty();
+        return Optional.ofNullable(selectId(aLong));
     }
 
     @Override
@@ -73,7 +74,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
         List<Property> properties = article.getProperties();
         if (properties != null) {
-            if (properties.size() > 0) {
+            if (!properties.isEmpty()) {
                 Iterable<Property> resultProperties = propertyRepository.saveAll(properties);
                 properties = new LinkedList<>();
                 resultProperties.forEach(properties::add);
@@ -129,6 +130,48 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
                     LogUtil.traceFetchId(Article.class, article.getId(), LOGGER);
                     return article;
                 }
+            }
+            LOGGER.debug("Returning empty Article model");
+            return null;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Article selectId(long id) {
+        PreparedStatement preparedStatement = null;
+        final String query = "select id, name, quantity, image, categoryId from articles where id = ?";
+
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setLong(1, id);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                Article article = new Article();
+                article.setId(resultSet.getLong("id"));
+                article.setName(resultSet.getString("name"));
+                article.setQuantity(resultSet.getInt("quantity"));
+                article.setImage(resultSet.getBlob("image"));
+
+                // Setting category
+                Optional<Category> categoryOptional = categoryRepository.findById(resultSet.getLong("categoryId"));
+                categoryOptional.ifPresent(article::setCategory);
+
+                // Setting properties
+                List<Long> propertyIdList = articlePropertyRepository.findAllByArticleId(article.getId());
+                List<Property> properties = new ArrayList<>(propertyIdList.size());
+                for(long propertyId : propertyIdList) {
+                    Optional<Property> propertyOptional = propertyRepository.findById(propertyId);
+                    propertyOptional.ifPresent(properties::add);
+                }
+                article.setProperties(properties);
+
+                LogUtil.traceFetchId(Article.class, article.getId(), LOGGER);
+                return article;
             }
             LOGGER.debug("Returning empty Article model");
             return null;
