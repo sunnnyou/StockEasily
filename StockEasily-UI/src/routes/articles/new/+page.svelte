@@ -114,7 +114,7 @@
                     <HorizontalRuler className="border-b-1 border-gray-300 mt-8 mx-4"></HorizontalRuler>
 
                     {#each inputData?.properties as property, i}
-                        <PropertyInput editInitially={true}
+                        <PropertyInput editInitially={false}
                                        id={{name: 'prop-name' + i, description: 'prop-description' + i}}
                                        leftLabelOptions={{
                                            className: 'text-gray-600 ml-2',
