@@ -37,6 +37,7 @@
     let inputRef: HTMLElement;
 </script>
 
+<!-- special props: min, max, step -->
 {#if containsMinMaxStep(type)}
     <input class={className}
            {id}
@@ -51,6 +52,7 @@
            on:input
            use:typeAction
     >
+<!-- special props: maxlength, placeholder -->
 {:else if containsPlaceholder(type)}
     <input class={className}
            {id}
@@ -64,6 +66,7 @@
            on:input
            use:typeAction
     >
+<!-- special props: accept, placeholder -->
 {:else if type === InputType.File}
     {#if previewImageOptions?.show}
         {#if previewImageOptions.src}
@@ -120,7 +123,6 @@
            disabled
            {id}
            {name}
-           {placeholder}
            {title}
            {type}
            {value}
@@ -133,7 +135,6 @@
     <input class={className}
            {id}
            {name}
-           {placeholder}
            {title}
            {type}
            {value}
