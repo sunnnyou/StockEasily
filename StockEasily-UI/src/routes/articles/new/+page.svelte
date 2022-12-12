@@ -131,7 +131,7 @@
                         />
                     {/each}
                     <PropertyInput editInitially={true}
-                                   id={{name: 'prop-name', description: 'prop-description'}}
+                                   id={{name: 'prop-name-new', description: 'prop-description-new'}}
                                    leftLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
