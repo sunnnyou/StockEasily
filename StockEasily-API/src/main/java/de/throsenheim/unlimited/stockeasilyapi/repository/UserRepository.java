@@ -36,8 +36,7 @@ public class UserRepository implements HumaneRepository<User, Long> {
 
     @Override
     public Optional<User> findById(Long aLong) {
-        User user = selectId(aLong, true);
-        return Optional.of(user);
+        return Optional.ofNullable(selectId(aLong, true));
     }
 
     @Override
