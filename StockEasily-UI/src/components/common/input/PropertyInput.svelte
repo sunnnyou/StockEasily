@@ -27,7 +27,7 @@
     export let parentClass: string | undefined = undefined;
     export let parentId: string | undefined;
     export let parentLabelOptions: LabelOptions = {className: 'text-gray-600 font-bold mt-10', isBold: true};
-    export let property: PropertyRequestDto;
+    export let property: PropertyRequestDto | undefined = undefined;
     export let rightLabelOptions: LabelOptions = {
         className: '',
         hide: false,
