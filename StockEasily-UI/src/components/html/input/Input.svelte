@@ -40,6 +40,7 @@
 <!-- special props: min, max, step -->
 {#if containsMinMaxStep(type)}
     <input class={className}
+           {disabled}
            {id}
            max={max?.length > 0 ? max : ''}
            min={min?.length > 0 ? min : ''}
@@ -55,6 +56,7 @@
 <!-- special props: maxlength, placeholder -->
 {:else if containsPlaceholder(type)}
     <input class={className}
+           {disabled}
            {id}
            maxlength={maxLength}
            {name}
@@ -118,21 +120,9 @@
         </div>
         <div class="text-center">{$t(files?.length > 0 ? 'general.replaceImage' : 'general.chooseImage')}</div>
     </div>
-{:else if disabled}
-    <input class={className}
-           disabled
-           {id}
-           {name}
-           {title}
-           {type}
-           {value}
-           on:change
-           on:keydown
-           on:input
-           use:typeAction
-    >
 {:else}
     <input class={className}
+           {disabled}
            {id}
            {name}
            {title}
