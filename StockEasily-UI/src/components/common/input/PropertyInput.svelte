@@ -15,9 +15,6 @@
     export let addMarginTop: boolean = true;
     export let editInitially = false;
     export let id: { name: string, description: string };
-    export let parentClass: string | undefined = undefined;
-    export let parentId: string | undefined;
-    export let parentLabelOptions: LabelOptions = {className: 'text-gray-600 font-bold mt-10', isBold: true};
     export let leftLabelOptions: LabelOptions = {
         className: '',
         hide: false,
@@ -26,6 +23,10 @@
         text: '',
     };
     export let leftPlaceholder = '';
+    export let onAdd: Function | undefined = undefined;
+    export let parentClass: string | undefined = undefined;
+    export let parentId: string | undefined;
+    export let parentLabelOptions: LabelOptions = {className: 'text-gray-600 font-bold mt-10', isBold: true};
     export let property: PropertyRequestDto;
     export let rightLabelOptions: LabelOptions = {
         className: '',
