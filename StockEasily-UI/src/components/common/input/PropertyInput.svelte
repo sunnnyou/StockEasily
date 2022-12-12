@@ -97,13 +97,13 @@
                                     leftClass="w-1/2"
                                     rightClass="w-1/2"
                 >
-                    <p class="h-10 leading-10"
+                    <p class="h-10 leading-10 mt-5 pl-2"
                        slot="left"
                     >
-                        {property.name}
+                        {property.name}:
                     </p>
 
-                    <p class="h-10 leading-10"
+                    <p class="h-10 leading-10 mt-5"
                        slot="right"
                     >
                         {property.description}
