@@ -21,7 +21,6 @@ export const enum InputType {
     Time = 'time',
     Url = 'url',
     Week = 'week',
-    ExternalSelect = 'externalSelect'
 }
 
 export function containsMinMaxStep(type: InputType): boolean {
