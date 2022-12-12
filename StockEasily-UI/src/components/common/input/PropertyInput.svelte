@@ -97,17 +97,17 @@
                                     leftClass="w-1/2"
                                     rightClass="w-1/2"
                 >
-                    <p class="h-10 leading-10 mt-5 pl-2"
-                       slot="left"
+                    <span class="bg-blue-100 text-blue-800 text-l font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 h-10 leading-10 mt-5 pl-2"
+                          slot="left"
                     >
-                        {property.name}:
-                    </p>
+                        {property.name}
+                    </span>
 
-                    <p class="h-10 leading-10 mt-5"
-                       slot="right"
+                    <span class="bg-gray-100 text-gray-800 text-l font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300 h-10 leading-10 mt-5 pl-2"
+                          slot="right"
                     >
                         {property.description}
-                    </p>
+                    </span>
                 </InputFlexContainer>
             {/if}
         </div>
