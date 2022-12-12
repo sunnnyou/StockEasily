@@ -100,13 +100,13 @@
                     <span class="bg-blue-100 text-blue-800 text-l font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 h-10 leading-10 mt-5 pl-2"
                           slot="left"
                     >
-                        {property.name}
+                        {property?.name || ''}
                     </span>
 
                     <span class="bg-gray-100 text-gray-800 text-l font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300 h-10 leading-10 mt-5 pl-2"
                           slot="right"
                     >
-                        {property.description}
+                        {property?.description || ''}
                     </span>
                 </InputFlexContainer>
             {/if}
