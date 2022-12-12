@@ -1,22 +1,23 @@
 <script lang="ts">
     import {AcceptType} from '$components/common/input/file/accept-type';
-    import PropertyInput from '$components/common/input/PropertyInput.svelte';
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {ButtonType} from '$components/html/button/button-type';
-    import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
     import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
+    import {PropertyRequestDto} from '../../../dto/property-request-dto';
     import {t} from '$i18n/i18n';
     import {onMount} from 'svelte';
     import {to_number} from 'svelte/internal';
 
     import Button from '$components/html/button/Button.svelte';
     import Form from '$components/html/Form.svelte';
+    import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
     import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
     import LabeledFileInput from '$components/common/input/file/LabeledFileInput.svelte';
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
     import LabeledNumericInput from '$components/common/input/LabeledNumericInput.svelte';
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
+    import PropertyInput from '$components/common/input/PropertyInput.svelte';
 
     const IMAGE_MAXIMUM_SIZE = 524288;
 
