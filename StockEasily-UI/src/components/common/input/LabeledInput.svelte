@@ -110,6 +110,12 @@
                on:input
         />
     </div>
+    <!--
+     Note: This is a workaround to hide the falsy JS warning:
+     '<LabeledInput> received an unexpected slot "default"'
+     which is currently a bug in svelte and appears when passing slots without whitespaces:
+     See more: https://github.com/sveltejs/svelte/issues/4546#issuecomment-630756451
+    -->
     {#if false}
         <slot/>
     {/if}
