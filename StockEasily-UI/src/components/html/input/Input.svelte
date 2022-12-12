@@ -41,8 +41,8 @@
 {#if containsMinMaxStep(type)}
     <input class={className}
            {id}
-           min={min?.length > 0 ? min : ''}
            max={max?.length > 0 ? max : ''}
+           min={min?.length > 0 ? min : ''}
            {name}
            {step}
            {title}
