@@ -6,6 +6,9 @@ import de.throsenheim.unlimited.stockeasilyapi.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class ArticleServiceImpl implements ArticleService {
 
@@ -20,5 +23,20 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Article create(CreateArticleRequestDto request) {
         return this.articleRepository.save(new Article(request));
+    }
+
+    @Override
+    public Optional<Article> search(long id) {
+        return articleRepository.findById(id);
+    }
+
+    @Override
+    public List<Article> searchAllByName(String name) {
+        return articleRepository.findAllByName(name);
+    }
+
+    @Override
+    public List<Article> searchAll() {
+        return articleRepository.findAll();
     }
 }

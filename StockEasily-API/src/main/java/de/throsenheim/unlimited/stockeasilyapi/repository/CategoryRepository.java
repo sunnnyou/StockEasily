@@ -32,7 +32,7 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
 
     @Override
     public Optional<Category> findById(Long aLong) {
-        return Optional.empty();
+        return Optional.ofNullable(selectId(aLong));
     }
 
     @Override
@@ -105,6 +105,32 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
                 }
             }
             return null;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Category selectId(long id) {
+        PreparedStatement preparedStatement = null;
+        final String query = "SELECT name FROM categories WHERE id = ? LIMIT 1";
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, id);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            Category result = null;
+            if (resultSet.next()) {
+                result = new Category();
+                result.setId(id);
+                result.setName(resultSet.getString("name"));
+            } else {
+                LOGGER.debug("Could not find category with id {}", id);
+            }
+            return result;
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);

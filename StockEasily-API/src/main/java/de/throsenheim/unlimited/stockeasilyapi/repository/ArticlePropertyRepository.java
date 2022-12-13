@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -18,7 +20,7 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticlePropertyRepository.class);
 
-    private SqlConnection connection;
+    private final SqlConnection connection;
 
     @Autowired
     public ArticlePropertyRepository(DatabaseConnectionFactory databaseConnectionFactory) {
@@ -127,6 +129,28 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
             return null;
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Long> findAllByArticleId(long articleId) {
+        final String query = "SELECT propertyId FROM articles_properties WHERE articleId = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, articleId);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Long> propertyIdList = new ArrayList<>(resultSet.getFetchSize());
+            while (resultSet.next()) {
+                long propertyId = resultSet.getLong("propertyId");
+                propertyIdList.add(propertyId);
+            }
+            LOGGER.info("Retrieved articleProperty list from data bank with size: {}", propertyIdList.size());
+            return propertyIdList;
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

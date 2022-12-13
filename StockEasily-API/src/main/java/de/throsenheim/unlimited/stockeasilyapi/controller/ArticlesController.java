@@ -3,6 +3,7 @@ package de.throsenheim.unlimited.stockeasilyapi.controller;
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.ApiErrorDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.SearchArticleResponse;
 import de.throsenheim.unlimited.stockeasilyapi.exception.InvalidBodyException;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.service.article.ArticleService;
@@ -12,8 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 @Api(tags = {"Articles"}) // Set correct heading
 @RestController
@@ -47,4 +51,62 @@ public class ArticlesController {
         return new ResponseEntity<>(new CreateArticleResponseDto(result), httpStatus);
     }
 
+//    @GetMapping(path = "/{articleId}", consumes = {"*/*"})
+//    public ResponseEntity<SearchArticleResponse> searchArticle(
+//            @PathVariable String articleId) {
+//        try {
+//            final Optional<Article> resultOptional = articleService.search(Long.parseLong(articleId));
+//            if (resultOptional.isPresent()) {
+//                final Article result = resultOptional.get();
+//                final HttpStatus httpStatus = HttpStatus.OK;
+//                return new ResponseEntity<>(new SearchArticleResponse(result), httpStatus);
+//            } else {
+//                return ResponseEntity.notFound().build();
+//            }
+//        } catch (NumberFormatException ex) {
+//            // log
+//            return ResponseEntity.badRequest().build();
+//        }
+//    }
+
+    @ApiOperation(value = "Get article list with specific name", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Article list issued", response = List.class),
+            @ApiResponse(code = 400, message = "Api parameter not a string", response = HttpClientErrorException.BadRequest.class),
+            @ApiResponse(code = 404, message = "No articles with this name found", response = HttpClientErrorException.NotFound.class)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(path = "/{articleName}", consumes = {"*/*"})
+    public ResponseEntity<List<Article>> searchAllArticlesByName(
+            @PathVariable String articleName) {
+        final List<Article> resultList = articleService.searchAllByName(articleName);
+        return validateResponseList(resultList);
+    }
+
+    @ApiOperation(value = "Get all articles in list", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Article list issued", response = List.class),
+            @ApiResponse(code = 400, message = "Api parameter not a string", response = HttpClientErrorException.BadRequest.class),
+            @ApiResponse(code = 404, message = "No articles found", response = HttpClientErrorException.NotFound.class)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(consumes = {"*/*"})
+    public ResponseEntity<List<Article>> searchAllArticles() {
+        final List<Article> resultList = articleService.searchAll();
+        return validateResponseList(resultList);
+    }
+
+    private ResponseEntity<List<Article>> validateResponseList(List<Article> resultList) {
+        try {
+            if (resultList.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            } else {
+                final HttpStatus httpStatus = HttpStatus.OK;
+                return new ResponseEntity<>(resultList, httpStatus);
+            }
+        } catch (NumberFormatException ex) {
+            // log
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }
