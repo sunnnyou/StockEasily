@@ -4,3 +4,68 @@
 @tailwind components;
 /*noinspection CssInvalidAtRule*/
 @tailwind utilities;
+
+/*noinspection CssInvalidAtRule*/
+.btn {
+    @apply font-bold py-2 px-4 rounded;
+}
+
+/*noinspection CssInvalidAtRule*/
+.btn-blue {
+    @apply bg-blue-500 text-white;
+}
+
+/*noinspection CssInvalidAtRule*/
+.btn-light-gray {
+    @apply bg-gray-500 text-white;
+}
+
+/*noinspection CssInvalidAtRule*/
+.btn-blue:hover {
+    @apply bg-blue-600;
+}
+
+/* Use style from svelte-select */
+
+input {
+    border: 1px solid #d8dbdf;
+    border-radius: 3px;
+    padding: 0 1rem;
+}
+
+input::-webkit-scrollbar-thumb { /* Foreground */
+    background: #999;
+    width: 200%;
+}
+
+input.file {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+}
+
+input.file::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+input.file::before {
+    background: linear-gradient(to bottom, #f9f9f9, #e3e3e3);
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px 8px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    cursor: pointer;
+    text-shadow: 1px 1px #fff;
+    font-weight: 700;
+    font-size: 10pt;
+}
+
+input.file:hover::before {
+    border-color: black;
+}
+
+input.file:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}

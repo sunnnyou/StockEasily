@@ -1,25 +1,39 @@
 <script lang="ts">
-
+    import {ButtonPriority} from './button-priority';
     import {ButtonType} from './button-type';
 
     export let className = '';
     export let id = '';
     export let name = '';
-    export let onClick: Function | undefined;
+    export let priority: ButtonPriority = ButtonPriority.Secondary;
+    export let title = '';
     export let type = ButtonType.Button;
     export let value = '';
 
-    function onClickCallback() {
-        if (onClick) {
-            onClick();
+    function getButtonClass() {
+        return priority === ButtonPriority.Transparent ? '' : 'btn';
+    }
+
+    function getPriorityClass() {
+        switch (priority) {
+            case ButtonPriority.Primary:
+                return 'btn-blue';
+            case ButtonPriority.Secondary:
+                return 'btn-light-gray';
+            case ButtonPriority.Transparent:
+                return '';
         }
     }
 </script>
 
-<button {id} class={className} {name} {type} on:click={onClickCallback}>
-    {#if $$slots.default}
-        <slot/>
-    {:else if value?.length > 0}
+<button class="{getButtonClass()} {getPriorityClass() + (className?.length > 0 ? ' ' + className : '')}"
+        {id}
+        {name}
+        {title}
+        {type}
+        on:click
+>
+    <slot>
         {value}
-    {/if}
+    </slot>
 </button>

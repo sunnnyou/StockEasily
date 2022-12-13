@@ -21,5 +21,23 @@ export const enum InputType {
     Time = 'time',
     Url = 'url',
     Week = 'week',
+}
 
+export function containsMinMaxStep(type: InputType): boolean {
+    return type === InputType.Number
+        || type === InputType.Range
+        || type === InputType.Date
+        || type === InputType.DatetimeLocal
+        || type === InputType.Month
+        || type === InputType.Time
+        || type === InputType.Week;
+}
+
+export function containsPlaceholder(type: InputType): boolean {
+    return type === InputType.Text
+        || type === InputType.Search
+        || type === InputType.Url
+        || type === InputType.Tel
+        || type === InputType.Email
+        || type === InputType.Password;
 }

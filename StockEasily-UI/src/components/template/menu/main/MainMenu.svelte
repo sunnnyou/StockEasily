@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {faChartArea, faEnvelope, faHome, faTasks, faWallet} from '@fortawesome/free-solid-svg-icons';
+    import {faChartArea, faHome, faPlus, faTasks, faWallet} from '@fortawesome/free-solid-svg-icons';
     import MainMenuButton from './MainMenuButton.svelte';
 
     export let buttons = [
@@ -14,9 +14,9 @@
             icon: faTasks,
         },
         {
-            href: '/messages',
-            i18n: 'menu.messages',
-            icon: faEnvelope,
+            href: '/articles/new',
+            i18n: 'menu.addArticle',
+            icon: faPlus,
         },
         {
             href: '/analytics',
@@ -38,3 +38,10 @@
         </li>
     {/each}
 </ul>
+
+<style>
+    ul {
+        position: relative;
+        top: 5px;
+    }
+</style>

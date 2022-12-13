@@ -2,14 +2,15 @@
     import Fa from 'svelte-fa/src/fa.svelte';
 
     export let className = '';
-    export let slotClass = '';
+    export let color = '';
     export let fw = false;
     export let icon: any;
+    export let parentClass = '';
     export let scale = 1;
-    export let color = '';
+    export let slotClass = '';
 </script>
 
-<span class="inline flex-container">
+<span class="inline flex-container{parentClass?.length > 0 ? ' ' + parentClass : ''}">
     <i class="inline-block{className ? ' ' + className : ''}">
         <Fa {icon} {fw} {color} {scale}/>
     </i>
@@ -19,6 +20,7 @@
 </span>
 
 <style>
+    /*noinspection CssUnusedSymbol*/
     .flex-container {
         display: flex;
         flex-wrap: nowrap;
@@ -26,8 +28,6 @@
     }
 
     .flex-container > i {
-        /*width: 100px;*/
-        /*margin: 10px;*/
         text-align: center;
         line-height: 20px;
     }
