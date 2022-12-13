@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -68,6 +69,13 @@ public class ArticlesController {
 //        }
 //    }
 
+    @ApiOperation(value = "Get article list with specific name", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Article list issued", response = List.class),
+            @ApiResponse(code = 400, message = "Api parameter not a string", response = HttpClientErrorException.BadRequest.class),
+            @ApiResponse(code = 404, message = "No articles with this name found", response = HttpClientErrorException.NotFound.class)
+    })
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/{articleName}", consumes = {"*/*"})
     public ResponseEntity<List<Article>> searchAllArticlesByName(
             @PathVariable String articleName) {
@@ -75,6 +83,13 @@ public class ArticlesController {
         return validateResponseList(resultList);
     }
 
+    @ApiOperation(value = "Get all articles in list", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Article list issued", response = List.class),
+            @ApiResponse(code = 400, message = "Api parameter not a string", response = HttpClientErrorException.BadRequest.class),
+            @ApiResponse(code = 404, message = "No articles found", response = HttpClientErrorException.NotFound.class)
+    })
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping(consumes = {"*/*"})
     public ResponseEntity<List<Article>> searchAllArticles() {
         final List<Article> resultList = articleService.searchAll();
