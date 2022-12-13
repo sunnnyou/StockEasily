@@ -53,7 +53,7 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
 
     @Override
     public ArticleProperty save(ArticleProperty relation) {
-        return save(relation, true);
+        return save(relation, false);
     }
 
     @Override
