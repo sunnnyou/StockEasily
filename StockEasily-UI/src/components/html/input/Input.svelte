@@ -108,12 +108,15 @@
                {value}
                bind:this={inputRef}
                on:change
-               on:keydown
+               on:keyup
                on:input={handleInput}
                use:typeAction
         >
     {/if}
-    <div class="mt-5 w-full cursor-pointer" on:click={() => inputRef.click()}>
+    <div class="mt-5 w-full cursor-pointer"
+         on:click={() => inputRef.click()}
+         on:keyup
+    >
         <div class="w-14 h-14 mx-auto">
             <FaIcon className="inset-0 w-14 h-14 flex justify-center items-center" icon={faFileArrowUp}
                     scale="3"></FaIcon>
@@ -129,7 +132,7 @@
            {type}
            {value}
            on:change
-           on:keydown
+           on:keyup
            on:input
            use:typeAction
     >
