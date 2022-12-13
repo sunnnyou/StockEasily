@@ -14,27 +14,14 @@
 
     export let addMarginTop: boolean = true;
     export let editInitially = false;
-    export let id: { name: string, description: string };
-    export let leftLabelOptions: LabelOptions = {
-        className: '',
-        hide: false,
-        isBold: true,
-        placeAfterInput: false,
-        text: '',
-    };
+    export let leftLabelOptions: LabelOptions | undefined;
     export let leftPlaceholder = '';
     export let onSave: Function | undefined = undefined;
     export let parentClass: string | undefined = undefined;
     export let parentId: string | undefined;
-    export let parentLabelOptions: LabelOptions = {className: 'text-gray-600 font-bold mt-10', isBold: true};
+    export let parentLabelOptions: LabelOptions;
     export let property: PropertyRequestDto | undefined = undefined;
-    export let rightLabelOptions: LabelOptions = {
-        className: '',
-        hide: false,
-        isBold: true,
-        placeAfterInput: false,
-        text: '',
-    };
+    export let rightLabelOptions: LabelOptions | undefined;
     export let rightPlaceholder = '';
 
     let edit = false;
@@ -70,7 +57,10 @@
 <div>
     <div class="flex flex-col{parentClass ? ' ' + parentClass : ''}">
         <div class="flex items-end h-10 {addMarginTop ? ' mt-2' : ''}">
-            <Label className={parentLabelOptions.className}>
+            <Label className={parentLabelOptions.className}
+                   name={parentLabelOptions.name}
+                   bold={parentLabelOptions.isBold}
+            >
                 {#if parentLabelOptions?.text?.length > 0}
                     {parentLabelOptions.text}
                 {:else}
@@ -79,23 +69,23 @@
             </Label>
         </div>
     </div>
-    <div class="w-full flex flex-row">
+    <div class="w-full flex flex-row"
+         id={parentLabelOptions.name}
+    >
         <div class="w-11/12">
             <InputFlexContainer {parentId}
                                 leftClass="w-1/2"
                                 rightClass="w-1/2"
             >
                 <LabeledInput disabled={!edit}
-                              id={id.name}
                               labelOptions={leftLabelOptions}
                               placeholder={leftPlaceholder || $t('props.name.placeholder')}
-                              value={property?.name || ''}
+                              value={property?.name}
                               on:change={event => property.name = event.target.value}
                               slot="left"
                 />
 
                 <LabeledInput disabled={!edit}
-                              id={id.description}
                               labelOptions={rightLabelOptions}
                               placeholder={rightPlaceholder || $t('props.description.placeholder')}
                               value={property?.description}
@@ -104,8 +94,7 @@
                 />
             </InputFlexContainer>
         </div>
-        <Button
-                className="self-end h-10"
+        <Button className="self-end h-10"
                 priority={ButtonPriority.Transparent}
                 on:click={() => onButtonClick()}
         >

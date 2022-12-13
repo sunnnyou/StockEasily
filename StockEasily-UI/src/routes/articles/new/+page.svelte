@@ -92,8 +92,12 @@
                 <div class="float-left w-1/2">
                     <!-- input name -->
                     <LabeledInput addMarginTop={false}
-                                  id="article-name"
-                                  labelOptions={{className: 'text-gray-600', isBold: true, text: $t('general.name')}}
+                                  labelOptions={{
+                                      className: 'text-gray-600',
+                                      isBold: true,
+                                      name: 'article-name',
+                                      text: $t('general.name')
+                                  }}
                                   placeholder={$t('general.name.placeholder')}
                                   on:change={event => inputData.name = event.target.value}
                     />
@@ -102,17 +106,25 @@
                     <InputFlexContainer leftClass="w-65p"
                                         rightClass="w-34p"
                     >
-                        <LabeledInput id="article-category"
-                                      labelOptions={{className: 'text-gray-600', isBold: true, text: $t('general.category')}}
+                        <LabeledInput labelOptions={{
+                                          className: 'text-gray-600',
+                                          isBold: true,
+                                          name: 'article-category',
+                                          text: $t('general.category')
+                                      }}
                                       placeholder={$t('general.category.placeholder')}
                                       on:change={event => inputData.category.name = event.target.value}
                                       slot="left"
                         />
 
-                        <LabeledNumericInput id="article-quantity"
-                                             className="w-full text-sm"
+                        <LabeledNumericInput className="w-full text-sm"
                                              iconParentClass="pr-1 mt-1.5 text-sm"
-                                             labelOptions={{className: 'text-gray-600', isBold: true, text: $t('general.quantity')}}
+                                             labelOptions={{
+                                                 className: 'text-gray-600',
+                                                 isBold: true,
+                                                 name: 'article-quantity',
+                                                 text: $t('general.quantity')
+                                             }}
                                              min="0"
                                              offerSmallerSteps={true}
                                              on:change={event => inputData.quantity = to_number(event.target.value)}
@@ -125,33 +137,45 @@
 
                     {#each inputData?.properties as property, i}
                         <PropertyInput editInitially={false}
-                                       id={{name: 'prop-name' + i, description: 'prop-description' + i}}
                                        leftLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
-                                           text: $t('props.name')
+                                           name: 'prop-inner-name' + i,
+                                           text: $t('props.name'),
                                        }}
                                        parentId="prop-parent{i}"
+                                       parentLabelOptions={{
+                                           className: 'text-gray-600 mt-10',
+                                           isBold: true,
+                                           name: 'prop-inner-parent' + i,
+                                       }}
                                        {property}
                                        rightLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
-                                           text: $t('props.description')
+                                           name: 'prop-inner-description' + i,
+                                           text: $t('props.description'),
                                        }}
                         />
                     {/each}
                     <PropertyInput editInitially={true}
-                                   id={{name: 'prop-name-new', description: 'prop-description-new'}}
                                    leftLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
-                                           text: $t('props.name')
+                                           name: 'prop-inner-name-new',
+                                           text: $t('props.name'),
                                        }}
                                    parentId="prop-parent-new"
+                                   parentLabelOptions={{
+                                           className: 'text-gray-600 mt-10',
+                                           isBold: true,
+                                           name: 'prop-inner-parent-new',
+                                       }}
                                    rightLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
-                                           text: $t('props.description')
+                                           name: 'prop-inner-description-new',
+                                           text: $t('props.description'),
                                        }}
                                    onSave={property => onSaveProperty(property)}
                     />
@@ -164,7 +188,12 @@
                                           addMarginTop={false}
                                           allowMultiple={false}
                                           className="h-full"
-                                          labelOptions={{className: 'text-gray-600', isBold: true, text: $t('general.image')}}
+                                          labelOptions={{
+                                              className: 'text-gray-600',
+                                              isBold: true,
+                                              name: 'article-image',
+                                              text: $t('general.image')
+                                          }}
                                           previewImageOptions={{
                                             alt: selectedFileName,
                                             show: true,

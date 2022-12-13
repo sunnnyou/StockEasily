@@ -14,15 +14,7 @@
     export let disabled = false;
     export let files: File[] = [];
     export let className = '';
-    export let forName: string | undefined = undefined;
-    export let id: string;
-    export let labelOptions: LabelOptions = {
-        className: '',
-        hide: false,
-        isBold: true,
-        placeAfterInput: false,
-        text: '',
-    };
+    export let labelOptions: LabelOptions | undefined;
     export let max = '';
     export let min = '';
     export let name = '';
@@ -55,9 +47,9 @@
             {#if !labelOptions.placeAfterInput}
                 <div class={getLabelParentClass()}>
                     <Label bold={labelOptions.isBold}
-                           className={labelOptions.className || ''}
-                           {forName}
-                           {id}
+                           className={labelOptions.className}
+                           id={labelOptions.id}
+                           name={labelOptions.name}
                     >
                         <slot name="label">
                             {#if labelOptions.text}
@@ -75,9 +67,9 @@
             {#if labelOptions.placeAfterInput}
                 <div class={getLabelParentClass()}>
                     <Label bold={labelOptions.isBold}
-                           className={labelOptions.className || ''}
-                           {forName}
-                           {id}
+                           className={labelOptions.className}
+                           id={labelOptions.id}
+                           name={labelOptions.name}
                     >
                         <slot name="label">
                             {#if labelOptions.text}
@@ -95,10 +87,10 @@
                {allowMultiple}
                {className}
                {disabled}
-               {id}
+               id={labelOptions.name}
                {max}
                {min}
-               name={name?.length > 0 ? name : id}
+               {name}
                {placeholder}
                {previewImageOptions}
                {step}
