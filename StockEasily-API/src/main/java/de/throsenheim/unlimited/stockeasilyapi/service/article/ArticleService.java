@@ -11,7 +11,7 @@ public interface ArticleService {
 
     Optional<Article> search(long id);
 
-    Article searchByName(String name);
-
     List<Article> searchAllByName(String name);
+
+    List<Article> searchAll();
 }

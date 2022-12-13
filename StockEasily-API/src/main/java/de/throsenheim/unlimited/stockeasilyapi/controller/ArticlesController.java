@@ -1,7 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.controller;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
-import de.throsenheim.unlimited.stockeasilyapi.dto.request.SearchArticleByNameRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.ApiErrorDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.SearchArticleResponse;
@@ -9,7 +8,6 @@ import de.throsenheim.unlimited.stockeasilyapi.exception.InvalidBodyException;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.service.article.ArticleService;
 import io.swagger.annotations.*;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,30 +50,40 @@ public class ArticlesController {
         return new ResponseEntity<>(new CreateArticleResponseDto(result), httpStatus);
     }
 
-    @GetMapping(path = "/{articleId}", consumes = {"*/*"})
-    public ResponseEntity<SearchArticleResponse> searchArticle(
-            @PathVariable String articleId) {
-        try {
-            final Optional<Article> resultOptional = articleService.search(Long.parseLong(articleId));
-            if(resultOptional.isPresent()) {
-                final Article result = resultOptional.get();
-                final HttpStatus httpStatus = HttpStatus.OK;
-                return new ResponseEntity<>(new SearchArticleResponse(result), httpStatus);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (NumberFormatException ex) {
-            // log
-            return ResponseEntity.badRequest().build();
-        }
+//    @GetMapping(path = "/{articleId}", consumes = {"*/*"})
+//    public ResponseEntity<SearchArticleResponse> searchArticle(
+//            @PathVariable String articleId) {
+//        try {
+//            final Optional<Article> resultOptional = articleService.search(Long.parseLong(articleId));
+//            if (resultOptional.isPresent()) {
+//                final Article result = resultOptional.get();
+//                final HttpStatus httpStatus = HttpStatus.OK;
+//                return new ResponseEntity<>(new SearchArticleResponse(result), httpStatus);
+//            } else {
+//                return ResponseEntity.notFound().build();
+//            }
+//        } catch (NumberFormatException ex) {
+//            // log
+//            return ResponseEntity.badRequest().build();
+//        }
+//    }
+
+    @GetMapping(path = "/{articleName}", consumes = {"*/*"})
+    public ResponseEntity<List<Article>> searchAllArticlesByName(
+            @PathVariable String articleName) {
+        final List<Article> resultList = articleService.searchAllByName(articleName);
+        return validateResponseList(resultList);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Article>> searchAllArticlesByName(
-            @ApiParam(name = "request") @Valid @RequestBody SearchArticleByNameRequestDto request) {
+    @GetMapping(consumes = {"*/*"})
+    public ResponseEntity<List<Article>> searchAllArticles() {
+        final List<Article> resultList = articleService.searchAll();
+        return validateResponseList(resultList);
+    }
+
+    private ResponseEntity<List<Article>> validateResponseList(List<Article> resultList) {
         try {
-            final List<Article> resultList = articleService.searchAllByName(request.getName());
-            if(resultList.isEmpty()) {
+            if (resultList.isEmpty()) {
                 return ResponseEntity.notFound().build();
             } else {
                 final HttpStatus httpStatus = HttpStatus.OK;
@@ -86,5 +94,4 @@ public class ArticlesController {
             return ResponseEntity.badRequest().build();
         }
     }
-
 }

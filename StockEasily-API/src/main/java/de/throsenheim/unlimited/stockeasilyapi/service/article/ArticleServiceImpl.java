@@ -31,12 +31,12 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Article searchByName(String name) {
-        return articleRepository.findByName(name);
+    public List<Article> searchAllByName(String name) {
+        return articleRepository.findAllByName(name);
     }
 
     @Override
-    public List<Article> searchAllByName(String name) {
-        return articleRepository.findAllByName(name);
+    public List<Article> searchAll() {
+        return articleRepository.findAll();
     }
 }
