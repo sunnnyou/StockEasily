@@ -54,7 +54,9 @@
             if (onSave) {
                 onSave(internalProperty);
             }
-            internalProperty = {description: '', name: ''};
+            if (forceEdit) {
+                internalProperty = {description: '', name: ''};
+            }
         }
     }
 </script>
