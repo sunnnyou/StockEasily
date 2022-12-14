@@ -49,8 +49,12 @@
     function onButtonClick() {
         toggleEdit();
 
-        if (!edit && onSave) {
-            onSave(property);
+        // on saved
+        if (forceEdit || !edit) {
+            if (onSave) {
+                onSave(propertyCopy);
+            }
+            propertyCopy = {description: '', name: ''};
         }
     }
 </script>
