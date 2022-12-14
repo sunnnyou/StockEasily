@@ -25,7 +25,7 @@
     export let rightLabelOptions: LabelOptions | undefined;
     export let rightPlaceholder = '';
 
-    let edit = false;
+    let propertyCopy: PropertyRequestDto = property ? {...property} : {description: '', name: ''};
 
     onMount(() => {
         edit = editInitially;
