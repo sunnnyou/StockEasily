@@ -38,6 +38,11 @@
         rightLabelOptions = rightLabelOptions;
     }
 
+    function areFieldsEmpty() {
+        return ((internalProperty.description === undefined || internalProperty.description.length === 0)
+            && (internalProperty.name === undefined || internalProperty.name.length === 0));
+    }
+
     function toggleEdit() {
         if (forceEdit) {
             return;
@@ -47,6 +52,10 @@
     }
 
     function onButtonClick() {
+        if (edit && areFieldsEmpty()){
+            return;
+        }
+
         toggleEdit();
 
         // on saved
