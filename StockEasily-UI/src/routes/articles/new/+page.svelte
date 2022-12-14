@@ -24,6 +24,7 @@
 
     let inputData: CreateArticleRequestDto = {category: undefined, image: '', name: '', properties: [], quantity: 1};
     let selectedFileName = '';
+    let imageSelected: any;
 
     function validate(): boolean {
         return validateCreateArticleRequest(inputData);
@@ -38,9 +39,9 @@
         }
 
         const formData = new FormData();
-        // if (files.length > 0) {
-            // formData.append('file', files[0]);
-        // }
+        if (imageSelected.length > 0) {
+            formData.append('file', imageSelected);
+        }
         formData.set('name', inputData.name);
         formData.set('category', '' + inputData.category);
         formData.set('quantity', '' + inputData.quantity);
@@ -74,20 +75,20 @@
     }
 
     function onImageSelected(event) {
-        const image = event.target.files[0];
-        console.log('image size:', image.size);
-        if (image.size > IMAGE_MAXIMUM_SIZE) {
-            console.warn('Image select is too big', '(' + image.size + ' bytes or', image.size / 1024 + 'KB )', 'image maximum size: ', IMAGE_MAXIMUM_SIZE / 1024, 'bytes');
+        imageSelected = event.target.files[0];
+        console.log('image size:', imageSelected.size);
+        if (imageSelected.size > IMAGE_MAXIMUM_SIZE) {
+            console.warn('Image select is too big', '(' + imageSelected.size + ' bytes or', imageSelected.size / 1024 + 'KB )', 'image maximum size: ', IMAGE_MAXIMUM_SIZE / 1024, 'bytes');
             return;
         }
 
         // console.log(image, image);
         let reader = new FileReader();
-        reader.readAsDataURL(image);
+        reader.readAsDataURL(imageSelected);
         reader.onload = e => {
             inputData.image = e.target.result;
-            selectedFileName = image.name;
-            console.log('selected file:', image.name);
+            selectedFileName = imageSelected.name;
+            console.log('selected file:', imageSelected.name);
         };
     }
 
