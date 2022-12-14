@@ -119,3 +119,9 @@
         </Button>
     </div>
 </div>
+
+<style>
+    :global(button:hover) {
+        background-color: #f0f0f0;
+    }
+</style>
