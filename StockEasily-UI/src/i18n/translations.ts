@@ -34,6 +34,7 @@ export default {
         'menu.user.account': 'My account',
         'menu.user.logout': 'Logout',
         'menu.user.notifications': 'Notifications',
+        'menu.articles': 'Articles',
 
         // props
         'props': 'Properties',
@@ -41,6 +42,15 @@ export default {
         'props.description.placeholder': 'Short description / value',
         'props.name': 'Name',
         'props.name.placeholder': 'Short name',
+
+        // articles
+        'article': 'Article',
+        'articles.name': 'Name',
+        'articles.id' : 'ID',
+        'articles.notFound': 'No articles found.',
+
+        // categories
+        'category': 'Category',
 
         // footer
         'about': 'About',

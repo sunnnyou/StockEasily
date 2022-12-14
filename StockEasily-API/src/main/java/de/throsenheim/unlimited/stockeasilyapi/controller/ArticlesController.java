@@ -83,6 +83,7 @@ public class ArticlesController {
         return validateResponseList(resultList);
     }
 
+    @CrossOrigin
     @ApiOperation(value = "Get all articles in list", response = List.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Article list issued", response = List.class),
