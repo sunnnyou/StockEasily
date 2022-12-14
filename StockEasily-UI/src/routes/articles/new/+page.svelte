@@ -101,7 +101,7 @@
     <PageCard title={$t('menu.addArticle')}>
 
         <Form className="inline-block w-full"
-              on:submit={() => handleOnSubmit()}>
+              onSubmit={handleOnSubmit}>
             <!-- Submit button -->
             <div class="float-left w-full">
                 <div class="float-left w-1/2 vr">
