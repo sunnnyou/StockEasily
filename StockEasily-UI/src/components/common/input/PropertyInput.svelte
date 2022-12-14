@@ -1,6 +1,6 @@
 <script lang="ts">
     import {ButtonPriority} from '$components/html/button/button-priority';
-    import {faPen, faPlus} from '@fortawesome/free-solid-svg-icons';
+    import {faCheck, faPen, faPlus} from '@fortawesome/free-solid-svg-icons';
     import {onMount} from 'svelte';
     import {LabelOptions} from './label-options';
     import {PropertyRequestDto} from '../../../dto/property-request-dto';
@@ -105,7 +105,7 @@
                 priority={ButtonPriority.Transparent}
                 on:click={() => onButtonClick()}
         >
-            <FaIcon icon={edit ? faPlus : faPen}
+            <FaIcon icon={forceEdit ? faPlus : (edit ? faCheck : faPen)}
                     parentClass="mx-1"
             />
         </Button>
