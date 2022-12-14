@@ -55,8 +55,16 @@
         // }
     }
 
-    function onSaveProperty(property: PropertyRequestDto) {
-        console.log('new property', property);
+    function isEditingExistingProperty(index: number) {
+        return index !== Number.NaN && inputData.properties.length > index;
+    }
+
+    function onSaveProperty(property: PropertyRequestDto, index: number = Number.NaN) {
+        if (isEditingExistingProperty(index)) {
+            inputData.properties[index] = property;
+        } else {
+            inputData.properties = [...inputData.properties, property];
+        }
     }
 
     function onImageSelected(event) {
