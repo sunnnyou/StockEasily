@@ -87,16 +87,16 @@
                 <LabeledInput disabled={!edit}
                               labelOptions={leftLabelOptions}
                               placeholder={leftPlaceholder || $t('props.name.placeholder')}
-                              value={property?.name}
-                              on:change={event => property.name = event.target.value}
+                              bind:value={propertyCopy.name}
+                              on:change={event => propertyCopy.name = event.target.value}
                               slot="left"
                 />
 
                 <LabeledInput disabled={!edit}
                               labelOptions={rightLabelOptions}
                               placeholder={rightPlaceholder || $t('props.description.placeholder')}
-                              value={property?.description}
-                              on:change={event => property.description = event.target.value}
+                              bind:value={propertyCopy.description}
+                              on:change={event => propertyCopy.description = event.target.value}
                               slot="right"
                 />
             </InputFlexContainer>
