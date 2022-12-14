@@ -62,11 +62,6 @@
             }
         }
     }
-
-    function getParam(addMode: any, editMode: any, readMode) {
-        return forceEdit ? addMode : (edit ? editMode : readMode);
-    }
-
 </script>
 
 <div>
@@ -113,10 +108,10 @@
         </div>
         <Button className="self-end h-10"
                 priority={ButtonPriority.Transparent}
-                title={$t(getParam('general.add','general.save','general.edit'))}
+                title={forceEdit ? $t('general.add') : (edit ? $t('general.save') : $t('general.edit'))}
                 on:click={() => onButtonClick()}
         >
-            <FaIcon icon={getParam(faPlus, faCheck, faPen)}
+            <FaIcon icon={forceEdit ? faPlus : (edit ? faCheck : faPen)}
                     parentClass="mx-5"
             />
         </Button>
