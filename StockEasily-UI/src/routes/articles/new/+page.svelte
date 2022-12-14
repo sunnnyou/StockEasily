@@ -21,7 +21,7 @@
 
     const IMAGE_MAXIMUM_SIZE = 524288;
 
-    let inputData = new CreateArticleRequestDto();
+    let inputData: CreateArticleRequestDto = {category: undefined, image: '', name: '', properties: [], quantity: 1 };
     let selectedFileName = '';
 
     function isValid() {
@@ -127,6 +127,7 @@
                                              }}
                                              min="0"
                                              offerSmallerSteps={true}
+                                             bind:value={inputData.quantity}
                                              on:change={event => inputData.quantity = to_number(event.target.value)}
                                              slot="right"
                         >
