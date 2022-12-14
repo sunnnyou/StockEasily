@@ -60,20 +60,22 @@
 </script>
 
 <div>
-    <div class="flex flex-col{parentClass ? ' ' + parentClass : ''}">
-        <div class="flex items-end h-10 {addMarginTop ? ' mt-2' : ''}">
-            <Label className={parentLabelOptions.className}
-                   name={parentLabelOptions.name}
-                   bold={parentLabelOptions.isBold}
-            >
-                {#if parentLabelOptions?.text?.length > 0}
-                    {parentLabelOptions.text}
-                {:else}
-                    {$t('props') + ':'}
-                {/if}
-            </Label>
+    {#if parentLabelOptions && !parentLabelOptions.hide}
+        <div class="flex flex-col{parentClass ? ' ' + parentClass : ''}">
+            <div class="flex items-end h-10 {addMarginTop ? ' mt-2' : ''}">
+                <Label className={parentLabelOptions.className}
+                       name={parentLabelOptions.name}
+                       bold={parentLabelOptions.isBold}
+                >
+                    {#if parentLabelOptions?.text?.length > 0}
+                        {parentLabelOptions.text}
+                    {:else}
+                        {$t('props') + ':'}
+                    {/if}
+                </Label>
+            </div>
         </div>
-    </div>
+    {/if}
     <div class="w-full flex flex-row"
          id={parentLabelOptions.name}
     >
