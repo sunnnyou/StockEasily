@@ -147,6 +147,7 @@
                                        parentId="prop-parent{i}"
                                        parentLabelOptions={{
                                            className: 'text-gray-600 mt-10',
+                                           hide: i !== 0,
                                            isBold: true,
                                            name: 'prop-inner-parent' + i,
                                        }}
@@ -169,10 +170,10 @@
                                        }}
                                    parentId="prop-parent-new"
                                    parentLabelOptions={{
-                                           className: 'text-gray-600 mt-10',
-                                           isBold: true,
-                                           name: 'prop-inner-parent-new',
-                                       }}
+                                       className: 'text-gray-600 mt-10',
+                                       hide: inputData?.properties.length > 0,
+                                       isBold: true,
+                                   }}
                                    rightLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
