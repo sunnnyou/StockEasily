@@ -34,8 +34,6 @@
     function setHideProp() {
         leftLabelOptions = {...leftLabelOptions, hide: !edit};
         rightLabelOptions = {...rightLabelOptions, hide: !edit};
-        leftLabelOptions = leftLabelOptions;
-        rightLabelOptions = rightLabelOptions;
     }
 
     function areFieldsEmpty() {
