@@ -78,7 +78,7 @@
             >
         {:else}
 
-            <div class="text-center mt-16 mb-16">
+            <div class="text-center my-20">
                 {$t('general.input.noImageSelected')}
             </div>
         {/if}
