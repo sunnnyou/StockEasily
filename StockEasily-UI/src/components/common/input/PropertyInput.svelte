@@ -13,7 +13,8 @@
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
 
     export let addMarginTop: boolean = true;
-    export let editInitially = false;
+    export let edit = false;
+    export let forceEdit = false;
     export let leftLabelOptions: LabelOptions | undefined;
     export let leftPlaceholder = '';
     export let onSave: Function | undefined = undefined;
@@ -39,6 +40,9 @@
     }
 
     function toggleEdit() {
+        if (forceEdit) {
+            return;
+        }
         edit = !edit;
         setHideProp();
     }
