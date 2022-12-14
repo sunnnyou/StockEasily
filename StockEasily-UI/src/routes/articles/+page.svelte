@@ -4,30 +4,40 @@
     import {t} from "$i18n/i18n.js";
     import {goto} from "$app/navigation";
     import SearchField from "$components/template/SearchField.svelte";
+    import {onMount} from "svelte";
 
     let articles = [];
 
     async function getArticles() {
-        let response = await fetch('http://localhost:8080/api/v1/articles/');
-        articles = await response.json();
+        try{
+            let response = await fetch('http://localhost:8080/api/v1/articles/');
+            if(response.ok) {
+                articles = await response.json();
+            } else {
+                console.log(response.status)
+            }
+        } catch (e) {
+            console.log(e)
+        }
     }
-
-    getArticles();
+    onMount(() => {
+        getArticles();
+    })
 </script>
 
 <PageContent>
     <PageCard title={$t('menu.articles')}>
 
         {#if articles}
-            <section class="bg-gray-100 text-gray-600 px-4">
+            <section class="text-gray-600 px-4">
                 <div class="flex flex-col h-full">
-                    <!-- Table -->
 
-                    <div class="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-100">
+                    <!-- Search Bar -->
+                    <div class="w-full max-w-2xl mx-auto shadow rounded-md bg-white rounded-sm border border-gray-200">
                         <div class="pr-4">
                             <SearchField placeholder={$t('general.search')} title={$t('menu.search.tooltip')}></SearchField>
                         </div>
-
+                        <!-- Table -->
                         <div class="p-3">
                             <div class="overflow-x-auto">
                                 <table class="table-auto w-full">
@@ -61,6 +71,8 @@
                                                 <div class="text-left font-medium text-green-500">{article.id}</div>
                                             </td>
                                         </tr>
+                                    {:else}
+                                        <p>loading...</p>
                                         {/each}
                                     </tbody>
                                 </table>

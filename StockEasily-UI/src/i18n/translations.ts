@@ -40,7 +40,7 @@ export default {
         'props': 'Properties',
         'props.description': 'Description',
         'props.description.placeholder': 'Short description / value',
-        'props.name': 'Name',
+        'props.name': 'Property name',
         'props.name.placeholder': 'Short name',
 
         // articles
