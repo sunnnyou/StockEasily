@@ -159,6 +159,7 @@
                                            name: 'prop-inner-name' + i,
                                            text: $t('props.name'),
                                        }}
+                                       isValid={property => validatePropertyRequest(property)}
                                        parentId="prop-parent{i}"
                                        parentLabelOptions={{
                                            className: 'text-gray-600 mt-10',
