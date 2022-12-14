@@ -28,7 +28,6 @@
     let propertyCopy: PropertyRequestDto = property ? {...property} : {description: '', name: ''};
 
     onMount(() => {
-        edit = editInitially;
         setHideProp();
     });
 
