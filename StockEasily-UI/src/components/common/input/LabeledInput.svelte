@@ -89,7 +89,7 @@
                {step}
                {title}
                {type}
-               value={internalValue}
+               bind:value
                bind:files
                on:change
                on:input
