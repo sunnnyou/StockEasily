@@ -25,7 +25,7 @@
     export let rightLabelOptions: LabelOptions | undefined;
     export let rightPlaceholder = '';
 
-    let propertyCopy: PropertyRequestDto = property ? {...property} : {description: '', name: ''};
+    let internalProperty: PropertyRequestDto = property ? {...property} : {description: '', name: ''};
 
     onMount(() => {
         setHideProp();
@@ -52,9 +52,9 @@
         // on saved
         if (forceEdit || !edit) {
             if (onSave) {
-                onSave(propertyCopy);
+                onSave(internalProperty);
             }
-            propertyCopy = {description: '', name: ''};
+            internalProperty = {description: '', name: ''};
         }
     }
 </script>
@@ -87,16 +87,16 @@
                 <LabeledInput disabled={!edit}
                               labelOptions={leftLabelOptions}
                               placeholder={leftPlaceholder || $t('props.name.placeholder')}
-                              bind:value={propertyCopy.name}
-                              on:change={event => propertyCopy.name = event.target.value}
+                              bind:value={internalProperty.name}
+                              on:change={event => internalProperty.name = event.target.value}
                               slot="left"
                 />
 
                 <LabeledInput disabled={!edit}
                               labelOptions={rightLabelOptions}
                               placeholder={rightPlaceholder || $t('props.description.placeholder')}
-                              bind:value={propertyCopy.description}
-                              on:change={event => propertyCopy.description = event.target.value}
+                              bind:value={internalProperty.description}
+                              on:change={event => internalProperty.description = event.target.value}
                               slot="right"
                 />
             </InputFlexContainer>
