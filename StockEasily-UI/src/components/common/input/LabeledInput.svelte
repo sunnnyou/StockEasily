@@ -2,7 +2,6 @@
     import {AcceptType} from './file/accept-type';
     import {InputType} from '$components/html/input/input-type';
     import {LabelOptions} from './label-options';
-    import {onMount} from 'svelte';
     import {PreviewImageOptions} from './preview-image-options';
 
     import Input from '$components/html/input/Input.svelte';
@@ -25,12 +24,6 @@
     export let title = '';
     export let type = InputType.Text;
     export let value = '';
-
-    let internalValue = undefined;
-
-    onMount(() => {
-        internalValue = value?.length > 0 ? value : (type == InputType.Number ? '1' : '');
-    });
 
     function getLabelParentClass() {
         return type === InputType.File ? 'w-1/2 mx-auto text-center' : '';
