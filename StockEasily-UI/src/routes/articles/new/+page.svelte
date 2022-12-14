@@ -21,7 +21,7 @@
 
     const IMAGE_MAXIMUM_SIZE = 524288;
 
-    let inputData: CreateArticleRequestDto = {category: undefined, image: '', name: '', properties: [], quantity: 1 };
+    let inputData: CreateArticleRequestDto = {category: undefined, image: '', name: '', properties: [], quantity: 1};
     let selectedFileName = '';
 
     function isValid() {
