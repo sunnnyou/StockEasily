@@ -18,6 +18,7 @@
     export let placeholder = '';
     export let step = 1;
     export let title = '';
+    export let value = '';
 
     const DEFAULT_STEP = 1;
     const STEPS = [100, 10, DEFAULT_STEP, 0.1, 0.01, 0.001];
@@ -75,6 +76,7 @@
               step={offerSmallerSteps ? currentStep : step}
               {title}
               type={InputType.Number}
+              bind:value
 >
     <div class="text-right w-full inline-flex justify-end"
          slot="inner">
