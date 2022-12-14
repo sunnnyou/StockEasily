@@ -20,6 +20,8 @@
                 return 'btn-blue';
             case ButtonPriority.Secondary:
                 return 'btn-light-gray';
+            case ButtonPriority.TransparentHover:
+                return 'btn-hover';
             case ButtonPriority.Transparent:
             default:
                 '';

@@ -106,8 +106,8 @@
                 />
             </InputFlexContainer>
         </div>
-        <Button className="self-end h-10"
-                priority={ButtonPriority.Transparent}
+        <Button className="add-property self-end h-10"
+                priority={ButtonPriority.TransparentHover}
                 title={forceEdit ? $t('general.add') : (edit ? $t('general.save') : $t('general.edit'))}
                 on:click={() => onButtonClick()}
         >
@@ -117,9 +117,3 @@
         </Button>
     </div>
 </div>
-
-<style>
-    :global(button:hover) {
-        background-color: #f0f0f0;
-    }
-</style>
