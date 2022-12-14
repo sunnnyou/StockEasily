@@ -152,6 +152,7 @@
                                            name: 'prop-inner-parent' + i,
                                        }}
                                        {property}
+                                       onSave={property => onSaveProperty(property, i)}
                                        rightLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
