@@ -17,6 +17,7 @@
     export let forceEdit = false;
     export let leftLabelOptions: LabelOptions | undefined;
     export let leftPlaceholder = '';
+    export let isValid: Function;
     export let onSave: Function | undefined = undefined;
     export let parentClass: string | undefined = undefined;
     export let parentId: string | undefined;
@@ -36,11 +37,6 @@
         rightLabelOptions = {...rightLabelOptions, hide: !edit};
     }
 
-    function areFieldsEmpty() {
-        return ((internalProperty.description === undefined || internalProperty.description.length === 0)
-            && (internalProperty.name === undefined || internalProperty.name.length === 0));
-    }
-
     function toggleEdit() {
         if (forceEdit) {
             return;
@@ -50,7 +46,7 @@
     }
 
     function onButtonClick() {
-        if (edit && areFieldsEmpty()){
+        if (edit && !isValid(internalProperty)) {
             return;
         }
 

@@ -2,7 +2,7 @@
     import {AcceptType} from '$components/common/input/file/accept-type';
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {ButtonType} from '$components/html/button/button-type';
-    import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
+    import {CreateArticleRequestDto, validateCreateArticleRequest} from '$dto/create-article-request-dto';
     import {PropertyRequestDto} from '../../../dto/property-request-dto';
     import {t} from '$i18n/i18n';
     import {onMount} from 'svelte';
@@ -18,41 +18,47 @@
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
+    import {validatePropertyRequest} from '../../../dto/property-request-dto.js';
 
     const IMAGE_MAXIMUM_SIZE = 524288;
 
     let inputData: CreateArticleRequestDto = {category: undefined, image: '', name: '', properties: [], quantity: 1};
     let selectedFileName = '';
 
-    function isValid() {
-        // TODO implement
-        return false;
+    function validate(): boolean {
+        return validateCreateArticleRequest(inputData);
     }
 
     function handleOnSubmit() {
         console.log('onSubmit', inputData);
 
-        // console.log(imageInputRef.getFirstFile());
-        // if (isValid()) {
-        //
-        //
-        //     let formData = new FormData();
-        //     formData.append('name', inputData.name);
-        //     formData.append('category', inputData.category);
-        //     formData.append('image', inputData.image);
-        //     formData.append('quantity', inputData.quantity);
-        //     formData.append('', inputData.image);
-        //
-        //     const upload = fetch('http://localhost:8080/file', {
-        //         method: 'POST',
-        //         body: formData
-        //     }).then((response) => response.json()).then((result) => {
-        //         console.log('Success:', result);
-        //     })
-        //         .catch((error) => {
-        //             console.error('Error:', error);
-        //         });
+        if (!validate()) {
+            console.error('Could not validate input data');
+            return;
+        }
+
+        const formData = new FormData();
+        // if (files.length > 0) {
+            // formData.append('file', files[0]);
         // }
+        formData.set('name', inputData.name);
+        formData.set('category', '' + inputData.category);
+        formData.set('quantity', '' + inputData.quantity);
+        formData.set('properties', '' + inputData.properties);
+        console.log('sending formData', formData.keys());
+        fetch('http://localhost:3000/articles', {
+            method: 'POST',
+            headers: new Headers({
+                Accept: 'application/json',
+            }),
+            body: formData,
+        }).then(response => {
+            console.log('API RESPONSE:', response);
+            // const link = JSON.parse(response).data.link;
+        }).catch(error => {
+            console.log('error happened', error);
+        });
+
     }
 
     function isEditingExistingProperty(index: number) {
@@ -121,7 +127,7 @@
                                           text: $t('general.category')
                                       }}
                                       placeholder={$t('general.category.placeholder')}
-                                      on:change={event => inputData.category.name = event.target.value}
+                                      on:change={event => inputData.category = {name: event.target.value}}
                                       slot="left"
                         />
 
@@ -177,6 +183,7 @@
                                            name: 'prop-inner-name-new',
                                            text: $t('props.name'),
                                        }}
+                                   isValid={property => validatePropertyRequest(property)}
                                    parentId="prop-parent-new"
                                    parentLabelOptions={{
                                        className: 'text-gray-600 mt-10',
