@@ -4,7 +4,7 @@ import type {PropertyRequestDto} from './property-request-dto';
 export class CreateArticleRequestDto {
     name = '';
     quantity = 1;
-    category = new CategoryRequestDto();
+    category: CategoryRequestDto = { name: ''};
     image: string | ArrayBuffer | undefined;
     properties: PropertyRequestDto[] = [];
 }

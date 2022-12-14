@@ -1,3 +1,3 @@
 export class CategoryRequestDto {
-    name: string | undefined;
+    name: string = '';
 }
