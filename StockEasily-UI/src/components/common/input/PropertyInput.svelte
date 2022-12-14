@@ -47,9 +47,7 @@
     }
 
     function onButtonClick() {
-
         toggleEdit();
-        console.log('changed to edit: ', edit);
 
         if (!edit && onSave) {
             onSave(property);
