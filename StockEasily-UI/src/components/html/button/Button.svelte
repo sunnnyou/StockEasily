@@ -21,7 +21,8 @@
             case ButtonPriority.Secondary:
                 return 'btn-light-gray';
             case ButtonPriority.Transparent:
-                return '';
+            default:
+                '';
         }
     }
 </script>
