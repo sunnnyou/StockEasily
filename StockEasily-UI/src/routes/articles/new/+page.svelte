@@ -97,7 +97,7 @@
               on:submit={() => handleOnSubmit()}>
             <!-- Submit button -->
             <div class="float-left w-full">
-                <div class="float-left w-1/2">
+                <div class="float-left w-1/2 vr">
                     <!-- input name -->
                     <LabeledInput addMarginTop={false}
                                   labelOptions={{
@@ -193,9 +193,8 @@
                     />
                 </div>
 
-
-                <div class="float-left h-full w-1/2 pl-10">
-                    <div class="w-full px-10 m-auto vr h-full">
+                <div class="float-left h-full w-1/2">
+                    <div class="w-full m-auto h-full">
                         <LabeledFileInput accept={AcceptType.Image}
                                           addMarginTop={false}
                                           allowMultiple={false}
@@ -228,9 +227,21 @@
 </PageContent>
 
 <style>
-    div.vr {
-        border-left: 1px solid #d8dbdf;
-        height: 90%;
-        display: inline-table;
+    div > div {
+        padding: 0 1rem;
+    }
+
+    .vr {
+        border-right: 1px solid #d8dbdf;
+    }
+
+    @media only screen and (max-width: 1023px) {
+        div > div {
+            padding: 0;
+        }
+
+        .vr {
+            padding: 0 1rem 0 0;
+        }
     }
 </style>
