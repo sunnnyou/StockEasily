@@ -69,3 +69,11 @@ input.file:hover::before {
 input.file:active::before {
     background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
 }
+
+button.btn-hover:hover {
+    background-color: #f0f0f0;
+}
+
+button.btn-hover:active {
+    background-color: #eaeaea;
+}

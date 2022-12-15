@@ -1,6 +1,6 @@
 <script lang="ts">
     import {ButtonPriority} from '$components/html/button/button-priority';
-    import {faPen, faPlus} from '@fortawesome/free-solid-svg-icons';
+    import {faCheck, faPen, faPlus} from '@fortawesome/free-solid-svg-icons';
     import {onMount} from 'svelte';
     import {LabelOptions} from './label-options';
     import {PropertyRequestDto} from '../../../dto/property-request-dto';
@@ -13,9 +13,11 @@
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
 
     export let addMarginTop: boolean = true;
-    export let editInitially = false;
+    export let edit = false;
+    export let forceEdit = false;
     export let leftLabelOptions: LabelOptions | undefined;
     export let leftPlaceholder = '';
+    export let isValid: Function;
     export let onSave: Function | undefined = undefined;
     export let parentClass: string | undefined = undefined;
     export let parentId: string | undefined;
@@ -24,51 +26,61 @@
     export let rightLabelOptions: LabelOptions | undefined;
     export let rightPlaceholder = '';
 
-    let edit = false;
+    let internalProperty: PropertyRequestDto = property ? {...property} : {description: '', name: ''};
 
     onMount(() => {
-        edit = editInitially;
         setHideProp();
     });
 
     function setHideProp() {
         leftLabelOptions = {...leftLabelOptions, hide: !edit};
         rightLabelOptions = {...rightLabelOptions, hide: !edit};
-        leftLabelOptions = leftLabelOptions;
-        rightLabelOptions = rightLabelOptions;
     }
 
     function toggleEdit() {
+        if (forceEdit) {
+            return;
+        }
         edit = !edit;
         setHideProp();
     }
 
     function onButtonClick() {
+        if (edit && !isValid(internalProperty)) {
+            return;
+        }
 
         toggleEdit();
-        console.log('changed to edit: ', edit);
 
-        if (!edit && onSave) {
-            onSave(property);
+        // on saved
+        if (forceEdit || !edit) {
+            if (onSave) {
+                onSave(internalProperty);
+            }
+            if (forceEdit) {
+                internalProperty = {description: '', name: ''};
+            }
         }
     }
 </script>
 
 <div>
-    <div class="flex flex-col{parentClass ? ' ' + parentClass : ''}">
-        <div class="flex items-end h-10 {addMarginTop ? ' mt-2' : ''}">
-            <Label className={parentLabelOptions.className}
-                   name={parentLabelOptions.name}
-                   bold={parentLabelOptions.isBold}
-            >
-                {#if parentLabelOptions?.text?.length > 0}
-                    {parentLabelOptions.text}
-                {:else}
-                    {$t('props') + ':'}
-                {/if}
-            </Label>
+    {#if parentLabelOptions && !parentLabelOptions.hide}
+        <div class="flex flex-col{parentClass ? ' ' + parentClass : ''}">
+            <div class="flex items-end h-10 {addMarginTop ? ' mt-2' : ''}">
+                <Label className={parentLabelOptions.className}
+                       name={parentLabelOptions.name}
+                       bold={parentLabelOptions.isBold}
+                >
+                    {#if parentLabelOptions?.text?.length > 0}
+                        {parentLabelOptions.text}
+                    {:else}
+                        {$t('props') + ':'}
+                    {/if}
+                </Label>
+            </div>
         </div>
-    </div>
+    {/if}
     <div class="w-full flex flex-row"
          id={parentLabelOptions.name}
     >
@@ -80,26 +92,27 @@
                 <LabeledInput disabled={!edit}
                               labelOptions={leftLabelOptions}
                               placeholder={leftPlaceholder || $t('props.name.placeholder')}
-                              value={property?.name}
-                              on:change={event => property.name = event.target.value}
+                              bind:value={internalProperty.name}
+                              on:change={event => internalProperty.name = event.target.value}
                               slot="left"
                 />
 
                 <LabeledInput disabled={!edit}
                               labelOptions={rightLabelOptions}
                               placeholder={rightPlaceholder || $t('props.description.placeholder')}
-                              value={property?.description}
-                              on:change={event => property.description = event.target.value}
+                              bind:value={internalProperty.description}
+                              on:change={event => internalProperty.description = event.target.value}
                               slot="right"
                 />
             </InputFlexContainer>
         </div>
-        <Button className="self-end h-10"
-                priority={ButtonPriority.Transparent}
+        <Button className="add-property self-end h-10"
+                priority={ButtonPriority.TransparentHover}
+                title={forceEdit ? $t('general.add') : (edit ? $t('general.save') : $t('general.edit'))}
                 on:click={() => onButtonClick()}
         >
-            <FaIcon icon={edit ? faPlus : faPen}
-                    parentClass="mx-1"
+            <FaIcon icon={forceEdit ? faPlus : (edit ? faCheck : faPen)}
+                    parentClass="mx-5"
             />
         </Button>
     </div>

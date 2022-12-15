@@ -1,12 +1,10 @@
 <script lang="ts">
-    import {ButtonPriority} from '$components/html/button/button-priority.js';
     import {faArrowDown, faArrowUp} from '@fortawesome/free-solid-svg-icons';
     import {InputType} from '$components/html/input/input-type';
     import {LabelOptions} from './label-options';
     import {onMount} from 'svelte';
     import {t} from '$i18n/i18n';
 
-    import Button from '$components/html/button/Button.svelte';
     import FaIcon from '$components/common/FaIcon.svelte';
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
 
@@ -20,6 +18,7 @@
     export let placeholder = '';
     export let step = 1;
     export let title = '';
+    export let value = '';
 
     const DEFAULT_STEP = 1;
     const STEPS = [100, 10, DEFAULT_STEP, 0.1, 0.01, 0.001];
@@ -77,6 +76,7 @@
               step={offerSmallerSteps ? currentStep : step}
               {title}
               type={InputType.Number}
+              bind:value
 >
     <div class="text-right w-full inline-flex justify-end"
          slot="inner">

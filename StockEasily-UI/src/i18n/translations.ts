@@ -11,6 +11,7 @@ export default {
         'general.description': 'Description',
         'general.chooseImage': 'Choose image',
         'general.replaceImage': 'Replace image',
+        'general.edit': 'Edit',
         'general.guest': 'Guest',
         'general.image': 'Image',
         'general.input.noImageSelected': 'No image selected',
@@ -19,6 +20,7 @@ export default {
         'general.nextStep': 'Next step',
         'general.previewImage': 'Preview image',
         'general.quantity': 'Quantity',
+        'general.save': 'Save',
         'general.search': 'Search',
         'general.step': 'Step',
 

@@ -2,7 +2,7 @@
     import {AcceptType} from '$components/common/input/file/accept-type';
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {ButtonType} from '$components/html/button/button-type';
-    import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
+    import {CreateArticleRequestDto, validateCreateArticleRequest} from '$dto/create-article-request-dto';
     import {PropertyRequestDto} from '../../../dto/property-request-dto';
     import {t} from '$i18n/i18n';
     import {onMount} from 'svelte';
@@ -18,62 +18,80 @@
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
+    import {validatePropertyRequest} from '../../../dto/property-request-dto.js';
 
     const IMAGE_MAXIMUM_SIZE = 524288;
 
-    let inputData = new CreateArticleRequestDto();
+    let inputData: CreateArticleRequestDto = {category: undefined, image: '', name: '', properties: [], quantity: 1};
     let selectedFileName = '';
+    let imageSelected: any;
 
-    function isValid() {
-        // TODO implement
-        return false;
+    function validate(): boolean {
+        return validateCreateArticleRequest(inputData);
     }
 
     function handleOnSubmit() {
         console.log('onSubmit', inputData);
 
-        // console.log(imageInputRef.getFirstFile());
-        // if (isValid()) {
-        //
-        //
-        //     let formData = new FormData();
-        //     formData.append('name', inputData.name);
-        //     formData.append('category', inputData.category);
-        //     formData.append('image', inputData.image);
-        //     formData.append('quantity', inputData.quantity);
-        //     formData.append('', inputData.image);
-        //
-        //     const upload = fetch('http://localhost:8080/file', {
-        //         method: 'POST',
-        //         body: formData
-        //     }).then((response) => response.json()).then((result) => {
-        //         console.log('Success:', result);
-        //     })
-        //         .catch((error) => {
-        //             console.error('Error:', error);
-        //         });
+        if (!validate()) {
+            console.error('Could not validate input data');
+            return;
+        }
+
+        const formData = new FormData();
+        // if (imageSelected?.size > 0) {
+        //     formData.append('image', imageSelected);
+        //     inputData.image = undefined;
         // }
+        // formData.append('article', JSON.stringify(inputData));
+        // formData.set('name', inputData.name);
+        // formData.set('category', '' + inputData.category);
+        // formData.set('quantity', '' + inputData.quantity);
+        // formData.set('properties', '' + inputData.properties);
+        // console.log('sending formData', formData.keys());
+        fetch('http://localhost:8080/api/v1/articles', {
+            method: 'POST',
+            // headers: {
+                // 'Content-Type': 'multipart/form-data',
+            // },
+            // body: formData,
+            body: JSON.stringify(inputData),
+        }).then(response => {
+            console.log('API RESPONSE:', response);
+            // const link = JSON.parse(response).data.link;
+        }).catch(error => {
+            console.log('error happened', error);
+        });
+
     }
 
-    function onSaveProperty(property: PropertyRequestDto) {
-        console.log('new property', property);
+    function isEditingExistingProperty(index: number) {
+        return index !== Number.NaN && inputData.properties.length > index;
+    }
+
+    function onSaveProperty(property: PropertyRequestDto, index: number = Number.NaN) {
+        if (isEditingExistingProperty(index)) {
+            inputData.properties[index] = property;
+        } else {
+            inputData.properties = [...inputData.properties, property];
+        }
     }
 
     function onImageSelected(event) {
-        const image = event.target.files[0];
-        console.log('image size:', image.size);
-        if (image.size > IMAGE_MAXIMUM_SIZE) {
-            console.warn('Image select is too big', '(' + image.size + ' bytes or', image.size / 1024 + 'KB )', 'image maximum size: ', IMAGE_MAXIMUM_SIZE / 1024, 'bytes');
+        imageSelected = event.target.files[0];
+        console.log('image size:', imageSelected.size);
+        if (imageSelected.size > IMAGE_MAXIMUM_SIZE) {
+            console.warn('Image select is too big', '(' + imageSelected.size + ' bytes or', imageSelected.size / 1024 + 'KB )', 'image maximum size: ', IMAGE_MAXIMUM_SIZE / 1024, 'bytes');
             return;
         }
 
         // console.log(image, image);
         let reader = new FileReader();
-        reader.readAsDataURL(image);
+        reader.readAsDataURL(imageSelected);
         reader.onload = e => {
             inputData.image = e.target.result;
-            selectedFileName = image.name;
-            console.log('selected file:', image.name);
+            selectedFileName = imageSelected.name;
+            console.log('selected file:', imageSelected.name);
         };
     }
 
@@ -86,10 +104,10 @@
     <PageCard title={$t('menu.addArticle')}>
 
         <Form className="inline-block w-full"
-              on:submit={() => handleOnSubmit()}>
+              onSubmit={handleOnSubmit}>
             <!-- Submit button -->
             <div class="float-left w-full">
-                <div class="float-left w-1/2">
+                <div class="float-left w-1/2 vr">
                     <!-- input name -->
                     <LabeledInput addMarginTop={false}
                                   labelOptions={{
@@ -113,7 +131,7 @@
                                           text: $t('general.category')
                                       }}
                                       placeholder={$t('general.category.placeholder')}
-                                      on:change={event => inputData.category.name = event.target.value}
+                                      on:change={event => inputData.category = {name: event.target.value}}
                                       slot="left"
                         />
 
@@ -127,6 +145,7 @@
                                              }}
                                              min="0"
                                              offerSmallerSteps={true}
+                                             bind:value={inputData.quantity}
                                              on:change={event => inputData.quantity = to_number(event.target.value)}
                                              slot="right"
                         >
@@ -136,20 +155,23 @@
                     <HorizontalRuler className="border-b-1 border-gray-300 mt-8 mx-4"></HorizontalRuler>
 
                     {#each inputData?.properties as property, i}
-                        <PropertyInput editInitially={false}
+                        <PropertyInput edit={false}
                                        leftLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
                                            name: 'prop-inner-name' + i,
                                            text: $t('props.name'),
                                        }}
+                                       isValid={property => validatePropertyRequest(property)}
                                        parentId="prop-parent{i}"
                                        parentLabelOptions={{
                                            className: 'text-gray-600 mt-10',
+                                           hide: i !== 0,
                                            isBold: true,
                                            name: 'prop-inner-parent' + i,
                                        }}
                                        {property}
+                                       onSave={property => onSaveProperty(property, i)}
                                        rightLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
@@ -158,19 +180,21 @@
                                        }}
                         />
                     {/each}
-                    <PropertyInput editInitially={true}
+                    <PropertyInput edit={true}
+                                   forceEdit={true}
                                    leftLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
                                            name: 'prop-inner-name-new',
                                            text: $t('props.name'),
                                        }}
+                                   isValid={property => validatePropertyRequest(property)}
                                    parentId="prop-parent-new"
                                    parentLabelOptions={{
-                                           className: 'text-gray-600 mt-10',
-                                           isBold: true,
-                                           name: 'prop-inner-parent-new',
-                                       }}
+                                       className: 'text-gray-600 mt-10',
+                                       hide: inputData?.properties.length > 0,
+                                       isBold: true,
+                                   }}
                                    rightLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
@@ -181,9 +205,8 @@
                     />
                 </div>
 
-
-                <div class="float-left h-full w-1/2 pl-10">
-                    <div class="w-full px-10 m-auto vr h-full">
+                <div class="float-left h-full w-1/2">
+                    <div class="w-full m-auto h-full">
                         <LabeledFileInput accept={AcceptType.Image}
                                           addMarginTop={false}
                                           allowMultiple={false}
@@ -216,9 +239,21 @@
 </PageContent>
 
 <style>
-    div.vr {
-        border-left: 1px solid #d8dbdf;
-        height: 90%;
-        display: inline-table;
+    div > div {
+        padding: 0 1rem;
+    }
+
+    .vr {
+        border-right: 1px solid #d8dbdf;
+    }
+
+    @media only screen and (max-width: 1023px) {
+        div > div {
+            padding: 0;
+        }
+
+        .vr {
+            padding: 0 1rem 0 0;
+        }
     }
 </style>

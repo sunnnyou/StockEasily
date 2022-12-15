@@ -13,7 +13,7 @@ public class CreateArticleRequestDto {
     private CategoryRequestDto category;
 
     @ApiModelProperty(notes = "Article name", example = "HDX42 Widescreen Monitor", required = true)
-    @NotNull(message = "Name is mandatory")
+    @NotNull(message = "Article name is mandatory")
     @Size(min = 1, max = 30, message = "Article name must be between 1 and 30 characters")
     private String name;
 
@@ -26,15 +26,15 @@ public class CreateArticleRequestDto {
     @PositiveOrZero(message = "Quantity must greater than or equal to 0")
     private int quantity = 1;
 
-    private MultipartFile image; // TODO validate size
+//    private MultipartFile image; // TODO/**/ validate size
 
     public CategoryRequestDto getCategory() {
         return category;
     }
 
-    public MultipartFile getImage() {
-        return image;
-    }
+//    public MultipartFile getImage() {
+//        return image;
+//    }
 
     public String getName() {
         return name;
@@ -52,9 +52,9 @@ public class CreateArticleRequestDto {
         this.category = category;
     }
 
-    public void setImage(MultipartFile image) {
-        this.image = image;
-    }
+//    public void setImage(MultipartFile image) {
+//        this.image = image;
+//    }
 
     public void setName(String name) {
         this.name = (name != null ? name.trim() : null);

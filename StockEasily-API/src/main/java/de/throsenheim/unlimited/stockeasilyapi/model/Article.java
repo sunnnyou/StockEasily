@@ -31,7 +31,7 @@ public class Article {
 
     public Article(CreateArticleRequestDto request) {
         setName(request.getName());
-        setImage(request.getImage());
+//        setImage(request.getImage());
         setQuantity(request.getQuantity());
         setCategory(new Category(request.getCategory()));
         setProperties(Property.getProperties(request.getProperties()));
