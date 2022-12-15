@@ -112,7 +112,6 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
                 "WHERE articleId = ? " +
                 "AND propertyId = ?" +
                 ") AS 'exists'";
-        String errorMessage = "Could not insert " + ArticleRepository.class.getSimpleName() + " relations";
 
         try {
             preparedStatement = connection.prepareStatement(query);
@@ -125,7 +124,6 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
             if (resultSet.next() && resultSet.getLong("exists") == 1) {
                 return relation;
             }
-            LOGGER.error(errorMessage);
             return null;
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
