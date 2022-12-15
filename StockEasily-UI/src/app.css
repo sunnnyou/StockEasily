@@ -73,3 +73,7 @@ input.file:active::before {
 button.btn-hover:hover {
     background-color: #f0f0f0;
 }
+
+button.btn-hover:active {
+    background-color: #eaeaea;
+}
