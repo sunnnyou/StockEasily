@@ -39,17 +39,23 @@
         }
 
         const formData = new FormData();
-        if (imageSelected?.length > 0) {
-            formData.append('file', imageSelected);
-        }
-        formData.set('name', inputData.name);
-        formData.set('category', '' + inputData.category);
-        formData.set('quantity', '' + inputData.quantity);
-        formData.set('properties', '' + inputData.properties);
-        console.log('sending formData', formData.keys());
+        // if (imageSelected?.size > 0) {
+        //     formData.append('image', imageSelected);
+        //     inputData.image = undefined;
+        // }
+        // formData.append('article', JSON.stringify(inputData));
+        // formData.set('name', inputData.name);
+        // formData.set('category', '' + inputData.category);
+        // formData.set('quantity', '' + inputData.quantity);
+        // formData.set('properties', '' + inputData.properties);
+        // console.log('sending formData', formData.keys());
         fetch('http://localhost:8080/api/v1/articles', {
             method: 'POST',
-            body: formData,
+            // headers: {
+                // 'Content-Type': 'multipart/form-data',
+            // },
+            // body: formData,
+            body: JSON.stringify(inputData),
         }).then(response => {
             console.log('API RESPONSE:', response);
             // const link = JSON.parse(response).data.link;

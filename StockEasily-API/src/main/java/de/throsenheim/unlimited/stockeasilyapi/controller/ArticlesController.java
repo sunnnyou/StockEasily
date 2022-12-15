@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -38,9 +39,13 @@ public class ArticlesController {
             @ApiResponse(code = 500, message = "Entity serialization error", response = ApiErrorDto.class)
     })
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
+//    @PostMapping(consumes = {"*/*"})
+    @PostMapping()
     public ResponseEntity<CreateArticleResponseDto> createArticle(
-            @ApiParam(name = "request") @Valid @RequestBody CreateArticleRequestDto request,
+//            @ApiParam(name = "image") @ModelAttribute("image") MultipartFile image,
+            @ApiParam(name = "article") @Valid @RequestBody CreateArticleRequestDto request,
+//            @ModelAttribute("article")
+//            @ApiParam(name = "article") @Valid @RequestParam("article") CreateArticleRequestDto request,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidBodyException(bindingResult);
