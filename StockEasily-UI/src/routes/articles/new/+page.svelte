@@ -39,7 +39,7 @@
         }
 
         const formData = new FormData();
-        if (imageSelected.length > 0) {
+        if (imageSelected?.length > 0) {
             formData.append('file', imageSelected);
         }
         formData.set('name', inputData.name);
