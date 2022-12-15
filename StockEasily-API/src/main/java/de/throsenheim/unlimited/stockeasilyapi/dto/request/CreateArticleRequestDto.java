@@ -13,7 +13,7 @@ public class CreateArticleRequestDto {
     private CategoryRequestDto category;
 
     @ApiModelProperty(notes = "Article name", example = "HDX42 Widescreen Monitor", required = true)
-    @NotNull(message = "Name is mandatory")
+    @NotNull(message = "Article name is mandatory")
     @Size(min = 1, max = 30, message = "Article name must be between 1 and 30 characters")
     private String name;
 
