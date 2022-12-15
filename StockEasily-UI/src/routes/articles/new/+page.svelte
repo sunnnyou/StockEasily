@@ -47,11 +47,8 @@
         formData.set('quantity', '' + inputData.quantity);
         formData.set('properties', '' + inputData.properties);
         console.log('sending formData', formData.keys());
-        fetch('http://localhost:3000/articles', {
+        fetch('http://localhost:8080/api/v1/articles', {
             method: 'POST',
-            headers: new Headers({
-                Accept: 'application/json',
-            }),
             body: formData,
         }).then(response => {
             console.log('API RESPONSE:', response);
