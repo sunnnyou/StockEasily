@@ -29,6 +29,9 @@ public class Property {
 
     public static List<Property> getProperties(List<PropertyRequestDto> propertyRequests) {
         List<Property> result = new LinkedList<>();
+        if (propertyRequests == null) {
+            return result;
+        }
         for (PropertyRequestDto propertyRequest : propertyRequests) {
             result.add(new Property(propertyRequest));
         }
