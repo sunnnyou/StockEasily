@@ -27,15 +27,15 @@ public class CreateArticleRequestDto {
     @PositiveOrZero(message = "Quantity must greater than or equal to 0")
     private int quantity = 1;
 
-//    private MultipartFile image; // TODO/**/ validate size
+    private String image;
 
     public CategoryRequestDto getCategory() {
         return category;
     }
 
-//    public MultipartFile getImage() {
-//        return image;
-//    }
+    public String getImage() {
+        return image;
+    }
 
     public String getName() {
         return name;
@@ -53,9 +53,9 @@ public class CreateArticleRequestDto {
         this.category = category;
     }
 
-//    public void setImage(MultipartFile image) {
-//        this.image = image;
-//    }
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public void setName(String name) {
         this.name = (name != null ? name.trim() : null);
