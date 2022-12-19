@@ -6,7 +6,7 @@ export class CreateArticleRequestDto {
     name = '';
     quantity = 1;
     category: CategoryRequestDto = { name: ''};
-    image: string | ArrayBuffer | undefined;
+    image: string | undefined;
     properties: PropertyRequestDto[] = [];
 
 }

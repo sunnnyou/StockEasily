@@ -1,5 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.model.Property;
 import io.swagger.annotations.ApiModelProperty;
@@ -26,6 +27,12 @@ public class CreateArticleResponseDto {
 
     @ApiModelProperty(notes = "Article quantity", example = "2")
     private int quantity;
+
+    @JsonIgnore
+    private boolean isImageInvalid = true;
+
+    public CreateArticleResponseDto() {
+    }
 
     public CreateArticleResponseDto(Article article) {
         if (article == null) {
@@ -60,12 +67,20 @@ public class CreateArticleResponseDto {
         return quantity;
     }
 
+    public boolean isImageInvalid() {
+        return isImageInvalid;
+    }
+
     public void setCategory(CategoryResponseDto category) {
         this.category = category;
     }
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void setImageInvalid(boolean isImageInvalid) {
+        this.isImageInvalid = isImageInvalid;
     }
 
     public void setName(String name) {
@@ -79,5 +94,4 @@ public class CreateArticleResponseDto {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-
 }

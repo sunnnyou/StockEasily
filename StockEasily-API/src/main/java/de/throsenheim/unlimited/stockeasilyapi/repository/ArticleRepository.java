@@ -117,7 +117,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
             preparedStatement.setString(1, article.getName());
             preparedStatement.setInt(2, article.getQuantity());
-            preparedStatement.setBlob(3, article.getImage()); // TODO implement image upload
+            preparedStatement.setBlob(3, article.getImage());
             if (categoryId != null) {
                 preparedStatement.setLong(4, categoryId);
             }

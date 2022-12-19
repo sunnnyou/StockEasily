@@ -22,42 +22,42 @@
 
     const IMAGE_MAXIMUM_SIZE = 524288;
 
-    let inputData: CreateArticleRequestDto = {category: undefined, image: '', name: '', properties: [], quantity: 1};
+    let inputArticle: CreateArticleRequestDto = {category: undefined, image: '', name: '', properties: [], quantity: 1};
     let selectedFileName = '';
     let imageSelected: any;
 
     function validate(): boolean {
-        return validateCreateArticleRequest(inputData);
+        return validateCreateArticleRequest(inputArticle);
     }
 
     function handleOnSubmit() {
-        console.log('onSubmit', inputData);
+        console.log('onSubmit', inputArticle);
 
         if (!validate()) {
             console.error('Could not validate input data');
             return;
         }
 
-        const formData = new FormData();
-        // if (imageSelected?.size > 0) {
-        //     formData.append('image', imageSelected);
-        //     inputData.image = undefined;
-        // }
-        // formData.append('article', JSON.stringify(inputData));
-        // formData.set('name', inputData.name);
-        // formData.set('category', '' + inputData.category);
-        // formData.set('quantity', '' + inputData.quantity);
-        // formData.set('properties', '' + inputData.properties);
-        // console.log('sending formData', formData.keys());
+        if (imageSelected?.size > IMAGE_MAXIMUM_SIZE) {
+            inputArticle.image = undefined;
+            console.debug('File size is too big(' + imageSelected.size + ') => aborting');
+            return;
+        }
+        const body = JSON.stringify(inputArticle);
+        console.debug('sending body', body);
+
         fetch('http://localhost:8080/api/v1/articles', {
+            body: body,
             method: 'POST',
-            // headers: {
-                // 'Content-Type': 'multipart/form-data',
-            // },
-            // body: formData,
-            body: JSON.stringify(inputData),
+            headers: {
+                'Content-Type': 'application/json',
+            },
         }).then(response => {
             console.log('API RESPONSE:', response);
+            if (!response.ok) {
+                console.error('Could not POST CreateArticleRequestDto, response:', response);
+                return;
+            }
             // const link = JSON.parse(response).data.link;
         }).catch(error => {
             console.log('error happened', error);
@@ -66,14 +66,14 @@
     }
 
     function isEditingExistingProperty(index: number) {
-        return index !== Number.NaN && inputData.properties.length > index;
+        return index !== Number.NaN && inputArticle.properties.length > index;
     }
 
     function onSaveProperty(property: PropertyRequestDto, index: number = Number.NaN) {
         if (isEditingExistingProperty(index)) {
-            inputData.properties[index] = property;
+            inputArticle.properties[index] = property;
         } else {
-            inputData.properties = [...inputData.properties, property];
+            inputArticle.properties = [...inputArticle.properties, property];
         }
     }
 
@@ -89,14 +89,14 @@
         let reader = new FileReader();
         reader.readAsDataURL(imageSelected);
         reader.onload = e => {
-            inputData.image = e.target.result;
+            inputArticle.image = '' + e.target.result;
             selectedFileName = imageSelected.name;
             console.log('selected file:', imageSelected.name);
         };
     }
 
     onMount(() => {
-        console.debug('Showing', inputData.properties.length, 'properties');
+        console.debug('Showing', inputArticle.properties.length, 'properties');
     });
 </script>
 
@@ -117,7 +117,7 @@
                                       text: $t('general.name')
                                   }}
                                   placeholder={$t('general.name.placeholder')}
-                                  on:change={event => inputData.name = event.target.value}
+                                  on:change={event => inputArticle.name = event.target.value}
                     />
 
                     <!-- input category, quantity -->
@@ -131,7 +131,7 @@
                                           text: $t('general.category')
                                       }}
                                       placeholder={$t('general.category.placeholder')}
-                                      on:change={event => inputData.category = {name: event.target.value}}
+                                      on:change={event => inputArticle.category = {name: event.target.value}}
                                       slot="left"
                         />
 
@@ -145,8 +145,8 @@
                                              }}
                                              min="0"
                                              offerSmallerSteps={true}
-                                             bind:value={inputData.quantity}
-                                             on:change={event => inputData.quantity = to_number(event.target.value)}
+                                             bind:value={inputArticle.quantity}
+                                             on:change={event => inputArticle.quantity = to_number(event.target.value)}
                                              slot="right"
                         >
                         </LabeledNumericInput>
@@ -154,7 +154,7 @@
 
                     <HorizontalRuler className="border-b-1 border-gray-300 mt-8 mx-4"></HorizontalRuler>
 
-                    {#each inputData?.properties as property, i}
+                    {#each inputArticle?.properties as property, i}
                         <PropertyInput edit={false}
                                        leftLabelOptions={{
                                            className: 'text-gray-600 ml-2',
@@ -192,7 +192,7 @@
                                    parentId="prop-parent-new"
                                    parentLabelOptions={{
                                        className: 'text-gray-600 mt-10',
-                                       hide: inputData?.properties.length > 0,
+                                       hide: inputArticle?.properties.length > 0,
                                        isBold: true,
                                    }}
                                    rightLabelOptions={{
@@ -220,7 +220,7 @@
                                           previewImageOptions={{
                                             alt: selectedFileName,
                                             show: true,
-                                            src: inputData.image
+                                            src: inputArticle.image
                                           }}
                                           on:change={event => onImageSelected(event)}
                         />
