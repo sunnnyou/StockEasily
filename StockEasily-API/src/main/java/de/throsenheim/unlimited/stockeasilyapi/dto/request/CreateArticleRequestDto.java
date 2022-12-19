@@ -10,6 +10,7 @@ import java.util.List;
 public class CreateArticleRequestDto {
 
     @Valid
+    @NotNull(message = "Category name is mandatory")
     private CategoryRequestDto category;
 
     @ApiModelProperty(notes = "Article name", example = "HDX42 Widescreen Monitor", required = true)
