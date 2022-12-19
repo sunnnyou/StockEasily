@@ -73,7 +73,9 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
             }
             result.add(resultProperty);
         }
-        connection.commit(CommittedSqlCommand.INSERT);
+        if (result.size() > 0) {
+            connection.commit(CommittedSqlCommand.INSERT);
+        }
         return result;
     }
 
