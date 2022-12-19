@@ -45,6 +45,7 @@ public class CreateArticleResponseDto {
         setName(article.getName());
         setProperties(article.getProperties());
         setQuantity(article.getQuantity());
+        setImageInvalid(false);
     }
 
     public CategoryResponseDto getCategory() {
