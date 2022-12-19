@@ -107,10 +107,10 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
     private Article insert(Article article, boolean commit) {
         PreparedStatement preparedStatement = null;
-        final Long categoryId = article.getCategory() == null ? null : article.getCategory().getId();
+        final Long categoryId = article.getCategory().getId();
         final String query = "INSERT INTO " +
-                "articles(name,quantity,image" + (categoryId == null ? "" : ",categoryId") + ") " +
-                "VALUES (?,?,?" + (categoryId == null ? "" : ",?") + ")";
+                "articles(name,quantity,image,categoryId) " +
+                "VALUES (?,?,?,?)";
 
         try {
             preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -118,9 +118,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             preparedStatement.setString(1, article.getName());
             preparedStatement.setInt(2, article.getQuantity());
             preparedStatement.setBlob(3, article.getImage());
-            if (categoryId != null) {
-                preparedStatement.setLong(4, categoryId);
-            }
+            preparedStatement.setLong(4, categoryId);
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
