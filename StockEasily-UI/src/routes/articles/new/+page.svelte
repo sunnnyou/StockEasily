@@ -23,6 +23,7 @@
 
     const IMAGE_MAXIMUM_SIZE = 524288;
 
+    let responseError;
     let inputArticle: CreateArticleRequestDto = {category: undefined, image: '', name: '', properties: [], quantity: 1};
     let selectedFileName = '';
     let imageSelected: any;
@@ -54,15 +55,16 @@
                 'Content-Type': 'application/json',
             },
         }).then(response => {
-            console.log('API RESPONSE:', response);
             if (!response.ok) {
+                responseError = response;
                 console.error('Could not POST CreateArticleRequestDto, response:', response);
                 return;
             }
 
             goto('/articles');
         }).catch(error => {
-            console.log('error happened', error);
+            console.error('Could not add article. Error:', error);
+            responseError = error;
         });
 
     }
