@@ -46,7 +46,6 @@
             return;
         }
         const body = JSON.stringify(inputArticle);
-        console.debug('sending body', body);
 
         await fetch('http://localhost:8080/api/v1/articles', {
             body: body,
