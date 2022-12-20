@@ -8,6 +8,7 @@
     import {onMount} from 'svelte';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
+    import {validatePropertyRequest} from '../../../dto/property-request-dto';
 
     import Button from '$components/html/button/Button.svelte';
     import Form from '$components/html/Form.svelte';
