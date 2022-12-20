@@ -23,7 +23,7 @@
 
     const IMAGE_MAXIMUM_SIZE = 524288;
 
-    let responseError;
+    let responseErrors: Object | undefined;
     let inputArticle: CreateArticleRequestDto = {category: undefined, image: '', name: '', properties: [], quantity: 1};
     let selectedFileName = '';
     let imageSelected: any;
@@ -32,7 +32,7 @@
         return validateCreateArticleRequest(inputArticle);
     }
 
-    function handleOnSubmit() {
+    async function handleOnSubmit() {
         console.log('onSubmit', inputArticle);
 
         if (!validate()) {
@@ -48,23 +48,23 @@
         const body = JSON.stringify(inputArticle);
         console.debug('sending body', body);
 
-        fetch('http://localhost:8080/api/v1/articles', {
+        await fetch('http://localhost:8080/api/v1/articles', {
             body: body,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-        }).then(response => {
+        }).then(async (response) => {
             if (!response.ok) {
-                responseError = response;
-                console.error('Could not POST CreateArticleRequestDto, response:', response);
+                responseErrors = (await response.json())['errors'];
+                console.error('Could not POST article, response errors:', responseErrors);
                 return;
             }
 
             goto('/articles');
-        }).catch(error => {
-            console.error('Could not add article. Error:', error);
-            responseError = error;
+        }).catch(async (response) => {
+            responseErrors = (await response.json())['errors'];
+            console.error('Unknown error: Could not POST article, response error:', response);
         });
 
     }
@@ -97,6 +97,21 @@
             selectedFileName = imageSelected.name;
             console.log('selected file:', imageSelected.name);
         };
+    }
+
+    function getImageResponseMessage(): string | undefined {
+        if (imageSelected === undefined) {
+            console.debug('No image was selected, returning empty response message');
+            return undefined;
+        }
+        if (responseErrors === undefined) {
+            console.debug('Request was sent successfully');
+            return undefined;
+        }
+
+        const IMAGE_ERROR = responseErrors['image'];
+        console.debug('Error:', IMAGE_ERROR);
+        return `${$t('general.error')}: ${IMAGE_ERROR}`;
     }
 
     onMount(() => {
@@ -229,12 +244,14 @@
                                           on:change={event => onImageSelected(event)}
                         />
 
-                        <div class="flex p-0 m-0 h-10">
-                            <span class="w-full leading-10 pr-5 text-right">
-                                {#if responseError}
-                                    {$t('page.createArticle.error', {params: {error: responseError}})}
+                        <div class="flex p-0 m-0 h-10 mt-4">
+                            <div class="w-full text-right">
+                                {#if responseErrors && Object.keys(responseErrors)?.length > 0 }
+                                    <span class="w-full leading-10 pr-5">
+                                        {getImageResponseMessage()}
+                                    </span>
                                 {/if}
-                            </span>
+                            </div>
                             <Button className="w-1/8 align-end float-right"
                                     type={ButtonType.Submit}
                                     priority={ButtonPriority.Primary}
