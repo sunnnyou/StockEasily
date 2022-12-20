@@ -38,6 +38,11 @@ export default {
         'menu.user.notifications': 'Notifications',
         'menu.articles': 'Articles',
 
+        // pages
+
+        // /articles/new
+        'page.createArticle.error': 'Could not add article. Error: {{error}}',
+
         // props
         'props': 'Properties',
         'props.description': 'Description',

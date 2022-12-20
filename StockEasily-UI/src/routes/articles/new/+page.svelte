@@ -229,12 +229,19 @@
                                           on:change={event => onImageSelected(event)}
                         />
 
-                        <Button className="mt-7 float-right"
-                                type={ButtonType.Submit}
-                                priority={ButtonPriority.Primary}
-                        >
-                            {$t('general.add')}
-                        </Button>
+                        <div class="flex p-0 m-0 h-10">
+                            <span class="w-full leading-10 pr-5 text-right">
+                                {#if responseError}
+                                    {$t('page.createArticle.error', {params: {error: responseError}})}
+                                {/if}
+                            </span>
+                            <Button className="w-1/8 align-end float-right"
+                                    type={ButtonType.Submit}
+                                    priority={ButtonPriority.Primary}
+                            >
+                                {$t('general.add')}
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
