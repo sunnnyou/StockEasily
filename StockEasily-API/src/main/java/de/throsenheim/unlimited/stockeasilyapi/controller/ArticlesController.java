@@ -47,7 +47,7 @@ public class ArticlesController {
         }
         final CreateArticleResponseDto result = this.articleService.create(request);
         if (result != null && request.getImage() != null && result.isImageInvalid()) {
-            bindingResult.addError(this.articleService.getImageValidationError());
+            bindingResult.addError(this.articleService.getImageFieldError());
             throw new InvalidBodyException(bindingResult);
         }
         // INTERNAL SERVER ERROR should NOT occur

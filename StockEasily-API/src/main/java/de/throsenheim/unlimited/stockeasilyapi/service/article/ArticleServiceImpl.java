@@ -7,7 +7,7 @@ import de.throsenheim.unlimited.stockeasilyapi.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.FieldError;
 
 import java.util.Base64;
 import java.util.List;
@@ -43,8 +43,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public ObjectError getImageValidationError() {
-        return new ObjectError("image", "Image size must be <= " + maxImageSize);
+    public FieldError getImageFieldError() {
+        return new FieldError("image", "image", "Image size must be <= " + maxImageSize);
     }
 
     @Override

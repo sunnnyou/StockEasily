@@ -3,7 +3,7 @@ package de.throsenheim.unlimited.stockeasilyapi.service.article;
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.FieldError;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface ArticleService {
     CreateArticleResponseDto create(CreateArticleRequestDto request);
 
-    ObjectError getImageValidationError();
+    FieldError getImageFieldError();
 
     Optional<Article> search(long id);
 
