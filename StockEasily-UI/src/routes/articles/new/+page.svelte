@@ -4,8 +4,9 @@
     import {ButtonType} from '$components/html/button/button-type';
     import {CreateArticleRequestDto, validateCreateArticleRequest} from '$dto/create-article-request-dto';
     import {PropertyRequestDto} from '../../../dto/property-request-dto';
-    import {t} from '$i18n/i18n';
+    import {goto} from '$app/navigation';
     import {onMount} from 'svelte';
+    import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
 
     import Button from '$components/html/button/Button.svelte';
@@ -18,7 +19,6 @@
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
-    import {validatePropertyRequest} from '../../../dto/property-request-dto.js';
 
     const IMAGE_MAXIMUM_SIZE = 524288;
 
@@ -58,7 +58,8 @@
                 console.error('Could not POST CreateArticleRequestDto, response:', response);
                 return;
             }
-            // const link = JSON.parse(response).data.link;
+
+            goto('/articles');
         }).catch(error => {
             console.log('error happened', error);
         });
