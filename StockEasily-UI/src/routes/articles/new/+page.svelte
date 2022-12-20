@@ -42,7 +42,7 @@
 
         if (imageSelected?.size > IMAGE_MAXIMUM_SIZE) {
             inputArticle.image = undefined;
-            console.debug('File size is too big(' + imageSelected.size + ') => aborting');
+            console.debug('File size is too big (' + imageSelected.size + ') => aborting');
             return;
         }
         const body = JSON.stringify(inputArticle);
