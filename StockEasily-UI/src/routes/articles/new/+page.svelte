@@ -95,7 +95,7 @@
 
     }
 
-    function isEditingExistingProperty(index: number) {
+    function isEditingExistingProperty(index: number): boolean {
         return index !== Number.NaN && inputArticle.properties.length > index;
     }
 
