@@ -85,6 +85,10 @@
 
             goto('/articles');
         }).catch(async (response) => {
+            if (!response) {
+                console.error('Could not reach backend, probably offline?');
+                return;
+            }
             responseErrors = (await response.json())['errors'];
             console.error('Unknown error: Could not POST article, response error:', response);
         });
