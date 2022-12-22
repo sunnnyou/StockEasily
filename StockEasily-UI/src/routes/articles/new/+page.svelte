@@ -27,12 +27,35 @@
     let inputArticle: CreateArticleRequestDto = {category: undefined, image: '', name: '', properties: [], quantity: 1};
     let selectedFileName = '';
     let imageSelected: any;
+    let isFormValid = false;
 
-    function validate(): boolean {
-        return validateCreateArticleRequest(inputArticle);
+    let articleInputs: {
+        name: HTMLElement,
+        category: HTMLElement,
+        image: undefined,
+        properties: HTMLElement[],
+    };
+
+    function getImageResponseMessage(): string | undefined {
+        if (imageSelected === undefined) {
+            console.debug('No image was selected, returning empty response message');
+            return undefined;
+        }
+        if (responseErrors === undefined) {
+            console.debug('Request was sent successfully');
+            return undefined;
+        }
+
+        const IMAGE_ERROR = responseErrors['image'];
+        console.debug('Error:', IMAGE_ERROR);
+        return `${$t('general.error')}: ${IMAGE_ERROR}`;
     }
 
     async function handleOnSubmit() {
+        if (!isFormValid) {
+            console.log('aborting submit');
+            return;
+        }
         console.log('onSubmit', inputArticle);
 
         if (!validate()) {
@@ -72,6 +95,17 @@
         return index !== Number.NaN && inputArticle.properties.length > index;
     }
 
+    function onAddClick(e) {
+        const firstInvalid = e.target.closest('form').querySelector(':invalid');
+
+        if ((isFormValid = !firstInvalid)) {
+            console.debug('Form data is valid');
+            handleOnSubmit();
+            return;
+        }
+        console.warn('Invalid properties found', firstInvalid);
+    }
+
     function onSaveProperty(property: PropertyRequestDto, index: number = Number.NaN) {
         if (isEditingExistingProperty(index)) {
             inputArticle.properties[index] = property;
@@ -98,23 +132,14 @@
         };
     }
 
-    function getImageResponseMessage(): string | undefined {
-        if (imageSelected === undefined) {
-            console.debug('No image was selected, returning empty response message');
-            return undefined;
-        }
-        if (responseErrors === undefined) {
-            console.debug('Request was sent successfully');
-            return undefined;
-        }
-
-        const IMAGE_ERROR = responseErrors['image'];
-        console.debug('Error:', IMAGE_ERROR);
-        return `${$t('general.error')}: ${IMAGE_ERROR}`;
+    function validate(): boolean {
+        // TODO validate
+        return validateCreateArticleRequest(inputArticle);
     }
 
     onMount(() => {
         console.debug('Showing', inputArticle.properties.length, 'properties');
+        console.log('articleInputs', articleInputs);
     });
 </script>
 
@@ -122,8 +147,7 @@
     <PageCard title={$t('menu.addArticle')}>
 
         <Form className="inline-block w-full"
-              onSubmit={handleOnSubmit}>
-            <!-- Submit button -->
+              on:submit={() => handleOnSubmit()}>
             <div class="float-left w-full">
                 <div class="float-left w-1/2 vr">
                     <!-- input name -->
@@ -135,6 +159,7 @@
                                       text: $t('general.name')
                                   }}
                                   placeholder={$t('general.name.placeholder')}
+                                  bind:this={inputArticle.name}
                                   on:change={event => inputArticle.name = event.target.value}
                     />
 
@@ -254,6 +279,7 @@
                             <Button className="w-1/8 align-end float-right"
                                     type={ButtonType.Submit}
                                     priority={ButtonPriority.Primary}
+                                    on:click={event => onAddClick(event)}
                             >
                                 {$t('general.add')}
                             </Button>
