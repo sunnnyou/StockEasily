@@ -126,7 +126,6 @@
             return;
         }
 
-        // console.log(image, image);
         let reader = new FileReader();
         reader.readAsDataURL(imageSelected);
         reader.onload = e => {
