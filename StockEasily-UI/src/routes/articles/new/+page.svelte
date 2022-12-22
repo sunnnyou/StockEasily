@@ -101,8 +101,8 @@
 
     function onAddClick(e) {
         const firstInvalid = e.target.closest('form').querySelector(':invalid');
-
-        if ((isFormValid = !firstInvalid)) {
+        isFormValid = !firstInvalid;
+        if (isFormValid) {
             console.debug('Form data is valid');
             handleOnSubmit();
             return;
