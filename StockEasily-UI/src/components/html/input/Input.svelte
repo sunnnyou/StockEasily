@@ -13,6 +13,7 @@
     export let allowMultiple = true;
     export let className = '';
     export let disabled = false;
+    export let error = '';
     export let files: File[] = [];
     export let id = '';
     export let min = '';
@@ -53,7 +54,7 @@
            on:input
            use:typeAction
     >
-<!-- special props: maxlength, placeholder -->
+    <!-- special props: maxlength, placeholder -->
 {:else if containsPlaceholder(type)}
     <input class={className}
            {disabled}
@@ -68,7 +69,7 @@
            on:input
            use:typeAction
     >
-<!-- special props: accept, placeholder -->
+    <!-- special props: accept, placeholder -->
 {:else if type === InputType.File}
     {#if previewImageOptions?.show}
         {#if previewImageOptions.src}
@@ -136,6 +137,10 @@
            on:input
            use:typeAction
     >
+{/if}
+
+{#if error?.length > 0}
+    <p>{error}</p>
 {/if}
 
 <style>

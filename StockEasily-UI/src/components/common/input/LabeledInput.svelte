@@ -11,6 +11,7 @@
     export let addMarginTop = true;
     export let allowMultiple = true;
     export let disabled = false;
+    export let error = '';
     export let files: File[] = [];
     export let className = '';
     export let labelOptions: LabelOptions | undefined;
@@ -80,6 +81,7 @@
                {allowMultiple}
                {className}
                {disabled}
+               {error}
                id={labelOptions.name}
                {max}
                {min}
