@@ -115,7 +115,7 @@
                 />
             </InputFlexContainer>
         </div>
-        <Button className="add-property self-end h-10 w-1.5/12"
+        <Button className="add-property h-10 w-1.5/12"
                 priority={ButtonPriority.TransparentHover}
                 title={forceEdit ? $t('general.add') : (edit ? $t('general.save') : $t('general.edit'))}
                 on:click={() => onButtonClick()}

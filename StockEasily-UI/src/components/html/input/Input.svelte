@@ -146,10 +146,6 @@
 {/if}
 
 <style>
-    p.error {
-        color: #e90404;
-    }
-
     /* Extend needed styles here! */
     input[type=number], input[type=file], input[type=text], input[type=search] {
         border: 1px solid #d8dbdf;

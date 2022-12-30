@@ -43,8 +43,6 @@ export default {
 
         // /articles/new
         'page.createArticle.error': 'Could not add article. Error: {{error}}',
-        'validation.between': '{{entity}} length must be between {{min}} and {{max}}',
-        'validation.max': '{{entity}} maximum is {{max}}',
 
         // props
         'props': 'Properties',
@@ -61,6 +59,11 @@ export default {
 
         // categories
         'category': 'Category',
+
+        // validation
+        'validation.between': '{{entity}} length must be between {{min}} and {{max}}',
+        'validation.max': '{{entity}} maximum is {{max}}',
+        'validation.image': 'The selected image is too big. Max. size: {{expected}}',
 
         // footer
         'about': 'About',

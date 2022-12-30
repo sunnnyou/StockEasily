@@ -38,10 +38,6 @@
             console.debug('No image was selected, returning empty response message');
             return undefined;
         }
-        if (responseErrors === undefined) {
-            console.debug('Request was sent successfully');
-            return undefined;
-        }
 
         const IMAGE_ERROR = responseErrors['image'];
         console.debug('Error:', IMAGE_ERROR);
@@ -100,9 +96,11 @@
         imageSelected = (event.target as HTMLInputElement).files![0];
         console.log('image size:', imageSelected.size);
         if (imageSelected.size > IMAGE_MAXIMUM_SIZE) {
-            console.warn('Image selected is too big',
-                '(' + imageSelected.size + ' bytes or', formatBytesAsKilobytes(imageSelected.size) + ')',
-                'image maximum size: ', formatBytesAsKilobytes(IMAGE_MAXIMUM_SIZE));
+            const EXPECTED = formatBytesAsKilobytes(IMAGE_MAXIMUM_SIZE);
+            responseErrors = {
+                image: $t('validation.image', {expected: EXPECTED}),
+            };
+            console.warn(`Image selected is too big ( ${formatBytesAsKilobytes(imageSelected.size)} ). Maximum size allowed: ${EXPECTED}`);
             return;
         }
 
@@ -358,7 +356,7 @@
                         <div class="flex p-0 m-0 h-10 mt-4">
                             <div class="w-full text-right">
                                 {#if responseErrors && Object.keys(responseErrors)?.length > 0 }
-                                    <span class="w-full leading-10 pr-5">
+                                    <span class="error w-full leading-10 pr-5">
                                         {getImageResponseMessage()}
                                     </span>
                                 {/if}
