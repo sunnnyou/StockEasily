@@ -16,6 +16,7 @@
     export let className = '';
     export let labelOptions: LabelOptions | undefined;
     export let max = '';
+    export let maxLength = '';
     export let min = '';
     export let name = '';
     export let parentClass = '';
@@ -85,6 +86,7 @@
                id={labelOptions.name}
                {max}
                {min}
+               {maxLength}
                {name}
                {placeholder}
                {previewImageOptions}

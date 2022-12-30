@@ -1,17 +1,16 @@
 <script lang="ts">
+    import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
+    import type {ValidatableArticle} from '$dto/create-article-request-dto';
+    import type {Validatable} from '../../../common/validatable';
+    import type {PropertyRequestDto, ValidatableProperty} from '../../../dto/property-request-dto';
     import {AcceptType} from '$components/common/input/file/accept-type';
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {ButtonType} from '$components/html/button/button-type';
-    import {CreateArticleRequestDto, validateCreateArticleRequest} from '$dto/create-article-request-dto';
-    import {PropertyRequestDto} from '../../../dto/property-request-dto';
     import {goto} from '$app/navigation';
-    import {onMount} from 'svelte';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
-    import {validatePropertyRequest} from '../../../dto/property-request-dto';
-
+    import {isPropertyDescriptionValid, isPropertyNameValid, PROPERTY_LIMITS} from '../../../dto/property-request-dto';
     import Button from '$components/html/button/Button.svelte';
-    import Form from '$components/html/Form.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
     import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
     import LabeledFileInput from '$components/common/input/file/LabeledFileInput.svelte';
@@ -24,17 +23,15 @@
     const IMAGE_MAXIMUM_SIZE = 524288;
 
     let responseErrors: Object | undefined;
-    let inputArticle: CreateArticleRequestDto = {category: undefined, image: '', name: '', properties: [], quantity: 1};
-    let selectedFileName = '';
-    let imageSelected: any;
-    let isFormValid = false;
-
-    let articleInputs: {
-        name: HTMLElement,
-        category: HTMLElement,
-        image: undefined,
-        properties: HTMLElement[],
+    let validatableArticle: ValidatableArticle = {
+        category: {value: '', error: ''},
+        image: {value: '', error: ''},
+        name: {value: '', error: ''},
+        properties: [],
+        quantity: {value: 1, error: ''},
     };
+    let selectedFileName = '';
+    let imageSelected: File | undefined;
 
     function getImageResponseMessage(): string | undefined {
         if (imageSelected === undefined) {
@@ -52,109 +49,186 @@
     }
 
     async function handleOnSubmit() {
-        if (!isFormValid) {
-            console.log('aborting submit');
-            return;
-        }
-        console.log('onSubmit', inputArticle);
-
-        if (!validate()) {
+        if (!validateForm()) {
             console.error('Could not validate input data');
             return;
         }
 
         if (imageSelected?.size > IMAGE_MAXIMUM_SIZE) {
-            inputArticle.image = undefined;
+            validatableArticle.image = undefined;
             console.debug('File size is too big (' + imageSelected.size + ') => aborting');
             return;
         }
-        const body = JSON.stringify(inputArticle);
-
-        await fetch('http://localhost:8080/api/v1/articles', {
-            body: body,
+        fetch('http://localhost:8080/api/v1/articles', {
             method: 'POST',
+            body: JSON.stringify(new CreateArticleRequestDto(validatableArticle)),
             headers: {
                 'Content-Type': 'application/json',
             },
-        }).then(async (response) => {
+        }).then(response => {
             if (!response.ok) {
-                responseErrors = (await response.json())['errors'];
+                responseErrors = response.json()['errors'];
                 console.error('Could not POST article, response errors:', responseErrors);
                 return;
             }
 
             goto('/articles');
-        }).catch(async (response) => {
-            if (!response) {
+        }).catch(error => {
+            if (!error) {
                 console.error('Could not reach backend, probably offline?');
                 return;
             }
-            responseErrors = (await response.json())['errors'];
-            console.error('Unknown error: Could not POST article, response error:', response);
+            console.error('Unknown error: Could not POST article, response error:', error);
         });
 
     }
 
     function isEditingExistingProperty(index: number): boolean {
-        return index !== Number.NaN && inputArticle.properties.length > index;
+        return index !== Number.NaN && validatableArticle.properties.length > index;
     }
 
-    function onAddClick(e) {
-        const firstInvalid = e.target.closest('form').querySelector(':invalid');
-        isFormValid = !firstInvalid;
-        if (isFormValid) {
-            console.debug('Form data is valid');
-            handleOnSubmit();
-            return;
-        }
-        console.warn('Invalid properties found', firstInvalid);
-    }
-
-    function onSaveProperty(property: PropertyRequestDto, index: number = Number.NaN) {
-        if (isEditingExistingProperty(index)) {
-            inputArticle.properties[index] = property;
-        } else {
-            inputArticle.properties = [...inputArticle.properties, property];
-        }
+    function formatBytesAsKilobytes(bytes: number): string {
+        const kilobytes = (bytes / 1000).toFixed(2);
+        return `${kilobytes} KB`;
     }
 
     function onImageSelected(event) {
-        imageSelected = event.target.files[0];
+        if (event.target?.files === undefined) {
+            console.error('Could not get selected image, it is undefined');
+            return;
+        }
+        imageSelected = (event.target as HTMLInputElement).files![0];
         console.log('image size:', imageSelected.size);
         if (imageSelected.size > IMAGE_MAXIMUM_SIZE) {
-            console.warn('Image select is too big', '(' + imageSelected.size + ' bytes or', imageSelected.size / 1024 + 'KB )', 'image maximum size: ', IMAGE_MAXIMUM_SIZE / 1024, 'bytes');
+            console.warn('Image selected is too big',
+                '(' + imageSelected.size + ' bytes or', formatBytesAsKilobytes(imageSelected.size) + ')',
+                'image maximum size: ', formatBytesAsKilobytes(IMAGE_MAXIMUM_SIZE));
             return;
         }
 
         let reader = new FileReader();
         reader.readAsDataURL(imageSelected);
         reader.onload = e => {
-            inputArticle.image = '' + e.target.result;
+            if (!e.target.result) {
+                console.error('Could not get base64 encoded image, result is undefined');
+                return;
+            }
+            validatableArticle.image.value = e.target.result as string;
             selectedFileName = imageSelected.name;
-            console.log('selected file:', imageSelected.name);
+            console.log('Selected file:', imageSelected.name);
         };
     }
 
-    function validate(): boolean {
-        // TODO validate
-        return validateCreateArticleRequest(inputArticle);
+    function onSaveProperty(property: PropertyRequestDto, index: number = Number.NaN) {
+        property.name = property.name.trim();
+        property.description = property.description.trim();
+
+        if (isEditingExistingProperty(index)) {
+            validatableArticle.properties[index].value = property;
+        } else {
+            const VALIDATABLE: ValidatableProperty = <Validatable<PropertyRequestDto> & { errors: { name: string; description: string } }>{
+                errors: {
+                    description: '',
+                    name: '',
+                }, value: property,
+            };
+            validatableArticle.properties = [...validatableArticle.properties, VALIDATABLE];
+        }
     }
 
-    onMount(() => {
-        console.debug('Showing', inputArticle.properties.length, 'properties');
-        console.log('articleInputs', articleInputs);
-    });
+    function validateForm() {
+        let isValid = true;
+
+        if (!validateTextLengthBetween1And30(validatableArticle.name, 'name')) {
+            isValid = false;
+        }
+        if (!validateTextLengthBetween1And30(validatableArticle.category, 'category')) {
+            isValid = false;
+        }
+        if (!validateProperties()) {
+            isValid = false;
+        }
+
+        // sadly this is currently needed so UI gets refreshed
+        validatableArticle = validatableArticle;
+
+        return isValid;
+    }
+
+    function validatePropertyDescription(prop: ValidatableProperty): boolean {
+        let isValid = true;
+        if (!isPropertyDescriptionValid(prop)) {
+            isValid = false;
+            prop.errors.description = `Please provide a description with maximum length of ${PROPERTY_LIMITS.MAX_LENGTH.DESCRIPTION}`;
+        } else {
+            prop.errors.description = '';
+        }
+        return isValid;
+    }
+
+    function validatePropertyName(prop: ValidatableProperty): boolean {
+        let isValid = true;
+        if (!isPropertyNameValid(prop)) {
+            isValid = false;
+            prop.errors.name = `Please provide a name with a length between ${PROPERTY_LIMITS.MIN_LENGTH.NAME} and ${PROPERTY_LIMITS.MAX_LENGTH.NAME}`;
+        } else {
+            prop.errors.name = '';
+        }
+        return isValid;
+    }
+
+    function validateProperty(property: ValidatableProperty): boolean {
+        let isValid = true;
+
+        if (!property.value) {
+            isValid = false;
+        } else {
+
+        }
+        if (property.value) {
+            isValid = isValid ? validatePropertyName(property) : false;
+            isValid = isValid ? validatePropertyDescription(property) : false;
+        }
+
+        return isValid;
+    }
+
+    function validateProperties(): boolean {
+        let isValid = true;
+        for (const PROPERTY of validatableArticle.properties) {
+            isValid = isValid ? validateProperty(PROPERTY) : false;
+
+        }
+        return isValid;
+    }
+
+    function validateTextLengthBetween(field: { value: string; error: string }, entity: string, min: number, max: number, nullable: boolean = false): boolean {
+        const VALUE = field.value;
+        const isValid = VALUE ? VALUE.length >= min || VALUE.length <= max : nullable;
+        if (!isValid) {
+            field.error = `Please provide a ${entity} with a length between ${min} and ${max}`;
+            console.warn(`Invalid input ${entity}:`, field.error);
+        } else {
+            field.error = '';
+        }
+        return isValid;
+    }
+
+    function validateTextLengthBetween1And30(field: { value: any; error: string }, entity: string, nullable: boolean = false): boolean {
+        return validateTextLengthBetween(field, entity, 1, 30, nullable);
+    }
 </script>
 
 <PageContent>
     <PageCard title={$t('menu.addArticle')}>
 
-        <Form className="inline-block w-full"
-              on:submit={() => handleOnSubmit()}>
+        <form class="inline-block w-full"
+              on:submit|preventDefault={handleOnSubmit}>
             <div class="float-left w-full">
                 <div class="float-left w-1/2 vr">
                     <!-- input name -->
                     <LabeledInput addMarginTop={false}
+                                  error={validatableArticle.name.error}
                                   labelOptions={{
                                       className: 'text-gray-600',
                                       isBold: true,
@@ -162,26 +236,27 @@
                                       text: $t('general.name')
                                   }}
                                   placeholder={$t('general.name.placeholder')}
-                                  bind:this={inputArticle.name}
-                                  on:change={event => inputArticle.name = event.target.value}
+                                  on:change={event => validatableArticle.name.value = event.target.value.trim()}
                     />
 
                     <!-- input category, quantity -->
                     <InputFlexContainer leftClass="w-65p"
                                         rightClass="w-34p"
                     >
-                        <LabeledInput labelOptions={{
+                        <LabeledInput error={validatableArticle.category.error}
+                                      labelOptions={{
                                           className: 'text-gray-600',
                                           isBold: true,
                                           name: 'article-category',
                                           text: $t('general.category')
                                       }}
                                       placeholder={$t('general.category.placeholder')}
-                                      on:change={event => inputArticle.category = {name: event.target.value}}
+                                      on:change={event => validatableArticle.category.value = event.target.value.trim()}
                                       slot="left"
                         />
 
                         <LabeledNumericInput className="w-full text-sm"
+                                             error={validatableArticle.quantity.error}
                                              iconParentClass="pr-1 mt-1.5 text-sm"
                                              labelOptions={{
                                                  className: 'text-gray-600',
@@ -191,8 +266,8 @@
                                              }}
                                              min="0"
                                              offerSmallerSteps={true}
-                                             bind:value={inputArticle.quantity}
-                                             on:change={event => inputArticle.quantity = to_number(event.target.value)}
+                                             bind:value={validatableArticle.quantity.value}
+                                             on:change={event => validatableArticle.quantity.value = to_number(event.target.value)}
                                              slot="right"
                         >
                         </LabeledNumericInput>
@@ -200,15 +275,15 @@
 
                     <HorizontalRuler className="border-b-1 border-gray-300 mt-8 mx-4"></HorizontalRuler>
 
-                    {#each inputArticle?.properties as property, i}
+                    {#each validatableArticle?.properties as property, i}
                         <PropertyInput edit={false}
+                                       errors={property.errors}
                                        leftLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
                                            name: 'prop-inner-name' + i,
                                            text: $t('props.name'),
                                        }}
-                                       isValid={property => validatePropertyRequest(property)}
                                        parentId="prop-parent{i}"
                                        parentLabelOptions={{
                                            className: 'text-gray-600 mt-10',
@@ -216,7 +291,7 @@
                                            isBold: true,
                                            name: 'prop-inner-parent' + i,
                                        }}
-                                       {property}
+                                       property={property}
                                        onSave={property => onSaveProperty(property, i)}
                                        rightLabelOptions={{
                                            className: 'text-gray-600 ml-2',
@@ -234,11 +309,10 @@
                                            name: 'prop-inner-name-new',
                                            text: $t('props.name'),
                                        }}
-                                   isValid={property => validatePropertyRequest(property)}
                                    parentId="prop-parent-new"
                                    parentLabelOptions={{
                                        className: 'text-gray-600 mt-10',
-                                       hide: inputArticle?.properties.length > 0,
+                                       hide: validatableArticle?.properties.length > 0,
                                        isBold: true,
                                    }}
                                    rightLabelOptions={{
@@ -266,7 +340,7 @@
                                           previewImageOptions={{
                                             alt: selectedFileName,
                                             show: true,
-                                            src: inputArticle.image
+                                            src: validatableArticle.image.value
                                           }}
                                           on:change={event => onImageSelected(event)}
                         />
@@ -284,7 +358,6 @@
                             <Button className="w-1/8 align-end float-right"
                                     type={ButtonType.Submit}
                                     priority={ButtonPriority.Primary}
-                                    on:click={event => onAddClick(event)}
                             >
                                 {$t('general.add')}
                             </Button>
@@ -292,7 +365,7 @@
                     </div>
                 </div>
             </div>
-        </Form>
+        </form>
     </PageCard>
 </PageContent>
 

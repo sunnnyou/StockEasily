@@ -75,7 +75,7 @@
         {#if previewImageOptions.src}
             <img alt={previewImageOptions.alt || $t('general.previewImage')}
                  class="mx-auto max-w-sm max-h-80"
-                 src={previewImageOptions.src }
+                 src={previewImageOptions.src}
             >
         {:else}
 
@@ -126,8 +126,10 @@
     </div>
 {:else}
     <input class={className}
+           class:error={error?.length > 0 ? 'border-red-500': ''}
            {disabled}
            {id}
+           {maxLength}
            {name}
            {title}
            {type}
@@ -140,10 +142,14 @@
 {/if}
 
 {#if error?.length > 0}
-    <p>{error}</p>
+    <p class="pt-1 error">{error}</p>
 {/if}
 
 <style>
+    p.error {
+        color: #e90404;
+    }
+
     /* Extend needed styles here! */
     input[type=number], input[type=file], input[type=text], input[type=search] {
         border: 1px solid #d8dbdf;
