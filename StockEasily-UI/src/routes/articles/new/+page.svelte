@@ -235,6 +235,7 @@
                                       name: 'article-name',
                                       text: $t('general.name')
                                   }}
+                                  maxLength={30}
                                   placeholder={$t('general.name.placeholder')}
                                   on:change={event => validatableArticle.name.value = event.target.value.trim()}
                     />
@@ -250,6 +251,7 @@
                                           name: 'article-category',
                                           text: $t('general.category')
                                       }}
+                                      maxLength={30}
                                       placeholder={$t('general.category.placeholder')}
                                       on:change={event => validatableArticle.category.value = event.target.value.trim()}
                                       slot="left"
