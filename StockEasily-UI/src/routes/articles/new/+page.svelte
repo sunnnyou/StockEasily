@@ -139,10 +139,10 @@
     function validateForm() {
         let isValid = true;
 
-        if (!validateTextLengthBetween1And30(validatableArticle.name, 'name')) {
+        if (!validateTextLengthBetween1And30(validatableArticle.name, 'Name')) {
             isValid = false;
         }
-        if (!validateTextLengthBetween1And30(validatableArticle.category, 'category')) {
+        if (!validateTextLengthBetween1And30(validatableArticle.category, 'Category')) {
             isValid = false;
         }
         if (!validateProperties()) {
@@ -159,7 +159,10 @@
         let isValid = true;
         if (!isPropertyDescriptionValid(prop)) {
             isValid = false;
-            prop.errors.description = `Please provide a description with maximum length of ${PROPERTY_LIMITS.MAX_LENGTH.DESCRIPTION}`;
+            prop.errors.description = $t('validation.max', {
+                entity: 'Description',
+                max: PROPERTY_LIMITS.MAX_LENGTH.DESCRIPTION,
+            });
         } else {
             prop.errors.description = '';
         }
@@ -170,7 +173,11 @@
         let isValid = true;
         if (!isPropertyNameValid(prop)) {
             isValid = false;
-            prop.errors.name = `Please provide a name with a length between ${PROPERTY_LIMITS.MIN_LENGTH.NAME} and ${PROPERTY_LIMITS.MAX_LENGTH.NAME}`;
+            prop.errors.name = $t('validation.between', {
+                entity: 'Name',
+                min: PROPERTY_LIMITS.MIN_LENGTH.NAME,
+                max: PROPERTY_LIMITS.MAX_LENGTH.NAME,
+            });
         } else {
             prop.errors.name = '';
         }
@@ -206,7 +213,7 @@
         const VALUE = field.value;
         const isValid = VALUE ? VALUE.length >= min || VALUE.length <= max : nullable;
         if (!isValid) {
-            field.error = `Please provide a ${entity} with a length between ${min} and ${max}`;
+            field.error = $t('validation.between', {entity: entity, min: min, max: max});// `${entity} length must be between ${min} and ${max}`;
             console.warn(`Invalid input ${entity}:`, field.error);
         } else {
             field.error = '';

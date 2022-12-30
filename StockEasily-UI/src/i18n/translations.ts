@@ -43,6 +43,8 @@ export default {
 
         // /articles/new
         'page.createArticle.error': 'Could not add article. Error: {{error}}',
+        'validation.between': '{{entity}} length must be between {{min}} and {{max}}',
+        'validation.max': '{{entity}} maximum is {{max}}',
 
         // props
         'props': 'Properties',
