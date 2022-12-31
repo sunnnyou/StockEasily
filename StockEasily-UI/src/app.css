@@ -77,3 +77,11 @@ button.btn-hover:hover {
 button.btn-hover:active {
     background-color: #eaeaea;
 }
+
+.add-property {
+    margin-top: 3.4875rem;
+}
+
+span.error,p.error {
+    color: #e90404;
+}

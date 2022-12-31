@@ -12,6 +12,7 @@ export default {
         'general.chooseImage': 'Choose image',
         'general.replaceImage': 'Replace image',
         'general.edit': 'Edit',
+        'general.error': 'Error',
         'general.guest': 'Guest',
         'general.image': 'Image',
         'general.input.noImageSelected': 'No image selected',
@@ -38,6 +39,11 @@ export default {
         'menu.user.notifications': 'Notifications',
         'menu.articles': 'Articles',
 
+        // pages
+
+        // /articles/new
+        'page.createArticle.error': 'Could not add article. Error: {{error}}',
+
         // props
         'props': 'Properties',
         'props.description': 'Description',
@@ -53,6 +59,11 @@ export default {
 
         // categories
         'category': 'Category',
+
+        // validation
+        'validation.between': '{{entity}} length must be between {{min}} and {{max}}',
+        'validation.max': '{{entity}} maximum is {{max}}',
+        'validation.image': 'The selected image is too big. Max. size: {{expected}}',
 
         // footer
         'about': 'About',

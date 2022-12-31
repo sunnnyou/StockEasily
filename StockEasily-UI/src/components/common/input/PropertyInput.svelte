@@ -1,9 +1,12 @@
 <script lang="ts">
+    import {isPropertyRequestValid} from '../../../dto/property-request-dto';
+    import type {PropertyRequestDto, ValidatableProperty} from '../../../dto/property-request-dto';
+
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {faCheck, faPen, faPlus} from '@fortawesome/free-solid-svg-icons';
     import {onMount} from 'svelte';
+    import {PROPERTY_LIMITS} from "../../../dto/property-request-dto.js";
     import {LabelOptions} from './label-options';
-    import {PropertyRequestDto} from '../../../dto/property-request-dto';
     import {t} from '$i18n/i18n';
 
     import Button from '$components/html/button/Button.svelte';
@@ -14,19 +17,19 @@
 
     export let addMarginTop: boolean = true;
     export let edit = false;
+    export let errors = {name: '', description: ''};
     export let forceEdit = false;
     export let leftLabelOptions: LabelOptions | undefined;
     export let leftPlaceholder = '';
-    export let isValid: Function;
     export let onSave: Function | undefined = undefined;
     export let parentClass: string | undefined = undefined;
     export let parentId: string | undefined;
     export let parentLabelOptions: LabelOptions;
-    export let property: PropertyRequestDto | undefined = undefined;
+    export let property: ValidatableProperty | undefined = undefined;
     export let rightLabelOptions: LabelOptions | undefined;
     export let rightPlaceholder = '';
 
-    let internalProperty: PropertyRequestDto = property ? {...property} : {description: '', name: ''};
+    let internalProperty: PropertyRequestDto = property?.value ? property?.value : {description: '', name: ''};
 
     onMount(() => {
         setHideProp();
@@ -46,7 +49,8 @@
     }
 
     function onButtonClick() {
-        if (edit && !isValid(internalProperty)) {
+        if (!property && edit && !isPropertyRequestValid(internalProperty)
+        ) {
             return;
         }
 
@@ -81,32 +85,37 @@
             </div>
         </div>
     {/if}
-    <div class="w-full flex flex-row"
+    <div class="flex flex-row"
          id={parentLabelOptions.name}
     >
-        <div class="w-11/12">
-            <InputFlexContainer {parentId}
+        <div class="w-10/12">
+            <InputFlexContainer
                                 leftClass="w-1/2"
+                                {parentId}
                                 rightClass="w-1/2"
             >
                 <LabeledInput disabled={!edit}
+                              error={errors?.name}
                               labelOptions={leftLabelOptions}
+                              maxLength={PROPERTY_LIMITS.MAX_LENGTH.NAME}
                               placeholder={leftPlaceholder || $t('props.name.placeholder')}
                               bind:value={internalProperty.name}
-                              on:change={event => internalProperty.name = event.target.value}
+                              on:change={event => internalProperty.name = event.target.value.trim()}
                               slot="left"
                 />
 
                 <LabeledInput disabled={!edit}
+                              error={errors?.description}
                               labelOptions={rightLabelOptions}
+                              maxLength={PROPERTY_LIMITS.MAX_LENGTH.DESCRIPTION}
                               placeholder={rightPlaceholder || $t('props.description.placeholder')}
                               bind:value={internalProperty.description}
-                              on:change={event => internalProperty.description = event.target.value}
+                              on:change={event => internalProperty.description = event.target.value.trim()}
                               slot="right"
                 />
             </InputFlexContainer>
         </div>
-        <Button className="add-property self-end h-10"
+        <Button className="add-property h-10 w-1.5/12"
                 priority={ButtonPriority.TransparentHover}
                 title={forceEdit ? $t('general.add') : (edit ? $t('general.save') : $t('general.edit'))}
                 on:click={() => onButtonClick()}

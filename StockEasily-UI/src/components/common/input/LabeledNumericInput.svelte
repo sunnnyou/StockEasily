@@ -10,6 +10,7 @@
 
     export let addMarginTop = true;
     export let className = '';
+    export let error = '';
     export let iconParentClass: string | undefined;
     export let labelOptions: LabelOptions | undefined;
     export let max = '';
@@ -67,6 +68,7 @@
 
 <LabeledInput {addMarginTop}
               {className}
+              {error}
               {labelOptions}
               {max}
               {min}

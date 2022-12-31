@@ -10,6 +10,7 @@
     export let accept = AcceptType.Any;
     export let allowMultiple = true;
     export let className = '';
+    export let error = '';
     export let files: File[] = [];
     export let labelOptions: LabelOptions | undefined;
     export let name = '';
@@ -21,6 +22,7 @@
               {addMarginTop}
               {allowMultiple}
               className="hidden file{(className?.length > 0 ? ' ' + className : '')}"
+              {error}
               {labelOptions}
               {name}
               {parentClass}

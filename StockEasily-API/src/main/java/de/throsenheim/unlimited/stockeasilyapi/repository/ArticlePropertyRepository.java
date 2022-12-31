@@ -44,10 +44,15 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
 
     @Override
     public Iterable<ArticleProperty> saveAll(Iterable<ArticleProperty> relations) {
+        boolean shouldCommit = false;
         for (ArticleProperty relation : relations) {
-            save(relation);
+            if (save(relation) != null && !shouldCommit) {
+                shouldCommit = true;
+            }
         }
-        connection.commit(CommittedSqlCommand.INSERT);
+        if (shouldCommit) {
+            connection.commit(CommittedSqlCommand.INSERT);
+        }
         return relations;
     }
 
