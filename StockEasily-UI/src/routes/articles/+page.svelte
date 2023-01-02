@@ -7,6 +7,7 @@
     import {onMount} from "svelte";
 
     let articles = [];
+    let defaultImage = "/9j/4AAQSkZJRgABAQAAAQABAAD/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAEAAAAAAAD/2wBDAAsICAoIBwsKCQoNDAsNERwSEQ8PESIZGhQcKSQrKigkJyctMkA3LTA9MCcnOEw5PUNFSElIKzZPVU5GVEBHSEX/2wBDAQwNDREPESESEiFFLicuRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUX/wAARCACKAJgDASIAAhEBAxEB/8QAGgABAQEBAQEBAAAAAAAAAAAAAAQDAgEFB//EACsQAQABAQQIBwEBAAAAAAAAAAABAgMEEZESExQhMVFScTIzQUJigaFyYf/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwD9PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc6yjrpzZXqqYimmJwiccXFN10qYmasMYx4Ao1lHXTmayjrpzYbJ8/w2T5/gN9ZR105mso66c2GyfP8ADZPn+A31lHXTmayjrpzYbJ8/w2T5/gN9ZR105mso66c2GyfP8Nk+f4CiKoq8MxPZ6jmKrvaxv3cd3rCwAAAAAAAAE979n23o8FPaGF79n23o8FPaAegVTFNMzPCN4GMY4YxjPoIK65qrmrhKyytNZRj6+sA7AAABJevMj+VaS9eZH8qwAAAAAAAAT3v2fbejwU9oYXv2fbejwU9oB6mvNpjOhHpvlvaV6uiasoQTOM4zxkB3ZWmrrx9J4uAH0YnGMY3wyrvFNFejhjz/AMc6UWFjhFWMzw3pZnGcQfRjfGMcBPdrTGNCfTgoBJevMj+VaS9eZH8qwAAAAAAAAT3v2fbejwU9oYXv2fbejy6e0AkvFpp14RwjcyV7LRzqzg2WjnVnAJBXstHOrODZaOdWcAkFey0c6s4Nlo51ZwCWJmJiY4wus64tKIqhnstHOrOHdnZxZxOjjOPME968yP5VpL15sdlYAAAAAAAAM7ay1tMYTvjgxii8UxhGMR3hUAl0bxznODRvHOc4VAJdG8c5zg0bxznOFQCXRvHOc4NG8c5zhUAl0bxznODRvHOc4VAJrOwrm00rTdhOPdSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//Z"
 
     async function getArticles() {
         try{
@@ -60,7 +61,13 @@
                                         <tr class="article" on:click={() => goto('/articles/'+article.id)}>
                                             <td class="p-2 whitespace-nowrap">
                                                 <div class="flex items-center">
-                                                    <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3"><img class="rounded-full" src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-05.jpg" width="40" height="40" alt="Alex Shatov"></div>
+                                                    <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
+                                                        {#if article.image}
+                                                            <img class="rounded-full" src="{`data:image/png;base64,${article.image}`}" width="40" height="40" alt="">
+                                                        {:else}
+                                                            <img class="rounded-full" src="{`data:image/jpeg;base64,${defaultImage}`}" width="40" height="40" alt="">
+                                                        {/if}
+                                                    </div>
                                                     <div class="font-medium text-gray-800">{article.name}</div>
                                                 </div>
                                             </td>
