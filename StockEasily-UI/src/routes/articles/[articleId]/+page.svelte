@@ -1,17 +1,13 @@
 <script lang="ts">
-    import {AcceptType} from '$components/common/input/file/accept-type';
     import {t} from '$i18n/i18n';
 
     import Form from '$components/html/Form.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
-    import LabeledFileInput from '$components/common/input/file/LabeledFileInput.svelte';
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
     import {page} from '$app/stores';
     import LabeledInput from "$components/common/input/LabeledInput.svelte";
     import InputFlexContainer from "$components/common/input/InputFlexContainer.svelte";
-
-    let selectedFileName = '';
 
     type Property = {
         id: number;
@@ -25,6 +21,7 @@
         properties: Property[];
         quantity: number;
         category: object;
+        image: string;
     }
 
     async function getJson() {
@@ -34,11 +31,14 @@
 
     let article: Article;
     let properties: Property[];
+    let image;
 
     async function setArticle() {
         article = await getJson();
         properties = article.properties;
+        image = article.image;
     }
+
 </script>
 
 <PageContent>
@@ -127,21 +127,7 @@
 
                     <div class="float-left h-full w-1/2 pl-10">
                         <div class="w-full px-10 m-auto vr h-full">
-                            <LabeledFileInput accept={AcceptType.Image}
-                                              addMarginTop={false}
-                                              allowMultiple={false}
-                                              className="h-full"
-                                              labelOptions={{
-                                              className: 'text-gray-600',
-                                              isBold: true,
-                                              name: 'article-image',
-                                              text: $t('general.image')
-                                          }}
-                                              previewImageOptions={{
-                                            alt: selectedFileName,
-                                            show: true,
-                                          }} }
-                            />
+                            <img src="{`data:image/png;base64,${image}`}" alt=""/>
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,7 @@ package de.throsenheim.unlimited.stockeasilyapi.service.article;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.SearchArticleResponse;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -58,8 +60,13 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> searchAll() {
-        return articleRepository.findAll();
+    public List<SearchArticleResponse> searchAll() {
+        final List<Article> articleList = articleRepository.findAll();
+        final List<SearchArticleResponse> articleResponseList = new ArrayList<>();
+        for(Article article : articleList) {
+            articleResponseList.add(new SearchArticleResponse(article));
+        }
+        return articleResponseList;
     }
 
     @Override

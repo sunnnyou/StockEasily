@@ -97,12 +97,12 @@ public class ArticlesController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(consumes = {"*/*"})
-    public ResponseEntity<List<Article>> searchAllArticles() {
-        final List<Article> resultList = articleService.searchAll();
+    public ResponseEntity<List<SearchArticleResponse>> searchAllArticles() {
+        final List<SearchArticleResponse> resultList = articleService.searchAll();
         return validateResponseList(resultList);
     }
 
-    private ResponseEntity<List<Article>> validateResponseList(List<Article> resultList) {
+    private ResponseEntity<List<SearchArticleResponse>> validateResponseList(List<SearchArticleResponse> resultList) {
         try {
             if (resultList.isEmpty()) {
                 return ResponseEntity.notFound().build();
