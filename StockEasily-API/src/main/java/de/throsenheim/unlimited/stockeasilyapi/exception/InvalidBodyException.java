@@ -11,6 +11,10 @@ public class InvalidBodyException extends RuntimeException {
         this.setResult(result);
     }
 
+    public InvalidBodyException() {
+        this(null);
+    }
+
     public BindingResult getResult() {
         return result;
     }

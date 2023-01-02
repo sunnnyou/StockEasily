@@ -3,6 +3,7 @@ package de.throsenheim.unlimited.stockeasilyapi.exception.common;
 import de.throsenheim.unlimited.stockeasilyapi.exception.InvalidBodyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,7 +24,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidBodyException.class)
     public ResponseEntity<?> invalidBodyException(InvalidBodyException ex) {
-        final List<FieldError> errors = ex.getResult().getFieldErrors();
+        final BindingResult result = ex.getResult();
+        if (result == null) {
+            return commonErrorHandler.getInvalidFieldsErrorResponse("Validation error",null);
+        }
+        final List<FieldError> errors = result.getFieldErrors();
         for (FieldError error : errors) {
             logger.error("Validation error '" + error.getField() + "', cause: " + error.getDefaultMessage());
         }

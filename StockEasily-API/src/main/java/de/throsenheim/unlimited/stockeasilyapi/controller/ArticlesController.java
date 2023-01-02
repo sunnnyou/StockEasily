@@ -42,13 +42,16 @@ public class ArticlesController {
     public ResponseEntity<CreateArticleResponseDto> createArticle(
             @ApiParam(name = "article") @Valid @RequestBody CreateArticleRequestDto request,
             BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+        if (bindingResult != null && bindingResult.hasErrors()) {
             throw new InvalidBodyException(bindingResult);
         }
         final CreateArticleResponseDto result = this.articleService.create(request);
         if (result != null && request.getImage() != null && result.isImageInvalid()) {
-            bindingResult.addError(this.articleService.getImageFieldError());
-            throw new InvalidBodyException(bindingResult);
+            if (bindingResult != null) {
+                bindingResult.addError(this.articleService.getImageFieldError());
+                throw new InvalidBodyException(bindingResult);
+            }
+            throw new InvalidBodyException();
         }
         // INTERNAL SERVER ERROR should NOT occur
         final HttpStatus httpStatus = result == null ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.CREATED;
