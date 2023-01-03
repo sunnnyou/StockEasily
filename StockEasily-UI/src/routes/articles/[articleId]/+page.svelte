@@ -8,6 +8,7 @@
     import {page} from '$app/stores';
     import LabeledInput from "$components/common/input/LabeledInput.svelte";
     import InputFlexContainer from "$components/common/input/InputFlexContainer.svelte";
+    import Label from "$components/html/input/Label.svelte";
 
     type Property = {
         id: number;
@@ -42,7 +43,7 @@
 </script>
 
 <PageContent>
-    <PageCard title={$t('menu.addArticle')}>
+    <PageCard title={$t('article')}>
         {#await setArticle() then _}
             <Form className="inline-block w-full">
                 <!-- Submit button -->
@@ -90,6 +91,17 @@
 
                         <HorizontalRuler className="border-b-1 border-gray-300 mt-8 mx-4"></HorizontalRuler>
 
+                        <div class="flex flex-col">
+                            <div class="flex items-end h-10 mt-2'}">
+                                <Label className='text-gray-600 mt-10'
+                                       name='prop-inner-parent'
+                                       bold=true
+                                >
+                                        {$t('props') + ':'}
+                                </Label>
+                            </div>
+                        </div>
+
                         {#each properties as property}
                             <InputFlexContainer leftClass="w-65p"
                                                 rightClass="w-34p"
@@ -98,8 +110,8 @@
                                               labelOptions={{
                                           className: 'text-gray-600',
                                           isBold: true,
-                                          name: 'article-category',
-                                          text: null
+                                          name: 'property-name',
+                                          text: $t('props.name')
                                       }}
                                               placeholder={property.name}
                                               slot="left"
@@ -111,8 +123,8 @@
                                               labelOptions={{
                                                  className: 'text-gray-600',
                                                  isBold: true,
-                                                 name: 'article-quantity',
-                                                 text: null
+                                                 name: 'property-description',
+                                                 text: $t('props.description')
                                           }}
                                               placeholder={property.description}
                                               slot="right"
