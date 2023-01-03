@@ -75,7 +75,7 @@
                                                 <div class="text-left">{article.category.name}</div>
                                             </td>
                                             <td class="p-2 whitespace-nowrap">
-                                                <div class="text-left font-medium text-green-500">{article.id}</div>
+                                                <div class="text-left font-medium text-gray-500">{article.id}</div>
                                             </td>
                                         </tr>
                                     {:else}
@@ -83,6 +83,23 @@
                                         {/each}
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+
+                        <div class="flex">
+                            <div class="m-auto">
+                                <div class="inline-block font-medium text-gray-800">
+                                    <a class="border-black float-left p-2 no-underline" href="#">&laquo;</a>
+
+                                    <a class="border-black float-left p-2 no-underline" href="#">1</a>
+                                    <a class="border-black float-left p-2 no-underline" href="#">2</a>
+                                    <a class="border-black float-left p-2 no-underline" href="#">3</a>
+                                    <a class="border-black float-left p-2 no-underline" href="#">4</a>
+                                    <a class="border-black float-left p-2 no-underline" href="#">5</a>
+                                    <a class="border-black float-left p-2 no-underline" href="#">6</a>
+
+                                    <a class="border-black float-left p-2 no-underline" href="#">&raquo;</a>
+                                </div>
                             </div>
                         </div>
                     </div>
