@@ -79,7 +79,7 @@
                                             </td>
                                         </tr>
                                     {:else}
-                                        <p>loading...</p>
+                                        <p class="text-gray-800">{$t('articles.loading')}...</p>
                                         {/each}
                                     </tbody>
                                 </table>
@@ -107,7 +107,7 @@
             </section>
 
         {:else}
-            <div>{$t('articles.notFound')}</div>
+            <div class="text-gray-800">{$t('articles.notFound')}</div>
         {/if}
     </PageCard>
 </PageContent>
