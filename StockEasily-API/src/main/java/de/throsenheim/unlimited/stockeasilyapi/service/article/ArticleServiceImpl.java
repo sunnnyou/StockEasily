@@ -70,6 +70,16 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public List<SearchArticleResponse> searchAllPage(int limit, int page) {
+        final List<Article> articleList = articleRepository.findAllPage(limit, page);
+        final List<SearchArticleResponse> articleResponseList = new ArrayList<>();
+        for(Article article : articleList) {
+            articleResponseList.add(new SearchArticleResponse(article));
+        }
+        return articleResponseList;
+    }
+
+    @Override
     public boolean validateImage(byte[] data) {
         return data.length <= maxImageSize;
     }

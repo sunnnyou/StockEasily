@@ -63,6 +63,10 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         return selectAllName(name);
     }
 
+    public List<Article> findAllPage(int limit, int page) {
+        return selectAllPage(limit, page);
+    }
+
     @Override
     public Article save(Article article) {
         return save(article, true);
@@ -211,6 +215,37 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
                 Article article = new Article();
                 article.setId(resultSet.getLong("id"));
                 article.setName(name);
+                setQuantityImagePropertiesCategories(article, resultSet);
+                articleList.add(article);
+            }
+            LOGGER.debug("Returning article list with size {}", articleList.size());
+            return articleList;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Article> selectAllPage(int limit, int page){
+        page = page - 1;
+        PreparedStatement preparedStatement = null;
+        final String query = "select id, name, quantity, image, categoryId from articles LIMIT ?, ?";
+
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, (page*limit));
+            preparedStatement.setInt(2, limit);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<Article> articleList = new ArrayList<>(resultSet.getFetchSize());
+
+            while (resultSet.next()) {
+                Article article = new Article();
+                article.setId(resultSet.getLong("id"));
+                article.setName(resultSet.getString("name"));
                 setQuantityImagePropertiesCategories(article, resultSet);
                 articleList.add(article);
             }

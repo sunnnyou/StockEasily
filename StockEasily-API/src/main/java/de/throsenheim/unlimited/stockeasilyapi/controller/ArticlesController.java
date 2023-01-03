@@ -102,6 +102,26 @@ public class ArticlesController {
         return validateResponseList(resultList);
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "Get all articles in list", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Article list issued", response = List.class),
+            @ApiResponse(code = 400, message = "Api parameter not a string", response = HttpClientErrorException.BadRequest.class),
+            @ApiResponse(code = 404, message = "No articles found", response = HttpClientErrorException.NotFound.class)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(path = "/page/{page}", consumes = {"*/*"})
+    public ResponseEntity<List<SearchArticleResponse>> searchAllArticlesPage(
+            @PathVariable int page) {
+        final int limit = 10;
+        if(page > 0) {
+            final List<SearchArticleResponse> resultList = articleService.searchAllPage(limit, page);
+            return validateResponseList(resultList);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     private ResponseEntity<List<SearchArticleResponse>> validateResponseList(List<SearchArticleResponse> resultList) {
         try {
             if (resultList.isEmpty()) {

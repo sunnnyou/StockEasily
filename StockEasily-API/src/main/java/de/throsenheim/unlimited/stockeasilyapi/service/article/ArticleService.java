@@ -20,5 +20,7 @@ public interface ArticleService {
 
     List<SearchArticleResponse> searchAll();
 
+    List<SearchArticleResponse> searchAllPage(int limit, int page);
+
     boolean validateImage(byte[] data);
 }
