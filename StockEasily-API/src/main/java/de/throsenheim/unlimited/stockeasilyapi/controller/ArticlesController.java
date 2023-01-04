@@ -103,10 +103,10 @@ public class ArticlesController {
     }
 
     @CrossOrigin
-    @ApiOperation(value = "Get all articles in list", response = List.class)
+    @ApiOperation(value = "Get articles from list with the amount depending on the limit and which ones on page", response = List.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Article list issued", response = List.class),
-            @ApiResponse(code = 400, message = "Api parameter not a string", response = HttpClientErrorException.BadRequest.class),
+            @ApiResponse(code = 400, message = "Api parameter not an int", response = HttpClientErrorException.BadRequest.class),
             @ApiResponse(code = 404, message = "No articles found", response = HttpClientErrorException.NotFound.class)
     })
     @ResponseStatus(HttpStatus.OK)
