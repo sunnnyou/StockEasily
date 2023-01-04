@@ -22,6 +22,7 @@
 
     const IMAGE_MAXIMUM_SIZE = 524288;
 
+    let files: File[] = [];
     let responseErrors: Object | undefined;
     let validatableArticle: ValidatableArticle = {
         category: {value: '', error: ''},
@@ -91,9 +92,23 @@
     function onImageSelected(event) {
         if (event.target?.files === undefined) {
             console.error('Could not get selected image, it is undefined');
+            files = [];
             return;
         }
-        imageSelected = (event.target as HTMLInputElement).files![0];
+        const HTML_TARGET = event.target as HTMLInputElement;
+        if (!HTML_TARGET) {
+            console.error('Could not get HTMLInputElement');
+            return;
+        }
+        if (HTML_TARGET.files.length === 0) {
+            console.warn('No file selected');
+            files = [];
+            imageSelected = undefined;
+            selectedFileName = undefined;
+            validatableArticle.image.value = undefined;
+            return;
+        }
+        imageSelected = HTML_TARGET.files![0];
         console.log('image size:', imageSelected.size);
         if (imageSelected.size > IMAGE_MAXIMUM_SIZE) {
             const EXPECTED = formatBytesAsKilobytes(IMAGE_MAXIMUM_SIZE);
@@ -101,6 +116,7 @@
                 image: $t('validation.image', {expected: EXPECTED}),
             };
             console.warn(`Image selected is too big ( ${formatBytesAsKilobytes(imageSelected.size)} ). Maximum size allowed: ${EXPECTED}`);
+            files = imageSelected === undefined ? [] : [imageSelected];
             return;
         }
 
@@ -109,6 +125,7 @@
         reader.onload = e => {
             if (!e.target.result) {
                 console.error('Could not get base64 encoded image, result is undefined');
+                files = [];
                 return;
             }
             validatableArticle.image.value = e.target.result as string;
@@ -349,6 +366,7 @@
                                             show: true,
                                             src: validatableArticle.image.value
                                           }}
+                                          bind:files
                                           on:change={event => onImageSelected(event)}
                         />
 
