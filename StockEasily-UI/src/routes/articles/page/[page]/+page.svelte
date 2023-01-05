@@ -162,11 +162,11 @@
                                                     {#if article.image}
                                                         <img class="rounded-full"
                                                              src="{`data:image/png;base64,${article.image}`}"
-                                                             width="40" height="40" alt="">
+                                                             alt="">
                                                     {:else}
                                                         <img class="rounded-full"
                                                              src="{`data:image/jpeg;base64,${defaultImage}`}"
-                                                             width="40" height="40" alt="">
+                                                             alt="">
                                                     {/if}
                                                 </div>
                                                 <div class="font-medium text-gray-800">{article.name}</div>
