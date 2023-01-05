@@ -171,8 +171,8 @@ public class ArticlesController {
 
     private ResponseEntity<List<SearchArticleResponse>> validateResponseList(List<SearchArticleResponse> resultList) {
         try {
-            if (resultList.isEmpty()) {
-                return ResponseEntity.notFound().build();
+            if (resultList==null) {
+                return ResponseEntity.internalServerError().build();
             } else {
                 final HttpStatus httpStatus = HttpStatus.OK;
                 return new ResponseEntity<>(resultList, httpStatus);
