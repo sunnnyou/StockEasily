@@ -46,7 +46,7 @@ public class SearchArticleResponse {
         try {
             LOGGER.info("Set image of article with id {}", article.getId());
             setImage(article.getImage());
-            LOGGER.info("Base64 String: {}", this.image);
+            LOGGER.info("Base64 String set: {}", this.image != null);
         } catch (SQLException e) {
             LOGGER.error("Could not set encode image to base64. ", e);
             setImageBase64Null();
