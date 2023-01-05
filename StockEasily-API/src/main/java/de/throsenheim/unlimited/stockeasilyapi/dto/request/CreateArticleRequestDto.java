@@ -1,7 +1,7 @@
 package de.throsenheim.unlimited.stockeasilyapi.dto.request;
 
+import de.throsenheim.unlimited.stockeasilyapi.validation.ImageSize;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -27,6 +27,7 @@ public class CreateArticleRequestDto {
     @PositiveOrZero(message = "Quantity must greater than or equal to 0")
     private int quantity = 1;
 
+    @ImageSize()
     private String image;
 
     public CategoryRequestDto getCategory() {

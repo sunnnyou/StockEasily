@@ -4,10 +4,10 @@ import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestD
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.repository.ArticleRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.FieldError;
 
 import java.util.Base64;
 import java.util.List;
@@ -16,35 +16,34 @@ import java.util.Optional;
 @Component
 public class ArticleServiceImpl implements ArticleService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleServiceImpl.class);
+
     private final ArticleRepository articleRepository;
 
-    private long maxImageSize;
-
     @Autowired
-    public ArticleServiceImpl(ArticleRepository articleRepository, @Value("${article.image.maxsize}") long maxImageSize) {
+    public ArticleServiceImpl(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
-        this.maxImageSize = maxImageSize;
+    }
+
+    private byte[] decodeImage(final String image) {
+        if (image == null) {
+            return null;
+        }
+        String rawImage = image.substring(image.indexOf(',') + 1);
+
+        try {
+            return Base64.getDecoder().decode(rawImage);
+        } catch (IllegalArgumentException exception) {
+            LOGGER.error("Could not decode image via base64, argument is invalid");
+            return null;
+        }
     }
 
     @Override
     public CreateArticleResponseDto create(CreateArticleRequestDto request) {
-        String image = request.getImage();
-        byte[] decodedBytes = null;
-        if (image != null) {
-            image = image.substring(image.indexOf(',') + 1);
-            decodedBytes = Base64.getDecoder().decode(image);
-            if (!this.validateImage(decodedBytes)) {
-                return new CreateArticleResponseDto();
-            }
-        }
-        final Article article = new Article(request, decodedBytes);
+        final Article article = new Article(request, decodeImage(request.getImage()));
         Article saveResult = this.articleRepository.save(article);
         return saveResult == null ? null : new CreateArticleResponseDto(article);
-    }
-
-    @Override
-    public FieldError getImageFieldError() {
-        return new FieldError("image", "image", "Image size must be <= " + maxImageSize);
     }
 
     @Override
@@ -60,10 +59,5 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<Article> searchAll() {
         return articleRepository.findAll();
-    }
-
-    @Override
-    public boolean validateImage(byte[] data) {
-        return data.length <= maxImageSize;
     }
 }
