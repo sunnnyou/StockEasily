@@ -23,4 +23,10 @@ public interface ArticleService {
     List<SearchArticleResponse> searchAllPage(int limit, int page);
 
     boolean validateImage(byte[] data);
+
+    int getArticleRepositorySize();
+
+    List<SearchArticleResponse> searchAllByQuery(String query, int limit, int page);
+
+    int getArticleRepositorySizeQuery(String query);
 }

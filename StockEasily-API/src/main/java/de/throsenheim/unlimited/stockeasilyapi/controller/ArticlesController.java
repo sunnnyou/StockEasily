@@ -8,6 +8,8 @@ import de.throsenheim.unlimited.stockeasilyapi.exception.InvalidBodyException;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.service.article.ArticleService;
 import io.swagger.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/api/v1/articles", consumes = "application/json", produces = "application/json")
 public class ArticlesController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ArticlesController.class);
 
     private final ArticleService articleService;
 
@@ -120,6 +124,49 @@ public class ArticlesController {
         } else {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "Get articles from list with the amount depending on the limit and which ones on page", response = List.class)
+    @ApiResponse(code = 200, message = "Article size issued", response = Integer.class)
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(path = "/size", consumes = {"*/*"})
+    public ResponseEntity<Integer> getArticleRepositorySize() {
+        final int articleRepositorySize = articleService.getArticleRepositorySize();
+        return ResponseEntity.ok(articleRepositorySize);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "Get articles from list with the amount depending on the limit and which ones on page", response = List.class)
+    @ApiResponse(code = 200, message = "Article size issued", response = Integer.class)
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(path = "/size/{query}", consumes = {"*/*"})
+    public ResponseEntity<Integer> getArticleRepositorySizeQuery(
+            @PathVariable String query) {
+        final int articleRepositorySize = articleService.getArticleRepositorySizeQuery(query);
+        return ResponseEntity.ok(articleRepositorySize);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "Get articles from list with the amount depending on the limit and which ones on page and search query", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Article list issued", response = List.class),
+            @ApiResponse(code = 400, message = "Api parameter not an int", response = HttpClientErrorException.BadRequest.class),
+            @ApiResponse(code = 404, message = "No articles found", response = HttpClientErrorException.NotFound.class)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(path = "/search/{query}/{page}", consumes = {"*/*"})
+    public ResponseEntity<List<SearchArticleResponse>> searchFromQuery(
+            @PathVariable String query,
+            @PathVariable int page) {
+        if(query == null || query.isBlank() || page < 1) {
+            LOG.info("Query: {}, Page: {}", query, page);
+            return ResponseEntity.badRequest().build();
+        }
+        final int limit = 10;
+        LOG.info("Query: {}, Limit:{} ,Page: {}", query, limit, page);
+        final List<SearchArticleResponse> resultList = articleService.searchAllByQuery(query, limit, page);
+        return validateResponseList(resultList);
     }
 
     private ResponseEntity<List<SearchArticleResponse>> validateResponseList(List<SearchArticleResponse> resultList) {

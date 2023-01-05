@@ -83,4 +83,24 @@ public class ArticleServiceImpl implements ArticleService {
     public boolean validateImage(byte[] data) {
         return data.length <= maxImageSize;
     }
+
+    @Override
+    public int getArticleRepositorySize() {
+        return articleRepository.getSize();
+    }
+
+    @Override
+    public List<SearchArticleResponse> searchAllByQuery(String query, int limit, int page) {
+        final List<Article> articleList = articleRepository.findAllByQuery(query, limit, page);
+        final List<SearchArticleResponse> articleResponseList = new ArrayList<>();
+        for(Article article : articleList) {
+            articleResponseList.add(new SearchArticleResponse(article));
+        }
+        return articleResponseList;
+    }
+
+    @Override
+    public int getArticleRepositorySizeQuery(String query) {
+        return articleRepository.getSizeQuery(query);
+    }
 }
