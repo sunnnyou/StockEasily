@@ -160,11 +160,11 @@ public class ArticlesController {
             @PathVariable String query,
             @PathVariable int page) {
         if(query == null || query.isBlank() || page < 1) {
-            LOG.info("Query: {}, Page: {}", query, page);
+            LOG.debug("Query: {}, Page: {}", query, page);
             return ResponseEntity.badRequest().build();
         }
         final int limit = 10;
-        LOG.info("Query: {}, Limit:{} ,Page: {}", query, limit, page);
+        LOG.debug("Query: {}, Limit:{} ,Page: {}", query, limit, page);
         final List<SearchArticleResponse> resultList = articleService.searchAllByQuery(query, limit, page);
         return validateResponseList(resultList);
     }
