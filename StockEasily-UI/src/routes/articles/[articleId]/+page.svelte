@@ -50,8 +50,8 @@
                 <div class="float-left w-full">
                     <div class="float-left w-1/2">
                         <!-- name -->
-                        <LabeledInput disabled="true"
-                                      addMarginTop={false}
+                        <LabeledInput addMarginTop={false}
+                                      disabled={true}
                                       labelOptions={{
                                       className: 'text-gray-600',
                                       isBold: true,
@@ -64,7 +64,7 @@
                         <InputFlexContainer leftClass="w-65p"
                                             rightClass="w-34p"
                         >
-                            <LabeledInput disabled=true
+                            <LabeledInput disabled={true}
                                           labelOptions={{
                                           className: 'text-gray-600',
                                           isBold: true,
@@ -75,7 +75,7 @@
                                           slot="left"
                             />
 
-                            <LabeledInput disabled=true
+                            <LabeledInput disabled={true}
                                           className="w-full text-sm"
                                           iconParentClass="pr-1 mt-1.5 text-sm"
                                           labelOptions={{
@@ -106,7 +106,7 @@
                             <InputFlexContainer leftClass="w-65p"
                                                 rightClass="w-34p"
                             >
-                                <LabeledInput disabled=true
+                                <LabeledInput disabled={true}
                                               labelOptions={{
                                           className: 'text-gray-600',
                                           isBold: true,
@@ -117,8 +117,8 @@
                                               slot="left"
                                 />
 
-                                <LabeledInput disabled=true
-                                              className="w-full text-sm"
+                                <LabeledInput className="w-full text-sm"
+                                              disabled={true}
                                               iconParentClass="pr-1 mt-1.5 text-sm"
                                               labelOptions={{
                                                  className: 'text-gray-600',
@@ -139,7 +139,10 @@
 
                     <div class="float-left h-full w-1/2 pl-10">
                         <div class="w-full px-10 m-auto vr h-full">
-                            <img src="{`data:image/png;base64,${image}`}" alt="" class="w-full object-contain max-h-96"/>
+                            <img alt=""
+                                 class="w-full object-contain max-h-96"
+                                 src={`data:image/png;base64,${image}`}
+                            />
                         </div>
                     </div>
                 </div>
