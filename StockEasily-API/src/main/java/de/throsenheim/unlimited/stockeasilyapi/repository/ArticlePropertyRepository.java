@@ -151,7 +151,7 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
                 long propertyId = resultSet.getLong("propertyId");
                 propertyIdList.add(propertyId);
             }
-            LOGGER.info("Retrieved articleProperty list from data bank with size: {}", propertyIdList.size());
+            LOGGER.debug("Retrieved articleProperty list from data bank with size: {}", propertyIdList.size());
             return propertyIdList;
         } catch (SQLException e) {
             throw new RuntimeException(e);

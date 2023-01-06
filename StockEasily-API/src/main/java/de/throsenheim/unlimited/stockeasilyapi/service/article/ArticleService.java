@@ -2,6 +2,7 @@ package de.throsenheim.unlimited.stockeasilyapi.service.article;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.SearchArticleResponse;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import org.springframework.validation.FieldError;
 
@@ -17,7 +18,15 @@ public interface ArticleService {
 
     List<Article> searchAllByName(String name);
 
-    List<Article> searchAll();
+    List<SearchArticleResponse> searchAll();
+
+    List<SearchArticleResponse> searchAllPage(int limit, int page);
 
     boolean validateImage(byte[] data);
+
+    int getArticleRepositorySize();
+
+    List<SearchArticleResponse> searchAllByQuery(String query, int limit, int page);
+
+    int getArticleRepositorySizeQuery(String query);
 }
