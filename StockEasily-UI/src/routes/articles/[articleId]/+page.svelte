@@ -55,7 +55,6 @@
         };
         let articleString = JSON.stringify(articleWithoutImage)
         let qrImage = await QRCode.toDataURL(articleString);
-        console.log(qrImage)
         let newTab = window.open();
         newTab.document.write(`<img src="${qrImage}" alt="">`);
     }
