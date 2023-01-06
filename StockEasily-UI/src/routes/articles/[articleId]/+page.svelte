@@ -9,6 +9,7 @@
     import LabeledInput from "$components/common/input/LabeledInput.svelte";
     import InputFlexContainer from "$components/common/input/InputFlexContainer.svelte";
     import Label from "$components/html/input/Label.svelte";
+    import QRCode from 'qrcode';
 
     type Property = {
         id: number;
@@ -40,11 +41,38 @@
         image = article.image;
     }
 
+    // This creates a new QR Image from article without the image. This QR image is then displayed on a new tab
+    async function getQRImage() {
+
+
+        const articleWithoutImage: { image: null; quantity: number; name: string; id: number; category: object; properties: Property[] } = {
+            id: Number($page.params.articleId),
+            name: article.name,
+            properties: properties,
+            quantity: article.quantity,
+            category: article.category,
+            image: null
+        };
+        let articleString = JSON.stringify(articleWithoutImage)
+        let qrImage = await QRCode.toDataURL(articleString);
+        console.log(qrImage)
+        let newTab = window.open();
+        newTab.document.write(`<img src="${qrImage}" alt="">`);
+    }
+
 </script>
 
 <PageContent>
     <PageCard title={$t('article')}>
+
         {#await setArticle() then _}
+
+            <button on:click={() => getQRImage()}
+                    type="submit"
+                    class="p-2.5 ml-2 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                Get QR-Code
+            </button>
+
             <Form className="inline-block w-full">
                 <!-- Submit button -->
                 <div class="float-left w-full">
