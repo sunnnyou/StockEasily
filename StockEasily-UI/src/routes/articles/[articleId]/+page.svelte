@@ -89,7 +89,7 @@
                             />
                         </InputFlexContainer>
 
-                        <HorizontalRuler className="border-b-1 border-gray-300 mt-8 mx-4"></HorizontalRuler>
+                        <HorizontalRuler className="border-b-1 border-gray-300 mt-8 mx-4"/>
 
                         <div class="flex flex-col">
                             <div class="flex items-end h-10 mt-2'}">
