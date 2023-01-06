@@ -6,9 +6,9 @@
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
     import {page} from '$app/stores';
-    import LabeledInput from "$components/common/input/LabeledInput.svelte";
-    import InputFlexContainer from "$components/common/input/InputFlexContainer.svelte";
-    import Label from "$components/html/input/Label.svelte";
+    import LabeledInput from '$components/common/input/LabeledInput.svelte';
+    import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
+    import Label from '$components/html/input/Label.svelte';
 
     type Property = {
         id: number;
