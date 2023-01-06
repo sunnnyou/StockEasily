@@ -176,13 +176,13 @@
                                             <div class="flex items-center">
                                                 <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
                                                     {#if article.image}
-                                                        <img class="rounded-full"
+                                                        <img class="rounded-full w-full object-contain max-h-10 max-w-10"
                                                              src="{`data:image/png;base64,${article.image}`}"
                                                              width="40"
                                                              height="40"
                                                              alt="">
                                                     {:else}
-                                                        <img class="rounded-full"
+                                                        <img class="rounded-full w-full object-contain max-h-10 max-w-10"
                                                              src="{`data:image/jpeg;base64,${defaultImage}`}"
                                                              width="40"
                                                              height="40"
