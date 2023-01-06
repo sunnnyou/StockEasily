@@ -53,11 +53,11 @@
                         <LabeledInput addMarginTop={false}
                                       disabled={true}
                                       labelOptions={{
-                                      className: 'text-gray-600',
-                                      isBold: true,
-                                      name: 'article-name',
-                                      text: $t('general.name')
-                                  }}
+                                          className: 'text-gray-600',
+                                          isBold: true,
+                                          name: 'article-name',
+                                          text: $t('general.name')
+                                      }}
                                       placeholder={article.name}
                         />
                         <!-- category, quantity -->
@@ -66,11 +66,11 @@
                         >
                             <LabeledInput disabled={true}
                                           labelOptions={{
-                                          className: 'text-gray-600',
-                                          isBold: true,
-                                          name: 'article-category',
-                                          text: $t('general.category')
-                                      }}
+                                              className: 'text-gray-600',
+                                              isBold: true,
+                                              name: 'article-category',
+                                              text: $t('general.category')
+                                          }}
                                           placeholder={article.category.name}
                                           slot="left"
                             />
@@ -97,7 +97,7 @@
                                        name='prop-inner-parent'
                                        bold=true
                                 >
-                                        {$t('props') + ':'}
+                                    {$t('props') + ':'}
                                 </Label>
                             </div>
                         </div>
@@ -108,11 +108,11 @@
                             >
                                 <LabeledInput disabled={true}
                                               labelOptions={{
-                                          className: 'text-gray-600',
-                                          isBold: true,
-                                          name: 'property-name',
-                                          text: $t('props.name')
-                                      }}
+                                                  className: 'text-gray-600',
+                                                  isBold: true,
+                                                  name: 'property-name',
+                                                  text: $t('props.name')
+                                              }}
                                               placeholder={property.name}
                                               slot="left"
                                 />
