@@ -56,6 +56,7 @@ export default {
         'articles.name': 'Name',
         'articles.id' : 'ID',
         'articles.notFound': 'No articles found.',
+        'articles.loading': 'Loading',
 
         // categories
         'category': 'Category',

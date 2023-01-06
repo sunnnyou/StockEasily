@@ -2,6 +2,7 @@ package de.throsenheim.unlimited.stockeasilyapi.service.article;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.SearchArticleResponse;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.repository.ArticleRepository;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +59,42 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> searchAll() {
-        return articleRepository.findAll();
+    public List<SearchArticleResponse> searchAll() {
+        final List<Article> articleList = articleRepository.findAll();
+        final List<SearchArticleResponse> articleResponseList = new ArrayList<>();
+        for(Article article : articleList) {
+            articleResponseList.add(new SearchArticleResponse(article));
+        }
+        return articleResponseList;
+    }
+
+    @Override
+    public List<SearchArticleResponse> searchAllPage(int limit, int page) {
+        final List<Article> articleList = articleRepository.findAllPage(limit, page);
+        final List<SearchArticleResponse> articleResponseList = new ArrayList<>();
+        for(Article article : articleList) {
+            articleResponseList.add(new SearchArticleResponse(article));
+        }
+        return articleResponseList;
+    }
+
+    @Override
+    public int getArticleRepositorySize() {
+        return articleRepository.getSize();
+    }
+
+    @Override
+    public List<SearchArticleResponse> searchAllByQuery(String query, int limit, int page) {
+        final List<Article> articleList = articleRepository.findAllByQuery(query, limit, page);
+        final List<SearchArticleResponse> articleResponseList = new ArrayList<>();
+        for(Article article : articleList) {
+            articleResponseList.add(new SearchArticleResponse(article));
+        }
+        return articleResponseList;
+    }
+
+    @Override
+    public int getArticleRepositorySizeQuery(String query) {
+        return articleRepository.getSizeQuery(query);
     }
 }
