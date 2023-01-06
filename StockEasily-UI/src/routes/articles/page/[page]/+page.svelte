@@ -256,4 +256,9 @@
         background: #ccc;
         color: #fff;
     }
+    a:hover {
+        cursor: pointer;
+        background: #ccc;
+        color: #fff;
+    }
 </style>
