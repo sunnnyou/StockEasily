@@ -9,7 +9,7 @@
             icon: faHome,
         },
         {
-            href: '/articles',
+            href: '/articles/page/1',
             i18n: 'menu.articles',
             icon: faList,
         },

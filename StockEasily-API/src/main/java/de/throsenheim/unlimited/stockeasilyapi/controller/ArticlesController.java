@@ -8,6 +8,8 @@ import de.throsenheim.unlimited.stockeasilyapi.exception.InvalidBodyException;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.service.article.ArticleService;
 import io.swagger.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/api/v1/articles", consumes = "application/json", produces = "application/json")
 public class ArticlesController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ArticlesController.class);
 
     private final ArticleService articleService;
 
@@ -100,15 +104,78 @@ public class ArticlesController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(consumes = {"*/*"})
-    public ResponseEntity<List<Article>> searchAllArticles() {
-        final List<Article> resultList = articleService.searchAll();
+    public ResponseEntity<List<SearchArticleResponse>> searchAllArticles() {
+        final List<SearchArticleResponse> resultList = articleService.searchAll();
         return validateResponseList(resultList);
     }
 
-    private ResponseEntity<List<Article>> validateResponseList(List<Article> resultList) {
+    @CrossOrigin
+    @ApiOperation(value = "Get articles from list with the amount depending on the limit and which ones on page", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Article list issued", response = List.class),
+            @ApiResponse(code = 400, message = "Api parameter not an int", response = HttpClientErrorException.BadRequest.class),
+            @ApiResponse(code = 404, message = "No articles found", response = HttpClientErrorException.NotFound.class)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(path = "/page/{page}", consumes = {"*/*"})
+    public ResponseEntity<List<SearchArticleResponse>> searchAllArticlesPage(
+            @PathVariable int page) {
+        final int limit = 10;
+        if(page > 0) {
+            final List<SearchArticleResponse> resultList = articleService.searchAllPage(limit, page);
+            return validateResponseList(resultList);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "Get articles from list with the amount depending on the limit and which ones on page", response = List.class)
+    @ApiResponse(code = 200, message = "Article size issued", response = Integer.class)
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(path = "/size", consumes = {"*/*"})
+    public ResponseEntity<Integer> getArticleRepositorySize() {
+        final int articleRepositorySize = articleService.getArticleRepositorySize();
+        return ResponseEntity.ok(articleRepositorySize);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "Get articles from list with the amount depending on the limit and which ones on page", response = List.class)
+    @ApiResponse(code = 200, message = "Article size issued", response = Integer.class)
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(path = "/size/{query}", consumes = {"*/*"})
+    public ResponseEntity<Integer> getArticleRepositorySizeQuery(
+            @PathVariable String query) {
+        final int articleRepositorySize = articleService.getArticleRepositorySizeQuery(query);
+        return ResponseEntity.ok(articleRepositorySize);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "Get articles from list with the amount depending on the limit and which ones on page and search query", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Article list issued", response = List.class),
+            @ApiResponse(code = 400, message = "Api parameter not an int", response = HttpClientErrorException.BadRequest.class),
+            @ApiResponse(code = 404, message = "No articles found", response = HttpClientErrorException.NotFound.class)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(path = "/search/{query}/{page}", consumes = {"*/*"})
+    public ResponseEntity<List<SearchArticleResponse>> searchFromQuery(
+            @PathVariable String query,
+            @PathVariable int page) {
+        if(query == null || query.isBlank() || page < 1) {
+            LOG.debug("Query: {}, Page: {}", query, page);
+            return ResponseEntity.badRequest().build();
+        }
+        final int limit = 10;
+        LOG.debug("Query: {}, Limit:{} ,Page: {}", query, limit, page);
+        final List<SearchArticleResponse> resultList = articleService.searchAllByQuery(query, limit, page);
+        return validateResponseList(resultList);
+    }
+
+    private ResponseEntity<List<SearchArticleResponse>> validateResponseList(List<SearchArticleResponse> resultList) {
         try {
-            if (resultList.isEmpty()) {
-                return ResponseEntity.notFound().build();
+            if (resultList==null) {
+                return ResponseEntity.internalServerError().build();
             } else {
                 final HttpStatus httpStatus = HttpStatus.OK;
                 return new ResponseEntity<>(resultList, httpStatus);
