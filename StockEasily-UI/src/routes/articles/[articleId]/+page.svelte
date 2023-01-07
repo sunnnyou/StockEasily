@@ -1,27 +1,27 @@
 <script lang="ts">
+    import type {PropertyRequestDto, ValidatableProperty} from '../../../dto/property-request-dto';
+    import type {Validatable} from '../../../common/validatable';
+    import type {ValidatableArticle} from '../../../dto/create-article-request-dto';
+
     import {AcceptType} from '$components/common/input/file/accept-type.js';
-    import LabeledFileInput from '$components/common/input/file/LabeledFileInput.svelte';
-    import LabeledNumericInput from '$components/common/input/LabeledNumericInput.svelte';
-    import PropertyInput from '$components/common/input/PropertyInput.svelte';
     import {ButtonPriority} from '$components/html/button/button-priority.js';
     import {ButtonType} from '$components/html/button/button-type.js';
-    import Button from '$components/html/button/Button.svelte';
+    import {formatBytesAsKilobytes} from '../../../common/number-util';
+    import {onMount} from 'svelte';
     import {page} from '$app/stores';
     import {SESSION_INFO} from '../../../common/session-util';
     import {t} from '$i18n/i18n';
+    import {to_number} from 'svelte/internal';
 
+    import Button from '$components/html/button/Button.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
+    import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
+    import LabeledFileInput from '$components/common/input/file/LabeledFileInput.svelte';
+    import LabeledInput from '$components/common/input/LabeledInput.svelte';
+    import LabeledNumericInput from '$components/common/input/LabeledNumericInput.svelte';
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
-    import {page} from '$app/stores';
-    import LabeledInput from '$components/common/input/LabeledInput.svelte';
-    import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
-    import {onMount} from 'svelte';
-    import {to_number} from 'svelte/internal';
-    import {formatBytesAsKilobytes} from '../../../common/number-util';
-    import type {Validatable} from '../../../common/validatable';
-    import type {ValidatableArticle} from '../../../dto/create-article-request-dto';
-    import type {PropertyRequestDto, ValidatableProperty} from '../../../dto/property-request-dto';
+    import PropertyInput from '$components/common/input/PropertyInput.svelte';
 
     type Property = {
         id: number;
