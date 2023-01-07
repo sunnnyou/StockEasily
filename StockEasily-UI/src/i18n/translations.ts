@@ -1,5 +1,9 @@
-export default {
-    en: {
+export const enum Locale {
+    en = 'en',
+}
+
+export const translations: {[locale: string]: {[key: string]: string}} = {
+    'en': {
         // head
         'app.description': 'StockEasily is a software system for organizing your home and stuff.\nIt allows to search and manage your items with ease.',
         'app.keywords': 'StockEasily,stock,organize,organization,sort,articles,inventory',

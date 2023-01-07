@@ -3,7 +3,7 @@
     import {onMount} from "svelte";
     import {page} from "$app/stores";
     import {SESSION_INFO} from '../../../../common/session-util';
-    import {t} from "$i18n/i18n.js";
+    import {t} from '$i18n/i18n';
 
     import PageCard from "$components/common/PageCard.svelte";
     import PageContent from "$components/common/PageContent.svelte";
