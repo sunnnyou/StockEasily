@@ -3,13 +3,13 @@
     import type {Validatable} from '../../../common/validatable';
     import type {PropertyRequestDto, ValidatableProperty} from '../../../dto/property-request-dto';
 
-    import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
-    import {SESSION_INFO} from '../../../common/session-util';
     import {AcceptType} from '$components/common/input/file/accept-type';
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {ButtonType} from '$components/html/button/button-type';
+    import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
     import {goto} from '$app/navigation';
     import {isPropertyDescriptionValid, isPropertyNameValid, PROPERTY_LIMITS} from '../../../dto/property-request-dto';
+    import {SESSION_INFO} from '../../../common/session-util';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
 

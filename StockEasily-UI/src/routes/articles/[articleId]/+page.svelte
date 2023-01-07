@@ -1,15 +1,15 @@
 <script lang="ts">
+    import {page} from '$app/stores';
+    import {SESSION_INFO} from '../../../common/session-util';
     import {t} from '$i18n/i18n';
 
     import Form from '$components/html/Form.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
-    import PageCard from '$components/common/PageCard.svelte';
-    import PageContent from '$components/common/PageContent.svelte';
-    import {page} from '$app/stores';
+    import Label from "$components/html/input/Label.svelte";
     import LabeledInput from "$components/common/input/LabeledInput.svelte";
     import InputFlexContainer from "$components/common/input/InputFlexContainer.svelte";
-    import Label from "$components/html/input/Label.svelte";
-    import {SESSION_INFO} from '../../../common/session-util';
+    import PageCard from '$components/common/PageCard.svelte';
+    import PageContent from '$components/common/PageContent.svelte';
 
     type Property = {
         id: number;
