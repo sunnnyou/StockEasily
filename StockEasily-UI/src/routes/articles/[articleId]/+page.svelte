@@ -46,6 +46,13 @@
     let article: Article;
     let image;
     let properties: Property[];
+    let validatableArticle: ValidatableArticle = {
+        category: {value: '', error: ''},
+        image: {value: '', error: ''},
+        name: {value: '', error: ''},
+        properties: [],
+        quantity: {value: 1, error: ''},
+    };
 
     async function setArticle() {
         article = await getJson();
@@ -56,14 +63,6 @@
     function handleOnSubmit() {
 
     }
-
-    let validatableArticle: ValidatableArticle = {
-        category: {value: '', error: ''},
-        image: {value: '', error: ''},
-        name: {value: '', error: ''},
-        properties: [],
-        quantity: {value: 1, error: ''},
-    };
 
     onMount(() => {
 
