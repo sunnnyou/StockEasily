@@ -8,7 +8,6 @@
     import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
     import {imageSelected, responseErrors, selectedFileName} from '$common/image-input-utils';
     import {goto} from '$app/navigation';
-    import {formatBytesAsKilobytes} from '../../../common/number-util';
     import {isPropertyDescriptionValid, isPropertyNameValid, PROPERTY_LIMITS} from '../../../dto/property-request-dto';
     import {getImageResponseMessage, onImageSelected} from '$common/image-input-utils';
     import {onSaveProperty} from '$common/property-utils';
