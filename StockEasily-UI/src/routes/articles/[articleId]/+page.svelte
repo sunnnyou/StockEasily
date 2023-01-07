@@ -6,6 +6,8 @@
     import {ButtonPriority} from '$components/html/button/button-priority.js';
     import {ButtonType} from '$components/html/button/button-type.js';
     import Button from '$components/html/button/Button.svelte';
+    import {page} from '$app/stores';
+    import {SESSION_INFO} from '../../../common/session-util';
     import {t} from '$i18n/i18n';
 
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
@@ -37,7 +39,7 @@
     }
 
     async function getJson() {
-        let response = await fetch('http://localhost:8080/api/v1/articles/' + $page.params.articleId);
+        let response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + $page.params.articleId);
         return JSON.parse(await response.text());
     }
 
