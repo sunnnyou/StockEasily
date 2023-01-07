@@ -1,15 +1,16 @@
 <script lang="ts">
     import type {ValidatableArticle} from '$dto/create-article-request-dto';
-    import {formatBytesAsKilobytes} from '../../../common/number-util';
-    import type {Validatable} from '../../../common/validatable';
-    import type {PropertyRequestDto, ValidatableProperty} from '../../../dto/property-request-dto';
+    import type {ValidatableProperty} from '../../../dto/property-request-dto';
 
     import {AcceptType} from '$components/common/input/file/accept-type';
+
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {ButtonType} from '$components/html/button/button-type';
     import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
     import {goto} from '$app/navigation';
+    import {formatBytesAsKilobytes} from '../../../common/number-util';
     import {isPropertyDescriptionValid, isPropertyNameValid, PROPERTY_LIMITS} from '../../../dto/property-request-dto';
+    import {onSaveProperty} from '$common/property-utils';
     import {SESSION_INFO} from '../../../common/session-util';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
@@ -83,10 +84,6 @@
 
     }
 
-    function isEditingExistingProperty(index: number): boolean {
-        return index !== Number.NaN && validatableArticle.properties.length > index;
-    }
-
     function onImageSelected(event) {
         if (event.target?.files === undefined) {
             console.error('Could not get selected image, it is undefined');
@@ -132,22 +129,22 @@
         };
     }
 
-    function onSaveProperty(property: PropertyRequestDto, index: number = Number.NaN) {
-        property.name = property.name.trim();
-        property.description = property.description.trim();
-
-        if (isEditingExistingProperty(index)) {
-            validatableArticle.properties[index].value = property;
-        } else {
-            const VALIDATABLE: ValidatableProperty = <Validatable<PropertyRequestDto> & { errors: { name: string; description: string } }>{
-                errors: {
-                    description: '',
-                    name: '',
-                }, value: property,
-            };
-            validatableArticle.properties = [...validatableArticle.properties, VALIDATABLE];
-        }
-    }
+    // function onSaveProperty(property: PropertyRequestDto, index: number = Number.NaN) {
+    //     property.name = property.name.trim();
+    //     property.description = property.description.trim();
+    //
+    //     if (isEditingExistingProperty(index)) {
+    //         validatableArticle.properties[index].value = property;
+    //     } else {
+    //         const VALIDATABLE: ValidatableProperty = <Validatable<PropertyRequestDto> & { errors: { name: string; description: string } }>{
+    //             errors: {
+    //                 description: '',
+    //                 name: '',
+    //             }, value: property,
+    //         };
+    //         validatableArticle.properties = [...validatableArticle.properties, VALIDATABLE];
+    //     }
+    // }
 
     function validateForm() {
         let isValid = true;
@@ -314,7 +311,7 @@
                                            name: 'prop-inner-parent' + i,
                                        }}
                                        property={property}
-                                       onSave={property => onSaveProperty(property, i)}
+                                       onSave={property => validatableArticle.properties = onSaveProperty(validatableArticle, property, i)}
                                        rightLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
@@ -343,7 +340,7 @@
                                            name: 'prop-inner-description-new',
                                            text: $t('props.description'),
                                        }}
-                                   onSave={property => onSaveProperty(property)}
+                                   onSave={property => validatableArticle.properties = onSaveProperty(validatableArticle, property)}
                     />
                 </div>
 
@@ -362,7 +359,7 @@
                                           previewImageOptions={{
                                             alt: selectedFileName,
                                             show: true,
-                                            src: validatableArticle.image.value
+                                            src: validatableArticle.image?.value
                                           }}
                                           bind:files
                                           on:change={event => onImageSelected(event)}

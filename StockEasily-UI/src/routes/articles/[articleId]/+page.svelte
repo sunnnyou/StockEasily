@@ -1,12 +1,10 @@
 <script lang="ts">
-    import type {PropertyRequestDto, ValidatableProperty} from '../../../dto/property-request-dto';
-    import type {Validatable} from '../../../common/validatable';
+    import {onSaveProperty} from "$common/property-utils";
     import type {ValidatableArticle} from '../../../dto/create-article-request-dto';
 
     import {AcceptType} from '$components/common/input/file/accept-type.js';
     import {ButtonPriority} from '$components/html/button/button-priority.js';
     import {ButtonType} from '$components/html/button/button-type.js';
-    import {formatBytesAsKilobytes} from '../../../common/number-util';
     import {onMount} from 'svelte';
     import {page} from '$app/stores';
     import {SESSION_INFO} from '../../../common/session-util';
@@ -68,72 +66,6 @@
         properties: [],
         quantity: {value: 1, error: ''},
     };
-
-    function isEditingExistingProperty(index: number): boolean {
-        return index !== Number.NaN && validatableArticle.properties.length > index;
-    }
-
-    function onSaveProperty(property: PropertyRequestDto, index: number = Number.NaN) {
-        property.name = property.name.trim();
-        property.description = property.description.trim();
-
-        if (isEditingExistingProperty(index)) {
-            validatableArticle.properties[index].value = property;
-        } else {
-            const VALIDATABLE: ValidatableProperty = <Validatable<PropertyRequestDto> & { errors: { name: string; description: string } }>{
-                errors: {
-                    description: '',
-                    name: '',
-                }, value: property,
-            };
-            validatableArticle.properties = [...validatableArticle.properties, VALIDATABLE];
-        }
-    }
-
-    function onImageSelected(event) {
-        if (event.target?.files === undefined) {
-            console.error('Could not get selected image, it is undefined');
-            files = [];
-            return;
-        }
-        const HTML_TARGET = event.target as HTMLInputElement;
-        if (!HTML_TARGET) {
-            console.error('Could not get HTMLInputElement');
-            return;
-        }
-        if (HTML_TARGET.files.length === 0) {
-            console.warn('No file selected');
-            files = [];
-            imageSelected = undefined;
-            selectedFileName = undefined;
-            validatableArticle.image.value = undefined;
-            return;
-        }
-        imageSelected = HTML_TARGET.files![0];
-        console.log('image size:', imageSelected.size);
-        if (imageSelected.size > IMAGE_MAXIMUM_SIZE) {
-            const EXPECTED = formatBytesAsKilobytes(IMAGE_MAXIMUM_SIZE);
-            responseErrors = {
-                image: $t('validation.image', {expected: EXPECTED}),
-            };
-            console.warn(`Image selected is too big ( ${formatBytesAsKilobytes(imageSelected.size)} ). Maximum size allowed: ${EXPECTED}`);
-            files = imageSelected === undefined ? [] : [imageSelected];
-            return;
-        }
-
-        let reader = new FileReader();
-        reader.readAsDataURL(imageSelected);
-        reader.onload = e => {
-            if (!e.target.result) {
-                console.error('Could not get base64 encoded image, result is undefined');
-                files = [];
-                return;
-            }
-            validatableArticle.image.value = e.target.result as string;
-            selectedFileName = imageSelected.name;
-            console.log('Selected file:', imageSelected.name);
-        };
-    }
 
     onMount(() => {
 
@@ -215,7 +147,7 @@
                                            name: 'prop-inner-parent' + i,
                                        }}
                                        property={property}
-                                       onSave={property => onSaveProperty(property, i)}
+                                       onSave={property => validatableArticle.properties = onSaveProperty(validatableArticle, property, i)}
                                        rightLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
@@ -244,7 +176,7 @@
                                            name: 'prop-inner-description-new',
                                            text: $t('props.description'),
                                        }}
-                                   onSave={property => onSaveProperty(property)}
+                                   onSave={property =>validatableArticle.properties = onSaveProperty(validatableArticle, property)}
                     />
                 </div>
 
