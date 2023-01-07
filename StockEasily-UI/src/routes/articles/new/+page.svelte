@@ -1,6 +1,7 @@
 <script lang="ts">
     import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
     import type {ValidatableArticle} from '$dto/create-article-request-dto';
+    import {formatBytesAsKilobytes} from '../../../common/number-util';
     import type {Validatable} from '../../../common/validatable';
     import type {PropertyRequestDto, ValidatableProperty} from '../../../dto/property-request-dto';
     import {AcceptType} from '$components/common/input/file/accept-type';
@@ -82,11 +83,6 @@
 
     function isEditingExistingProperty(index: number): boolean {
         return index !== Number.NaN && validatableArticle.properties.length > index;
-    }
-
-    function formatBytesAsKilobytes(bytes: number): string {
-        const kilobytes = (bytes / 1000).toFixed(2);
-        return `${kilobytes} KB`;
     }
 
     function onImageSelected(event) {
