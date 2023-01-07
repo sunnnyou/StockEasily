@@ -8,6 +8,6 @@ export type SessionInfo = {
 function getSessionInfo(): SessionInfo {
     return {
         API_ENDPOINT: import.meta.env.VITE_API_ENDPOINT,
-        IMAGE_MAX_SIZE: import.meta.env.VITEA_IMAGE_MAX_SIZE,
+        IMAGE_MAX_SIZE: import.meta.env.VITE_IMAGE_MAX_SIZE,
     };
 }
