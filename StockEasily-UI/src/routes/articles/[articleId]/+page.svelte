@@ -6,6 +6,7 @@
     import {ButtonType} from '$components/html/button/button-type.js';
     import {getImageResponseMessage, onImageSelected} from '$common/image-input-utils';
     import {onMount} from 'svelte';
+    import {onSaveProperty} from '$common/property-utils';
     import {page} from '$app/stores';
     import {responseErrors, selectedFileName} from '$common/image-input-utils';
     import {SESSION_INFO} from '../../../common/session-util';
