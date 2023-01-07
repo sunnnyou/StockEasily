@@ -9,6 +9,7 @@
     import LabeledInput from "$components/common/input/LabeledInput.svelte";
     import InputFlexContainer from "$components/common/input/InputFlexContainer.svelte";
     import Label from "$components/html/input/Label.svelte";
+    import {SESSION_INFO} from '../../../common/session-util';
 
     type Property = {
         id: number;
@@ -26,7 +27,7 @@
     }
 
     async function getJson() {
-        let response = await fetch('http://localhost:8080/api/v1/articles/' + $page.params.articleId);
+        let response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + $page.params.articleId);
         return JSON.parse(await response.text());
     }
 

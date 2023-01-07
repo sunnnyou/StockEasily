@@ -5,6 +5,7 @@
     import {goto} from "$app/navigation";
     import {onMount} from "svelte";
     import {page} from "$app/stores";
+    import {SESSION_INFO} from '../../../../common/session-util';
 
     let articles = [];
     let size = 0;
@@ -21,14 +22,14 @@
         try {
             if (pageQuery) {
                 console.log($page.params.page);
-                let response = await fetch('http://localhost:8080/api/v1/articles/search/' + pageQuery + '/' + $page.params.page);
+                let response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/search/' + pageQuery + '/' + $page.params.page);
                 if (response.ok) {
                     articles = await response.json();
                 } else {
                     console.log(response.status)
                 }
             } else {
-                let response = await fetch('http://localhost:8080/api/v1/articles/page/' + $page.params.page);
+                let response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/page/' + $page.params.page);
                 if (response.ok) {
                     articles = await response.json();
                 } else {
@@ -55,7 +56,7 @@
         try {
             let response
             if (pageQuery) {
-                response = await fetch('http://localhost:8080/api/v1/articles/size/' + pageQuery);
+                response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/size/' + pageQuery);
                 hrefEndPaginator = "?" + pageQuery;
                 if (response.ok) {
                     size = await response.json();
@@ -69,7 +70,7 @@
                     console.log(response.status)
                 }
             } else {
-                response = await fetch('http://localhost:8080/api/v1/articles/size/');
+                response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/size/');
                 if (response.ok) {
                     size = await response.json();
                     maxPage = Math.ceil(size / limit);
