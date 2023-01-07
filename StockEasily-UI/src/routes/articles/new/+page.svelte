@@ -3,13 +3,14 @@
     import type {ValidatableProperty} from '../../../dto/property-request-dto';
 
     import {AcceptType} from '$components/common/input/file/accept-type';
-
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {ButtonType} from '$components/html/button/button-type';
     import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
+    import {imageSelected, responseErrors, selectedFileName} from '$common/image-input-utils';
     import {goto} from '$app/navigation';
     import {formatBytesAsKilobytes} from '../../../common/number-util';
     import {isPropertyDescriptionValid, isPropertyNameValid, PROPERTY_LIMITS} from '../../../dto/property-request-dto';
+    import {getImageResponseMessage, onImageSelected} from '$common/image-input-utils';
     import {onSaveProperty} from '$common/property-utils';
     import {SESSION_INFO} from '../../../common/session-util';
     import {t} from '$i18n/i18n';
@@ -25,8 +26,6 @@
     import PageContent from '$components/common/PageContent.svelte';
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
 
-    let files: File[] = [];
-    let responseErrors: Object | undefined;
     let validatableArticle: ValidatableArticle = {
         category: {value: '', error: ''},
         image: {value: '', error: ''},
@@ -34,19 +33,6 @@
         properties: [],
         quantity: {value: 1, error: ''},
     };
-    let selectedFileName = '';
-    let imageSelected: File | undefined;
-
-    function getImageResponseMessage(): string | undefined {
-        if (imageSelected === undefined) {
-            console.debug('No image was selected, returning empty response message');
-            return undefined;
-        }
-
-        const IMAGE_ERROR = responseErrors['image'];
-        console.debug('Error:', IMAGE_ERROR);
-        return `${$t('general.error')}: ${IMAGE_ERROR}`;
-    }
 
     async function handleOnSubmit() {
         if (!validateForm()) {
@@ -83,68 +69,6 @@
         });
 
     }
-
-    function onImageSelected(event) {
-        if (event.target?.files === undefined) {
-            console.error('Could not get selected image, it is undefined');
-            files = [];
-            return;
-        }
-        const HTML_TARGET = event.target as HTMLInputElement;
-        if (!HTML_TARGET) {
-            console.error('Could not get HTMLInputElement');
-            return;
-        }
-        if (HTML_TARGET.files.length === 0) {
-            console.warn('No file selected');
-            files = [];
-            imageSelected = undefined;
-            selectedFileName = undefined;
-            validatableArticle.image.value = undefined;
-            return;
-        }
-        imageSelected = HTML_TARGET.files![0];
-        console.log('image size:', imageSelected.size);
-        if (imageSelected.size > SESSION_INFO.IMAGE_MAX_SIZE) {
-            const EXPECTED = formatBytesAsKilobytes(SESSION_INFO.IMAGE_MAX_SIZE);
-            responseErrors = {
-                image: $t('validation.image', {expected: EXPECTED}),
-            };
-            console.warn(`Image selected is too big ( ${formatBytesAsKilobytes(imageSelected.size)} ). Maximum size allowed: ${EXPECTED}`);
-            files = imageSelected === undefined ? [] : [imageSelected];
-            return;
-        }
-
-        let reader = new FileReader();
-        reader.readAsDataURL(imageSelected);
-        reader.onload = e => {
-            if (!e.target.result) {
-                console.error('Could not get base64 encoded image, result is undefined');
-                files = [];
-                return;
-            }
-            validatableArticle.image.value = e.target.result as string;
-            selectedFileName = imageSelected.name;
-            console.log('Selected file:', imageSelected.name);
-        };
-    }
-
-    // function onSaveProperty(property: PropertyRequestDto, index: number = Number.NaN) {
-    //     property.name = property.name.trim();
-    //     property.description = property.description.trim();
-    //
-    //     if (isEditingExistingProperty(index)) {
-    //         validatableArticle.properties[index].value = property;
-    //     } else {
-    //         const VALIDATABLE: ValidatableProperty = <Validatable<PropertyRequestDto> & { errors: { name: string; description: string } }>{
-    //             errors: {
-    //                 description: '',
-    //                 name: '',
-    //             }, value: property,
-    //         };
-    //         validatableArticle.properties = [...validatableArticle.properties, VALIDATABLE];
-    //     }
-    // }
 
     function validateForm() {
         let isValid = true;
@@ -356,13 +280,14 @@
                                               name: 'article-image',
                                               text: $t('general.image')
                                           }}
+                                          onFileChange={files => {
+                                              validatableArticle.image = onImageSelected(files, validatableArticle);
+                                          }}
                                           previewImageOptions={{
-                                            alt: selectedFileName,
+                                            alt: $selectedFileName,
                                             show: true,
                                             src: validatableArticle.image?.value
                                           }}
-                                          bind:files
-                                          on:change={event => onImageSelected(event)}
                         />
 
                         <!-- Image error response and submit button area -->

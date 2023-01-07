@@ -5,6 +5,7 @@
     import {faFileArrowUp} from '@fortawesome/free-solid-svg-icons';
     import {InputType} from './input-type';
     import {PreviewImageOptions} from '../../common/input/preview-image-options';
+    import {selectedFiles} from '$common/image-input-utils';
     import {t} from '$i18n/i18n';
 
     import FaIcon from '$components/common/FaIcon.svelte';
@@ -14,12 +15,12 @@
     export let className = '';
     export let disabled = false;
     export let error = '';
-    export let files: File[] = [];
     export let id = '';
     export let min = '';
     export let max = '';
     export let maxLength: string | undefined = undefined;
     export let name = '';
+    export let onFileChange: ((files: File[]) => void) = () => {};
     export let placeholder = '';
     export let previewImageOptions: PreviewImageOptions = {alt: '', show: false, src: ''};
     export let step = 1;
@@ -27,8 +28,16 @@
     export let type = InputType.Text;
     export let value = '';
 
-    function handleInput(e: any) {
-        files = type.match(/^(number|range)$/) ? +e.target.value : e.target.value;
+    function handleFileChange(event) {
+        const FILES = event.target.files;
+        if (FILES === undefined){
+            console.warn('Ignoring selected files, event.target.files is undefined')
+            return;
+        }
+        selectedFiles.set(FILES)
+        if (onFileChange) {
+            onFileChange(FILES);
+        }
     }
 
     function typeAction(node) {
@@ -92,11 +101,9 @@
                {name}
                {title}
                {type}
-               {value}
                bind:this={inputRef}
-               on:change
+               on:change={handleFileChange}
                on:keydown
-               on:input={handleInput}
                use:typeAction
         >
     {:else}
@@ -106,11 +113,9 @@
                {name}
                {title}
                {type}
-               {value}
                bind:this={inputRef}
-               on:change
+               on:change={handleFileChange}
                on:keyup
-               on:input={handleInput}
                use:typeAction
         >
     {/if}
@@ -122,7 +127,7 @@
             <FaIcon className="inset-0 w-14 h-14 flex justify-center items-center" icon={faFileArrowUp}
                     scale="3"></FaIcon>
         </div>
-        <div class="text-center">{$t(files?.length > 0 ? 'general.replaceImage' : 'general.chooseImage')}</div>
+        <div class="text-center">{$t($selectedFiles?.length > 0 ? 'general.replaceImage' : 'general.chooseImage')}</div>
     </div>
 {:else}
     <input class={className}

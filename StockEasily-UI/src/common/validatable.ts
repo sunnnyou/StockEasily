@@ -1,4 +1,4 @@
 export type Validatable<T> = {
-    value: T,
-    error: string,
+    value: T | undefined,
+    error: string | undefined,
 }

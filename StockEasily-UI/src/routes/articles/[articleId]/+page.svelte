@@ -1,12 +1,13 @@
 <script lang="ts">
-    import {onSaveProperty} from "$common/property-utils";
     import type {ValidatableArticle} from '../../../dto/create-article-request-dto';
 
     import {AcceptType} from '$components/common/input/file/accept-type.js';
     import {ButtonPriority} from '$components/html/button/button-priority.js';
     import {ButtonType} from '$components/html/button/button-type.js';
+    import {getImageResponseMessage, onImageSelected} from '$common/image-input-utils';
     import {onMount} from 'svelte';
     import {page} from '$app/stores';
+    import {responseErrors, selectedFileName} from '$common/image-input-utils';
     import {SESSION_INFO} from '../../../common/session-util';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
@@ -42,12 +43,8 @@
     }
 
     let article: Article;
-    let files: File[] = [];
     let image;
-    let imageSelected: File | undefined;
     let properties: Property[];
-    let responseErrors: Object | undefined;
-    let selectedFileName = '';
 
     async function setArticle() {
         article = await getJson();
@@ -192,13 +189,12 @@
                                               name: 'article-image',
                                               text: $t('general.image')
                                           }}
+                                          onFileChange={files => validatableArticle.image = onImageSelected(files, validatableArticle)}
                                           previewImageOptions={{
-                                            alt: selectedFileName,
+                                            alt: $selectedFileName,
                                             show: true,
-                                            src: validatableArticle.image.value
+                                            src: validatableArticle.image?.value
                                           }}
-                                          bind:files
-                                          on:change={event => onImageSelected(event)}
                         />
 
                         <!-- Image error response and submit button area -->
