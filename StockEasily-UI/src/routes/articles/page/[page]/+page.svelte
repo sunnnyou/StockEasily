@@ -91,13 +91,10 @@
     }
 
     onMount(() => {
-        let pageQuery = window.location.search;
-        pageQuery = pageQuery.toString().replaceAll("?", "")
-        console.log(pageQuery);
-        getArticles(pageQuery);
-        getSize(pageQuery);
+        const ENCODED_PAGE_QUERY: string = encodeURIComponent(window.location.search);
+        getArticles(ENCODED_PAGE_QUERY);
+        getSize(ENCODED_PAGE_QUERY);
     })
-
 
 </script>
 
