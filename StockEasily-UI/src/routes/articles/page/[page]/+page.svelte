@@ -91,7 +91,12 @@
     }
 
     onMount(() => {
-        const ENCODED_PAGE_QUERY: string = encodeURIComponent(window.location.search);
+        const PAGE_QUERY = window.location.search;
+        if (PAGE_QUERY === undefined) {
+            console.error('Could not get page query')
+            return;
+        }
+        const ENCODED_PAGE_QUERY: string = encodeURIComponent(PAGE_QUERY.replace(/^\?/,''));
         getArticles(ENCODED_PAGE_QUERY);
         getSize(ENCODED_PAGE_QUERY);
     })
