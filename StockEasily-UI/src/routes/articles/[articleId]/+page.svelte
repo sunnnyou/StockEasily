@@ -1,14 +1,15 @@
 <script lang="ts">
+    import {page} from '$app/stores';
+    import {SESSION_INFO} from '../../../common/session-util';
     import {t} from '$i18n/i18n';
 
     import Form from '$components/html/Form.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
-    import PageCard from '$components/common/PageCard.svelte';
-    import PageContent from '$components/common/PageContent.svelte';
-    import {page} from '$app/stores';
+    import Label from "$components/html/input/Label.svelte";
     import LabeledInput from "$components/common/input/LabeledInput.svelte";
     import InputFlexContainer from "$components/common/input/InputFlexContainer.svelte";
-    import Label from "$components/html/input/Label.svelte";
+    import PageCard from '$components/common/PageCard.svelte';
+    import PageContent from '$components/common/PageContent.svelte';
 
     type Property = {
         id: number;
@@ -26,7 +27,7 @@
     }
 
     async function getJson() {
-        let response = await fetch('http://localhost:8080/api/v1/articles/' + $page.params.articleId);
+        let response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + $page.params.articleId);
         return JSON.parse(await response.text());
     }
 
