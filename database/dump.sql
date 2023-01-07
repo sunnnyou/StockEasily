@@ -27,7 +27,7 @@ CREATE TABLE `articles` (
   `name` varchar(30) NOT NULL,
   `quantity` int(11) NOT NULL,
   `categoryId` bigint(20) DEFAULT NULL,
-  `image` blob DEFAULT NULL,
+  `image` mediumblob DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `articles_categories_null_fk` (`categoryId`),
   CONSTRAINT `articles_categories_null_fk` FOREIGN KEY (`categoryId`) REFERENCES `categories` (`id`)

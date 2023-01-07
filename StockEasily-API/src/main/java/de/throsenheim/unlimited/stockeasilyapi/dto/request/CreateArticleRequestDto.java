@@ -10,10 +10,11 @@ import java.util.List;
 public class CreateArticleRequestDto {
 
     @Valid
+    @NotNull(message = "Category name is mandatory")
     private CategoryRequestDto category;
 
     @ApiModelProperty(notes = "Article name", example = "HDX42 Widescreen Monitor", required = true)
-    @NotNull(message = "Name is mandatory")
+    @NotNull(message = "Article name is mandatory")
     @Size(min = 1, max = 30, message = "Article name must be between 1 and 30 characters")
     private String name;
 
@@ -26,13 +27,13 @@ public class CreateArticleRequestDto {
     @PositiveOrZero(message = "Quantity must greater than or equal to 0")
     private int quantity = 1;
 
-    private MultipartFile image; // TODO validate size
+    private String image;
 
     public CategoryRequestDto getCategory() {
         return category;
     }
 
-    public MultipartFile getImage() {
+    public String getImage() {
         return image;
     }
 
@@ -52,7 +53,7 @@ public class CreateArticleRequestDto {
         this.category = category;
     }
 
-    public void setImage(MultipartFile image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

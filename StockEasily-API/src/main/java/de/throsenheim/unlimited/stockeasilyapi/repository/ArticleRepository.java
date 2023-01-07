@@ -1,8 +1,8 @@
 package de.throsenheim.unlimited.stockeasilyapi.repository;
 
 import de.throsenheim.unlimited.stockeasilyapi.abstraction.SqlConnection;
-import de.throsenheim.unlimited.stockeasilyapi.common.logging.LogUtil;
 import de.throsenheim.unlimited.stockeasilyapi.common.logging.CommittedSqlCommand;
+import de.throsenheim.unlimited.stockeasilyapi.common.logging.LogUtil;
 import de.throsenheim.unlimited.stockeasilyapi.exception.NotImplementedException;
 import de.throsenheim.unlimited.stockeasilyapi.factory.DatabaseConnectionFactory;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
@@ -14,7 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -23,13 +27,10 @@ import java.util.Optional;
 public class ArticleRepository implements HumaneRepository<Article, Long> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleRepository.class);
-
+    private static final String EMPTY_ARTICLE_LOG = "Returning empty Article model";
     private final SqlConnection connection;
-
     private final PropertyRepository propertyRepository;
-
     private final CategoryRepository categoryRepository;
-
     private final ArticlePropertyRepository articlePropertyRepository;
 
     @Autowired
@@ -50,17 +51,82 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
     @Override
     public Optional<Article> findById(Long aLong) {
-        return Optional.empty();
+        return Optional.ofNullable(selectId(aLong));
     }
 
     @Override
     public Article findByName(String name) {
-        return null;
+        return selectName(name);
+    }
+
+    public List<Article> findAllByName(String name) {
+        return selectAllName(name);
+    }
+
+    public List<Article> findAllPage(int limit, int page) {
+        return selectAllPage(limit, page);
     }
 
     @Override
     public Article save(Article article) {
         return save(article, true);
+    }
+
+    public int getSize() {
+        return count();
+    }
+
+    public int getSizeQuery(String query) {
+        return countQuery(query);
+    }
+    public List<Article> findAllByQuery(String query, int limit, int page) {
+        return selectAllQuery(query, limit, page);
+    }
+
+    private int count() {
+        PreparedStatement preparedStatement = null;
+        final String query = "SELECT COUNT(*) as size FROM articles;";
+
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("size");
+            }
+            LOGGER.debug("Error with getting table size");
+            return 0;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private int countQuery(String searchQuery) {
+        PreparedStatement preparedStatement = null;
+        final String query = "SELECT COUNT(*) as size FROM articles where id like ? OR name like ? OR categoryId IN (SELECT id FROM categories WHERE name LIKE ?)";
+
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            searchQuery = "%" + searchQuery + "%";
+            preparedStatement.setString(1, searchQuery);
+            preparedStatement.setString(2, searchQuery);
+            preparedStatement.setString(3, searchQuery);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("size");
+            }
+            LOGGER.debug("Error with getting table size with query");
+            return 0;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -73,7 +139,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
         List<Property> properties = article.getProperties();
         if (properties != null) {
-            if (properties.size() > 0) {
+            if (!properties.isEmpty()) {
                 Iterable<Property> resultProperties = propertyRepository.saveAll(properties);
                 properties = new LinkedList<>();
                 resultProperties.forEach(properties::add);
@@ -102,20 +168,18 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
     private Article insert(Article article, boolean commit) {
         PreparedStatement preparedStatement = null;
-        final Long categoryId = article.getCategory() == null ? null : article.getCategory().getId();
+        final Long categoryId = article.getCategory().getId();
         final String query = "INSERT INTO " +
-                "articles(name,quantity,image" + (categoryId == null ? "" : ",categoryId") + ") " +
-                "VALUES (?,?,?" + (categoryId == null ? "" : ",?") + ")";
+                "articles(name,quantity,image,categoryId) " +
+                "VALUES (?,?,?,?)";
 
         try {
             preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, article.getName());
             preparedStatement.setInt(2, article.getQuantity());
-            preparedStatement.setBlob(3, article.getImage()); // TODO implement image upload
-            if (categoryId != null) {
-                preparedStatement.setLong(4, categoryId);
-            }
+            preparedStatement.setBlob(3, article.getImage());
+            preparedStatement.setLong(4, categoryId);
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
@@ -130,8 +194,120 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
                     return article;
                 }
             }
-            LOGGER.debug("Returning empty Article model");
+            LOGGER.debug(EMPTY_ARTICLE_LOG);
             return null;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Article selectId(long id) {
+        PreparedStatement preparedStatement = null;
+        final String query = "select name, quantity, image, categoryId from articles where id = ?";
+
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setLong(1, id);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                Article article = new Article();
+                article.setId(id);
+                article.setName(resultSet.getString("name"));
+                setQuantityImagePropertiesCategories(article, resultSet);
+                return article;
+            }
+            LOGGER.debug(EMPTY_ARTICLE_LOG);
+            return null;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Article selectName(String name) {
+        PreparedStatement preparedStatement = null;
+        final String query = "select id, quantity, image, categoryId from articles where name = ?";
+
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, name);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                Article article = new Article();
+                article.setId(resultSet.getLong("id"));
+                article.setName(name);
+                setQuantityImagePropertiesCategories(article, resultSet);
+                return article;
+            }
+            LOGGER.debug(EMPTY_ARTICLE_LOG);
+            return null;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Article> selectAllName(String name) {
+        PreparedStatement preparedStatement = null;
+        final String query = "select id, quantity, image, categoryId from articles where name = ?";
+
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, name);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<Article> articleList = new ArrayList<>(resultSet.getFetchSize());
+
+            while (resultSet.next()) {
+                Article article = new Article();
+                article.setId(resultSet.getLong("id"));
+                article.setName(name);
+                setQuantityImagePropertiesCategories(article, resultSet);
+                articleList.add(article);
+            }
+            LOGGER.debug("Returning article list with size {}", articleList.size());
+            return articleList;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Article> selectAllPage(int limit, int page){
+        page = page - 1;
+        PreparedStatement preparedStatement = null;
+        final String query = "select id, name, quantity, image, categoryId from articles LIMIT ?, ?";
+
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, (page*limit));
+            preparedStatement.setInt(2, limit);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<Article> articleList = new ArrayList<>(resultSet.getFetchSize());
+
+            while (resultSet.next()) {
+                Article article = new Article();
+                article.setId(resultSet.getLong("id"));
+                article.setName(resultSet.getString("name"));
+                setQuantityImagePropertiesCategories(article, resultSet);
+                articleList.add(article);
+            }
+            LOGGER.debug("Returning article list with size {}", articleList.size());
+            return articleList;
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);
@@ -148,4 +324,89 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         }
         return result;
     }
+
+    public List<Article> findAll() {
+        PreparedStatement preparedStatement = null;
+        final String query = "select id, name, quantity, image, categoryId from articles";
+
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<Article> articleList = new ArrayList<>(resultSet.getFetchSize());
+
+            while (resultSet.next()) {
+                Article article = new Article();
+                article.setId(resultSet.getLong("id"));
+                article.setName(resultSet.getString("name"));
+                setQuantityImagePropertiesCategories(article, resultSet);
+                articleList.add(article);
+            }
+            LOGGER.debug("Returning article list with size {}", articleList.size());
+            return articleList;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void setQuantityImagePropertiesCategories(Article article, ResultSet resultSet) throws SQLException {
+        article.setQuantity(resultSet.getInt("quantity"));
+        article.setImage(resultSet.getBlob("image"));
+
+        // Setting category
+        Optional<Category> categoryOptional = categoryRepository.findById(resultSet.getLong("categoryId"));
+        categoryOptional.ifPresent(article::setCategory);
+
+        // Setting properties
+        List<Long> propertyIdList = articlePropertyRepository.findAllByArticleId(article.getId());
+        List<Property> properties = new ArrayList<>(propertyIdList.size());
+        for (long propertyId : propertyIdList) {
+            Optional<Property> propertyOptional = propertyRepository.findById(propertyId);
+            propertyOptional.ifPresent(properties::add);
+        }
+        article.setProperties(properties);
+
+        LogUtil.traceFetchId(Article.class, article.getId(), LOGGER);
+    }
+
+
+    private List<Article> selectAllQuery(String searchQuery, int limit, int page) {
+        page = page - 1;
+        PreparedStatement preparedStatement = null;
+        final String query = "select id, name, quantity, image, categoryId from articles where id like ? OR name like ? OR categoryId IN (SELECT id FROM categories WHERE name LIKE ?) LIMIT ?, ?";
+
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            searchQuery = "%" + searchQuery + "%";
+            preparedStatement.setString(1, searchQuery);
+            preparedStatement.setString(2, searchQuery);
+            preparedStatement.setString(3, searchQuery);
+            preparedStatement.setInt(4, (page*limit));
+            preparedStatement.setInt(5, limit);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<Article> articleList = new ArrayList<>(resultSet.getFetchSize());
+
+            while (resultSet.next()) {
+                Article article = new Article();
+                article.setId(resultSet.getLong("id"));
+                article.setName(resultSet.getString("name"));
+                setQuantityImagePropertiesCategories(article, resultSet);
+                articleList.add(article);
+            }
+            LOGGER.debug("Returning article list with size {}", articleList.size());
+            return articleList;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
 }

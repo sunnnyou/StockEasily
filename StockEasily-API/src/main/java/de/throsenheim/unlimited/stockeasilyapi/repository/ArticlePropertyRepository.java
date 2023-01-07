@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -18,7 +20,7 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticlePropertyRepository.class);
 
-    private SqlConnection connection;
+    private final SqlConnection connection;
 
     @Autowired
     public ArticlePropertyRepository(DatabaseConnectionFactory databaseConnectionFactory) {
@@ -42,10 +44,15 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
 
     @Override
     public Iterable<ArticleProperty> saveAll(Iterable<ArticleProperty> relations) {
+        boolean shouldCommit = false;
         for (ArticleProperty relation : relations) {
-            save(relation);
+            if (save(relation) != null && !shouldCommit) {
+                shouldCommit = true;
+            }
         }
-        connection.commit(CommittedSqlCommand.INSERT);
+        if (shouldCommit) {
+            connection.commit(CommittedSqlCommand.INSERT);
+        }
         return relations;
     }
 
@@ -110,7 +117,6 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
                 "WHERE articleId = ? " +
                 "AND propertyId = ?" +
                 ") AS 'exists'";
-        String errorMessage = "Could not insert " + ArticleRepository.class.getSimpleName() + " relations";
 
         try {
             preparedStatement = connection.prepareStatement(query);
@@ -123,10 +129,31 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
             if (resultSet.next() && resultSet.getLong("exists") == 1) {
                 return relation;
             }
-            LOGGER.error(errorMessage);
             return null;
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Long> findAllByArticleId(long articleId) {
+        final String query = "SELECT propertyId FROM articles_properties WHERE articleId = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, articleId);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Long> propertyIdList = new ArrayList<>(resultSet.getFetchSize());
+            while (resultSet.next()) {
+                long propertyId = resultSet.getLong("propertyId");
+                propertyIdList.add(propertyId);
+            }
+            LOGGER.debug("Retrieved articleProperty list from data bank with size: {}", propertyIdList.size());
+            return propertyIdList;
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

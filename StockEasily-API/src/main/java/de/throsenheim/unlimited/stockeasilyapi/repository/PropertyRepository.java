@@ -34,7 +34,7 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
 
     @Override
     public Optional<Property> findById(Long aLong) {
-        return Optional.empty();
+        return Optional.ofNullable(selectId(aLong));
     }
 
     @Override
@@ -73,7 +73,9 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
             }
             result.add(resultProperty);
         }
-        connection.commit(CommittedSqlCommand.INSERT);
+        if (result.size() > 0) {
+            connection.commit(CommittedSqlCommand.INSERT);
+        }
         return result;
     }
 
@@ -124,4 +126,27 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
         }
     }
 
+    public Property selectId(long id) {
+        final String query = "SELECT name, description FROM properties WHERE id = ? LIMIT 1";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setLong(1, id);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            Property result = null;
+            if (resultSet.next()) {
+                result = new Property();
+                result.setId(id);
+                result.setName(resultSet.getString("name"));
+                result.setDescription(resultSet.getString("description"));
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
