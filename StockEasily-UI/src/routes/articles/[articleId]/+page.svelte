@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {goto} from '$app/navigation';
     import type {ValidatableArticle} from '../../../dto/create-article-request-dto';
 
     import {AcceptType} from '$components/common/input/file/accept-type.js';
@@ -7,9 +8,7 @@
     import {getImageResponseMessage, onImageSelected} from '$common/image-input-utils';
     import {onMount} from 'svelte';
     import {onSaveProperty} from '$common/property-utils';
-    import {page} from '$app/stores';
     import {responseErrors, selectedFileName} from '$common/image-input-utils';
-    import {SESSION_INFO} from '../../../common/session-util';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
 
@@ -22,6 +21,9 @@
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
+
+    /** @type {import('./$types').PageData} */
+    export let data;
 
     type Property = {
         id: number;
@@ -38,14 +40,7 @@
         image: string;
     }
 
-    async function getJson() {
-        let response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + $page.params.articleId);
-        return JSON.parse(await response.text());
-    }
-
     let article: Article;
-    let image;
-    let properties: Property[];
     let validatableArticle: ValidatableArticle = {
         category: {value: '', error: ''},
         image: {value: '', error: ''},
@@ -54,18 +49,16 @@
         quantity: {value: 1, error: ''},
     };
 
-    async function setArticle() {
-        article = await getJson();
-        properties = article.properties;
-        image = article.image;
-    }
-
     function handleOnSubmit() {
 
     }
 
-    onMount(() => {
-
+    onMount(async () => {
+        if (data.result === undefined) {
+            await goto('/articles');
+        }
+        console.debug('Loaded data', data.result);
+        article = data.result;
     });
 
 </script>
