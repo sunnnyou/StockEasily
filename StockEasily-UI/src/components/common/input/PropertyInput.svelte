@@ -1,11 +1,11 @@
 <script lang="ts">
-    import {isPropertyRequestValid} from '../../../dto/property-request-dto';
-    import type {PropertyRequestDto, ValidatableProperty} from '../../../dto/property-request-dto';
+    import type {PropertyRequestDto, ValidatableProperty} from '$dto/property-request-dto';
 
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {faCheck, faPen, faPlus} from '@fortawesome/free-solid-svg-icons';
+    import {isPropertyRequestValid} from '$dto/property-request-dto';
     import {onMount} from 'svelte';
-    import {PROPERTY_LIMITS} from "../../../dto/property-request-dto.js";
+    import {PROPERTY_LIMITS} from '$dto/property-request-dto';
     import {LabelOptions} from './label-options';
     import {t} from '$i18n/i18n';
 

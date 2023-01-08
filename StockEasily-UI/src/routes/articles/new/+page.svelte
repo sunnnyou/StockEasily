@@ -1,6 +1,6 @@
 <script lang="ts">
     import type {ValidatableArticle} from '$dto/create-article-request-dto';
-    import type {ValidatableProperty} from '../../../dto/property-request-dto';
+    import type {ValidatableProperty} from '$dto/property-request-dto';
 
     import {AcceptType} from '$components/common/input/file/accept-type';
     import {ButtonPriority} from '$components/html/button/button-priority';
