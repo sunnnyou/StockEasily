@@ -90,9 +90,9 @@
     >
         <div class="w-10/12">
             <InputFlexContainer
-                                leftClass="w-1/2"
-                                {parentId}
-                                rightClass="w-1/2"
+                    leftClass="w-1/2"
+                    {parentId}
+                    rightClass="w-1/2"
             >
                 <LabeledInput disabled={!edit}
                               error={errors?.name}
