@@ -328,9 +328,21 @@
 </PageContent>
 
 <style>
-    div.vr {
-        border-left: 1px solid #d8dbdf;
-        height: 90%;
-        display: inline-table;
+    div > div {
+        padding: 0 1rem;
+    }
+
+    .vr {
+        border-right: 1px solid #d8dbdf;
+    }
+
+    @media only screen and (max-width: 1023px) {
+        div > div {
+            padding: 0;
+        }
+
+        .vr {
+            padding: 0 1rem 0 0;
+        }
     }
 </style>
