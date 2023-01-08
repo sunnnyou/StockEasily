@@ -75,7 +75,7 @@
         <form class="inline-block w-full"
               on:submit|preventDefault={handleOnSubmit}>
             <div class="float-left w-full">
-                <div class="float-left w-1/2 vr">
+                <div class="float-left w-1/2 vr py-0 px-4">
                     <!-- input name -->
                     <LabeledInput addMarginTop={false}
                                   error={validatableArticle.name.error}
@@ -177,7 +177,7 @@
                     />
                 </div>
 
-                <div class="float-left h-full w-1/2">
+                <div class="float-left h-full w-1/2 py-0 px-4">
                     <div class="w-full m-auto h-full">
                         <LabeledFileInput accept={AcceptType.Image}
                                           addMarginTop={false}
@@ -328,10 +328,6 @@
 </PageContent>
 
 <style>
-    div > div {
-        padding: 0 1rem;
-    }
-
     .vr {
         border-right: 1px solid #d8dbdf;
     }
