@@ -3,8 +3,10 @@ package de.throsenheim.unlimited.stockeasilyapi.dto.response;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.model.Property;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.Nullable;
 
 import java.sql.Blob;
 import java.sql.SQLException;
@@ -12,8 +14,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SearchArticleResponse {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SearchArticleResponse.class);
+public class GetArticleResponseDto {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GetArticleResponseDto.class);
 
     private CategoryResponseDto category;
 
@@ -32,43 +34,46 @@ public class SearchArticleResponse {
     @ApiModelProperty(notes = "Base64 image string")
     private String image;
 
-    public SearchArticleResponse(Article article) {
-        if (article == null) {
-            LOGGER.error("Could not initialize CreateArticleResponseDto, article is null");
-            return;
-        }
-
+    public GetArticleResponseDto(Article article) {
         setCategory(new CategoryResponseDto(article.getCategory()));
         setId(article.getId());
         setName(article.getName());
         setProperties(article.getProperties());
         setQuantity(article.getQuantity());
-        try {
-            LOGGER.debug("Set image of article with id {}", article.getId());
-            setImage(article.getImage());
-            LOGGER.debug("Base64 String set: {}", this.image != null);
-        } catch (SQLException e) {
-            LOGGER.error("Could not set encode image to base64. ", e);
-            setImageBase64Null();
-        }
+        setImage(article.getImage(), this.id);
     }
 
     public String getImage() {
         return image;
     }
 
-    public void setImage(Blob imageBlob) throws SQLException {
-        if (imageBlob != null) {
-            int blobLength = (int) imageBlob.length();
-            byte[] blobAsBytes = imageBlob.getBytes(1, blobLength);
-            this.image = Base64.getEncoder().encodeToString(blobAsBytes);
-        } else {
-            this.image = null;
+    public void setImage(Blob imageBlob, long articleId) {
+        if (imageBlob == null) {
+            LOGGER.debug("Article with id " + articleId + " has no image attached");
+            return;
         }
-    }
+        byte[] blobAsBytes;
+        try {
+            int blobSize = (int) imageBlob.length();
+            blobAsBytes = imageBlob.getBytes(1, blobSize);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (blobAsBytes != null) {
+            final String mimeType = guessMimeType(blobAsBytes, articleId);
+            LOGGER.trace("Guessed MIME type: " + mimeType);
+            if (mimeType != null) {
+                this.image = "data:" + mimeType + ";base64," + Base64.getEncoder().encodeToString(blobAsBytes);
+            }
+        }
 
-    public void setImageBase64Null() {
-        this.image = null;
+        if (this.image == null) {
+            LOGGER.warn("Could not set image correctly. Seems like a data consistency problem");
+            return;
+        }
+        final int maxIndex = Math.min(this.image.length() - 1, 50);
+        final String imageFirstChars = this.image.substring(0, maxIndex);
+        LOGGER.debug("Blob converted to base64 string: " + imageFirstChars);
     }
 
     public CategoryResponseDto getCategory() {
@@ -110,4 +115,15 @@ public class SearchArticleResponse {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    @Nullable
+    private static String guessMimeType(byte[] imageBytes, long articleId) {
+        if (imageBytes.length == 0) {
+            LOGGER.trace("Article with id " + articleId + " does not have an image attached");
+            return null;
+        }
+        Tika tika = new Tika();
+        return tika.detect(imageBytes);
+    }
+
 }

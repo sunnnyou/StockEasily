@@ -3,9 +3,8 @@ package de.throsenheim.unlimited.stockeasilyapi.controller;
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.ApiErrorDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
-import de.throsenheim.unlimited.stockeasilyapi.dto.response.SearchArticleResponse;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.GetArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.exception.InvalidBodyException;
-import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.service.article.ArticleService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -19,7 +18,6 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @Api(tags = {"Articles"}) // Set correct heading
 @RestController
@@ -59,51 +57,41 @@ public class ArticlesController {
         return new ResponseEntity<>(result, httpStatus);
     }
 
+    @ApiOperation(value = "Get article", response = CreateArticleResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Article found", response = CreateArticleResponseDto.class),
+            @ApiResponse(code = 400, message = "Parameter validation error", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Article not found", response = ApiErrorDto.class)
+    })
+    @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
-    @GetMapping(path = "/{articleId}", consumes = {"*/*"})
-    public ResponseEntity<SearchArticleResponse> searchArticle(
-            @PathVariable String articleId) {
+    @GetMapping(path = "/{id}", consumes = {"*/*"})
+    public ResponseEntity<GetArticleResponseDto> searchArticle(
+            @PathVariable String id) {
+        long numericId;
         try {
-            final Optional<Article> resultOptional = articleService.search(Long.parseLong(articleId));
-            if (resultOptional.isPresent()) {
-                final Article result = resultOptional.get();
-                final HttpStatus httpStatus = HttpStatus.OK;
-                return new ResponseEntity<>(new SearchArticleResponse(result), httpStatus);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            numericId = Long.parseLong(id);
         } catch (NumberFormatException ex) {
-            // log
             return ResponseEntity.badRequest().build();
         }
+        final GetArticleResponseDto result = articleService.search(numericId);
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-//    @ApiOperation(value = "Get article list with specific name", response = List.class)
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "Article list issued", response = List.class),
-//            @ApiResponse(code = 400, message = "Api parameter not a string", response = HttpClientErrorException.BadRequest.class),
-//            @ApiResponse(code = 404, message = "No articles with this name found", response = HttpClientErrorException.NotFound.class)
-//    })
-//    @ResponseStatus(HttpStatus.OK)
-//    @GetMapping(path = "/{articleName}", consumes = {"*/*"})
-//    public ResponseEntity<List<Article>> searchAllArticlesByName(
-//            @PathVariable String articleName) {
-//        final List<Article> resultList = articleService.searchAllByName(articleName);
-//        return validateResponseList(resultList);
-//    }
-
     @CrossOrigin
-    @ApiOperation(value = "Get all articles in list", response = List.class)
+    @ApiOperation(value = "Get all articles", response = List.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Article list issued", response = List.class),
-            @ApiResponse(code = 400, message = "Api parameter not a string", response = HttpClientErrorException.BadRequest.class),
-            @ApiResponse(code = 404, message = "No articles found", response = HttpClientErrorException.NotFound.class)
+            @ApiResponse(code = 200, message = "Articles found", response = List.class),
+            @ApiResponse(code = 400, message = "Parameter validation error", response = HttpClientErrorException.BadRequest.class),
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(consumes = {"*/*"})
-    public ResponseEntity<List<SearchArticleResponse>> searchAllArticles() {
-        final List<SearchArticleResponse> resultList = articleService.searchAll();
-        return validateResponseList(resultList);
+    public ResponseEntity<List<GetArticleResponseDto>> searchAllArticles() {
+        final List<GetArticleResponseDto> result = articleService.searchAll();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @CrossOrigin
@@ -115,12 +103,12 @@ public class ArticlesController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/page/{page}", consumes = {"*/*"})
-    public ResponseEntity<List<SearchArticleResponse>> searchAllArticlesPage(
+    public ResponseEntity<List<GetArticleResponseDto>> searchAllArticlesPage(
             @PathVariable int page) {
         final int limit = 10;
         if(page > 0) {
-            final List<SearchArticleResponse> resultList = articleService.searchAllPage(limit, page);
-            return validateResponseList(resultList);
+            final List<GetArticleResponseDto> resultList = articleService.searchAllPage(limit, page);
+            return new ResponseEntity<>(resultList, HttpStatus.OK);
         } else {
             return ResponseEntity.badRequest().build();
         }
@@ -151,35 +139,21 @@ public class ArticlesController {
     @ApiOperation(value = "Get articles from list with the amount depending on the limit and which ones on page and search query", response = List.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Article list issued", response = List.class),
-            @ApiResponse(code = 400, message = "Api parameter not an int", response = HttpClientErrorException.BadRequest.class),
-            @ApiResponse(code = 404, message = "No articles found", response = HttpClientErrorException.NotFound.class)
+            @ApiResponse(code = 400, message = "Api parameter not an int", response = HttpClientErrorException.BadRequest.class)
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/search/{query}/{page}", consumes = {"*/*"})
-    public ResponseEntity<List<SearchArticleResponse>> searchFromQuery(
+    public ResponseEntity<List<GetArticleResponseDto>> searchFromQuery(
             @PathVariable String query,
             @PathVariable int page) {
-        if(query == null || query.isBlank() || page < 1) {
+        if (query == null || query.isBlank() || page < 1) {
             LOG.debug("Query: {}, Page: {}", query, page);
             return ResponseEntity.badRequest().build();
         }
         final int limit = 10;
         LOG.debug("Query: {}, Limit:{} ,Page: {}", query, limit, page);
-        final List<SearchArticleResponse> resultList = articleService.searchAllByQuery(query, limit, page);
-        return validateResponseList(resultList);
+        final List<GetArticleResponseDto> resultList = articleService.searchAllByQuery(query, limit, page);
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
-    private ResponseEntity<List<SearchArticleResponse>> validateResponseList(List<SearchArticleResponse> resultList) {
-        try {
-            if (resultList==null) {
-                return ResponseEntity.internalServerError().build();
-            } else {
-                final HttpStatus httpStatus = HttpStatus.OK;
-                return new ResponseEntity<>(resultList, httpStatus);
-            }
-        } catch (NumberFormatException ex) {
-            // log
-            return ResponseEntity.badRequest().build();
-        }
-    }
 }

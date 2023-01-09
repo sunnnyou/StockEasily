@@ -181,7 +181,7 @@
                                                 <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
                                                     {#if article.image}
                                                         <img class="rounded-full"
-                                                             src="{`data:image/png;base64,${article.image}`}"
+                                                             src={article.image}
                                                              width="40"
                                                              height="40"
                                                              alt="">
