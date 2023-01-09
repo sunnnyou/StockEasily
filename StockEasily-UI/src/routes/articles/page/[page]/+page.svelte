@@ -187,7 +187,7 @@
                                                              alt="">
                                                     {:else}
                                                         <img class="rounded-full"
-                                                             src="{`data:image/jpeg;base64,${defaultImage}`}"
+                                                             src={`data:image/jpeg;base64,${defaultImage}`}
                                                              width="40"
                                                              height="40"
                                                              alt="">
