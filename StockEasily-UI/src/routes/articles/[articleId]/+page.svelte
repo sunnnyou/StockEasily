@@ -59,19 +59,26 @@
               on:submit|preventDefault={handleOnSubmit}>
             <div class="float-left w-full">
                 <div class="float-left w-1/2 vr py-0 px-4">
-                    <!-- input name -->
-                    <LabeledInput addMarginTop={false}
-                                  error={validatableArticle.name.error}
-                                  labelOptions={{
-                                      className: 'text-gray-600',
-                                      isBold: true,
-                                      name: 'article-name',
-                                      text: $t('general.name')
-                                  }}
-                                  maxLength={30}
-                                  placeholder={$t('general.name.placeholder')}
-                                  on:change={event => validatableArticle.name.value = event.target.value.trim()}
-                    />
+                    {#if !edit}
+                        <LabeledText labelText={$t('general.name')}
+                                     text={validatableArticle.name.value}
+                        />
+                    {:else}
+                        <!-- input name -->
+                        <LabeledInput addMarginTop={false}
+                                      error={validatableArticle.name.error}
+                                      labelOptions={{
+                                          className: 'text-gray-600',
+                                          isBold: true,
+                                          name: 'article-name',
+                                          text: $t('general.name')
+                                      }}
+                                      maxLength={30}
+                                      placeholder={$t('general.name.placeholder')}
+                                      value={validatableArticle.name.value}
+                                      on:change={event => validatableArticle.name.value = event.target.value.trim()}
+                        />
+                    {/if}
 
                     <!-- input category, quantity -->
                     <InputFlexContainer leftClass="w-65p"
