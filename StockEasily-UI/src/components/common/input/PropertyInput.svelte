@@ -49,8 +49,7 @@
     }
 
     function onButtonClick() {
-        if (!property && edit && !isPropertyRequestValid(internalProperty)
-        ) {
+        if (!property && edit && !isPropertyRequestValid(internalProperty)) {
             return;
         }
 
