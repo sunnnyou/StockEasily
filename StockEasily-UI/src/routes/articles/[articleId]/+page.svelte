@@ -80,40 +80,55 @@
                         />
                     {/if}
 
-                    <!-- input category, quantity -->
-                    <InputFlexContainer leftClass="w-65p"
-                                        rightClass="w-34p"
-                    >
-                        <LabeledInput error={validatableArticle.category.error}
-                                      labelOptions={{
-                                          className: 'text-gray-600',
-                                          isBold: true,
-                                          name: 'article-category',
-                                          text: $t('general.category')
-                                      }}
-                                      maxLength={30}
-                                      placeholder={$t('general.category.placeholder')}
-                                      on:change={event => validatableArticle.category.value = event.target.value.trim()}
-                                      slot="left"
-                        />
-
-                        <LabeledNumericInput className="w-full text-sm"
-                                             error={validatableArticle.quantity.error}
-                                             iconParentClass="pr-1 mt-1.5 text-sm"
-                                             labelOptions={{
-                                                 className: 'text-gray-600',
-                                                 isBold: true,
-                                                 name: 'article-quantity',
-                                                 text: $t('general.quantity')
-                                             }}
-                                             min="0"
-                                             offerSmallerSteps={true}
-                                             bind:value={validatableArticle.quantity.value}
-                                             on:change={event => validatableArticle.quantity.value = to_number(event.target.value)}
-                                             slot="right"
+                    <!-- category, quantity -->
+                    {#if !edit}
+                        <InputFlexContainer leftClass="w-65p"
+                                            rightClass="w-34p"
                         >
-                        </LabeledNumericInput>
-                    </InputFlexContainer>
+                            <LabeledText labelText={$t('general.category')}
+                                         text={validatableArticle.category.value}
+                                         slot="left"
+                            />
+
+                            <LabeledText labelText={$t('general.quantity')}
+                                         text={validatableArticle.quantity.value}
+                                         slot="right"
+                            />
+                        </InputFlexContainer>
+                    {:else}
+                        <InputFlexContainer leftClass="w-65p"
+                                            rightClass="w-34p"
+                        >
+                            <LabeledInput error={validatableArticle?.category?.error}
+                                          labelOptions={{
+                                              className: 'text-gray-600',
+                                              isBold: true,
+                                              name: 'article-category',
+                                              text: $t('general.category')
+                                          }}
+                                          maxLength={30}
+                                          placeholder={$t('general.category.placeholder')}
+                                          on:change={event => validatableArticle.category.value = event.target.value.trim()}
+                                          slot="left"
+                            />
+
+                            <LabeledNumericInput className="w-full text-sm"
+                                                 error={validatableArticle.quantity.error}
+                                                 iconParentClass="pr-1 mt-1.5 text-sm"
+                                                 labelOptions={{
+                                                     className: 'text-gray-600',
+                                                     isBold: true,
+                                                     name: 'article-quantity',
+                                                     text: $t('general.quantity')
+                                                 }}
+                                                 min="0"
+                                                 offerSmallerSteps={true}
+                                                 bind:value={validatableArticle.quantity.value}
+                                                 on:change={event => validatableArticle.quantity.value = to_number(event.target.value)}
+                                                 slot="right"
+                            />
+                        </InputFlexContainer>
+                    {/if}
 
                     <HorizontalRuler className="border-b-1 border-gray-300 mt-8 mx-4"></HorizontalRuler>
 
