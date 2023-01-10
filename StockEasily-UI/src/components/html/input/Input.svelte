@@ -31,11 +31,11 @@
 
     function handleFileChange(event) {
         const FILES = event.target.files;
-        if (FILES === undefined){
-            console.warn('Ignoring selected files, event.target.files is undefined')
+        if (FILES === undefined) {
+            console.warn('Ignoring selected files, event.target.files is undefined');
             return;
         }
-        selectedFiles.set(FILES)
+        selectedFiles.set(FILES);
         if (onFileChange) {
             onFileChange(FILES);
         }
