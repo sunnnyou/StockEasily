@@ -19,6 +19,7 @@
     import LabeledFileInput from '$components/common/input/file/LabeledFileInput.svelte';
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
     import LabeledNumericInput from '$components/common/input/LabeledNumericInput.svelte';
+    import LabeledText from '$components/common/article/LabeledText.svelte';
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
     import PreviewImage from '$components/common/PreviewImage.svelte';
