@@ -9,7 +9,7 @@
     import {t} from '$i18n/i18n';
 
     import FaIcon from '$components/common/FaIcon.svelte';
-    import PreviewImage from "$components/common/PreviewImage.svelte";
+    import PreviewImage from '$components/common/article/PreviewImage.svelte';
 
     export let accept = AcceptType.Any;
     export let allowMultiple = true;
