@@ -23,7 +23,7 @@
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
     import PreviewImage from '$components/common/article/PreviewImage.svelte';
-    import PropertiesLabel from "$components/common/article/PropertiesLabel.svelte";
+    import PropertiesLabel from '$components/common/article/PropertiesLabel.svelte';
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
 
     /** @type {import('./$types').PageData} */
