@@ -1,16 +1,17 @@
 <script lang="ts">
-    import {goto} from '$app/navigation';
-    import type {ValidatableArticle} from '../../../dto/create-article-request-dto';
+    import type {GetArticleResponseDto} from '$dto/response/get-article-response-dto';
 
     import {AcceptType} from '$components/common/input/file/accept-type.js';
     import {ButtonPriority} from '$components/html/button/button-priority.js';
     import {ButtonType} from '$components/html/button/button-type.js';
     import {getImageResponseMessage, onImageSelected} from '$common/image-input-utils';
+    import {goto} from '$app/navigation';
     import {onMount} from 'svelte';
     import {onSaveProperty} from '$common/property-utils';
     import {responseErrors, selectedFileName} from '$common/image-input-utils';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
+    import {ValidatableArticle} from '$dto/create-article-request-dto';
 
     import Button from '$components/html/button/Button.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
@@ -25,22 +26,7 @@
     /** @type {import('./$types').PageData} */
     export let data;
 
-    type Property = {
-        id: number;
-        name: string;
-        description: string;
-    }
-
-    type Article = {
-        id: number;
-        name: string;
-        properties: Property[];
-        quantity: number;
-        category: object;
-        image: string;
-    }
-
-    let article: Article;
+    let article: GetArticleResponseDto;
     let validatableArticle: ValidatableArticle = {
         category: {value: '', error: ''},
         image: {value: '', error: ''},
@@ -59,6 +45,7 @@
         }
         console.debug('Loaded data', data.result);
         article = data.result;
+        validatableArticle = new ValidatableArticle(article);
     });
 
 </script>

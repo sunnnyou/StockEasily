@@ -1,6 +1,7 @@
 <script lang="ts">
     import type {ValidatableArticle} from '$dto/create-article-request-dto';
     import type {ValidatableProperty} from '$dto/property-request-dto';
+    import type {Validatable} from '../../../common/validatable';
 
     import {AcceptType} from '$components/common/input/file/accept-type';
     import {ButtonPriority} from '$components/html/button/button-priority';
@@ -142,7 +143,7 @@
         return isValid;
     }
 
-    function validateTextLengthBetween(field: { value: string; error: string }, entity: string, min: number, max: number, nullable: boolean = false): boolean {
+    function validateTextLengthBetween(field: Validatable<string>, entity: string, min: number, max: number, nullable: boolean = false): boolean {
         const VALUE = field.value;
         const isValid = VALUE ? VALUE.length >= min || VALUE.length <= max : nullable;
         if (!isValid) {
@@ -154,7 +155,7 @@
         return isValid;
     }
 
-    function validateTextLengthBetween1And30(field: { value: any; error: string }, entity: string, nullable: boolean = false): boolean {
+    function validateTextLengthBetween1And30(field: Validatable<string>, entity: string, nullable: boolean = false): boolean {
         return validateTextLengthBetween(field, entity, 1, 30, nullable);
     }
 </script>
