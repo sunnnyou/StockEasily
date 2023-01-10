@@ -9,6 +9,7 @@
     import {t} from '$i18n/i18n';
 
     import FaIcon from '$components/common/FaIcon.svelte';
+    import PreviewImage from "$components/common/PreviewImage.svelte";
 
     export let accept = AcceptType.Any;
     export let allowMultiple = true;
@@ -82,12 +83,10 @@
 {:else if type === InputType.File}
     {#if previewImageOptions?.show}
         {#if previewImageOptions.src}
-            <img alt={previewImageOptions.alt || $t('general.previewImage')}
-                 class="mx-auto max-w-sm max-h-80"
-                 src={previewImageOptions.src}
-            >
+            <PreviewImage alt={previewImageOptions.alt || $t('general.previewImage')}
+                          src={previewImageOptions.src}
+            />
         {:else}
-
             <div class="text-center my-20">
                 {$t('general.input.noImageSelected')}
             </div>

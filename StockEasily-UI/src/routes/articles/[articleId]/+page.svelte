@@ -21,6 +21,7 @@
     import LabeledNumericInput from '$components/common/input/LabeledNumericInput.svelte';
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
+    import PreviewImage from '$components/common/PreviewImage.svelte';
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
 
     /** @type {import('./$types').PageData} */
@@ -47,6 +48,8 @@
         article = data.result;
         validatableArticle = new ValidatableArticle(article);
     });
+
+    let edit = false;
 
 </script>
 
@@ -159,24 +162,29 @@
 
                 <div class="float-left h-full w-1/2 py-0 px-4">
                     <div class="w-full m-auto h-full">
-                        <LabeledFileInput accept={AcceptType.Image}
-                                          addMarginTop={false}
-                                          allowMultiple={false}
-                                          className="h-full"
-                                          labelOptions={{
-                                              className: 'text-gray-600',
-                                              isBold: true,
-                                              name: 'article-image',
-                                              text: $t('general.image')
-                                          }}
-                                          onFileChange={files => validatableArticle.image = onImageSelected(files, validatableArticle)}
-                                          previewImageOptions={{
-                                            alt: $selectedFileName,
-                                            show: true,
-                                            src: validatableArticle.image?.value
-                                          }}
-                        />
-
+                        {#if edit}
+                            <LabeledFileInput accept={AcceptType.Image}
+                                              addMarginTop={false}
+                                              allowMultiple={false}
+                                              className="h-full"
+                                              labelOptions={{
+                                                  className: 'text-gray-600',
+                                                  isBold: true,
+                                                  name: 'article-image',
+                                                  text: $t('general.image')
+                                              }}
+                                              onFileChange={files => validatableArticle.image = onImageSelected(files, validatableArticle)}
+                                              previewImageOptions={{
+                                                alt: $selectedFileName,
+                                                show: true,
+                                                src: validatableArticle.image?.value || ''
+                                              }}
+                            />
+                        {:else}
+                            <PreviewImage alt={validatableArticle.name.value}
+                                          src={validatableArticle.image?.value}
+                            />
+                        {/if}
                         <!-- Image error response and submit button area -->
                         <div class="flex p-0 m-0 h-10 mt-4">
                             <div class="w-full text-right">
