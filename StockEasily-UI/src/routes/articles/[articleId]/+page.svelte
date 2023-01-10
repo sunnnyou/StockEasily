@@ -139,7 +139,7 @@
 
                     {#if validatableArticle?.properties !== undefined}
                         {#if validatableArticle.properties.length > 0}
-                            <HorizontalRuler className="border-b-1 border-gray-300 mt-8 mx-4"></HorizontalRuler>
+                            <HorizontalRuler className="border-b-1 border-gray-300 mt-8 mx-4"/>
                             <PropertiesLabel addMarginTop={true}
                                              labelOptions={{
                                                  className: 'text-gray-600 mt-10',
