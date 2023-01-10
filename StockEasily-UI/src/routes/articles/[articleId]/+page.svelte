@@ -115,6 +115,7 @@
                                           maxLength={30}
                                           placeholder={$t('general.category.placeholder')}
                                           on:change={event => validatableArticle.category.value = event.target.value.trim()}
+                                          value={validatableArticle.category.value}
                                           slot="left"
                             />
 
