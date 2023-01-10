@@ -22,7 +22,8 @@
     import LabeledText from '$components/common/article/LabeledText.svelte';
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
-    import PreviewImage from '$components/common/PreviewImage.svelte';
+    import PreviewImage from '$components/common/article/PreviewImage.svelte';
+    import PropertiesLabel from "$components/common/article/PropertiesLabel.svelte";
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
 
     /** @type {import('./$types').PageData} */
@@ -136,55 +137,64 @@
                     {/if}
 
                     <HorizontalRuler className="border-b-1 border-gray-300 mt-8 mx-4"></HorizontalRuler>
-
-                    {#each validatableArticle?.properties as property, i}
-                        <PropertyInput edit={false}
-                                       errors={property.errors}
-                                       leftLabelOptions={{
-                                           className: 'text-gray-600 ml-2',
-                                           isBold: true,
-                                           name: 'prop-inner-name' + i,
-                                           text: $t('props.name'),
-                                       }}
-                                       parentId="prop-parent{i}"
-                                       parentLabelOptions={{
+                    <PropertiesLabel addMarginTop={true}
+                                     className=""
+                                     labelOptions={{
                                            className: 'text-gray-600 mt-10',
-                                           hide: i !== 0,
                                            isBold: true,
-                                           name: 'prop-inner-parent' + i,
                                        }}
-                                       property={property}
-                                       onSave={property => validatableArticle.properties = onSaveProperty(validatableArticle, property, i)}
-                                       rightLabelOptions={{
-                                           className: 'text-gray-600 ml-2',
-                                           isBold: true,
-                                           name: 'prop-inner-description' + i,
-                                           text: $t('props.description'),
-                                       }}
-                        />
-                    {/each}
-                    <PropertyInput edit={true}
-                                   forceEdit={true}
-                                   leftLabelOptions={{
+                    />
+                    {#if article?.properties !== undefined}
+                        {#each article.properties as property, i}
+                            <PropertyInput errors={property.errors}
+                                           leftLabelOptions={{
+                                               className: 'text-gray-600 ml-2',
+                                               isBold: true,
+                                               name: 'prop-inner-name' + i,
+                                               text: $t('props.name'),
+                                           }}
+                                           parentId="prop-parent{i}"
+                                           parentLabelOptions={{
+                                               className: 'text-gray-600 mt-10',
+                                               hide: i !== 0,
+                                               isBold: true,
+                                               name: 'prop-inner-parent' + i,
+                                           }}
+                                           property={property.value}
+                                           onSave={property => validatableArticle.properties = onSaveProperty(validatableArticle, property, i)}
+                                           rightLabelOptions={{
+                                               className: 'text-gray-600 ml-2',
+                                               isBold: true,
+                                               name: 'prop-inner-description' + i,
+                                               text: $t('props.description'),
+                                           }}
+                            />
+                        {/each}
+                    {/if}
+                    {#if edit}
+                        <PropertyInput edit={true}
+                                       forceEdit={true}
+                                       leftLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
                                            name: 'prop-inner-name-new',
                                            text: $t('props.name'),
                                        }}
-                                   parentId="prop-parent-new"
-                                   parentLabelOptions={{
+                                       parentId="prop-parent-new"
+                                       parentLabelOptions={{
                                        className: 'text-gray-600 mt-10',
                                        hide: validatableArticle?.properties.length > 0,
                                        isBold: true,
                                    }}
-                                   rightLabelOptions={{
+                                       rightLabelOptions={{
                                            className: 'text-gray-600 ml-2',
                                            isBold: true,
                                            name: 'prop-inner-description-new',
                                            text: $t('props.description'),
                                        }}
-                                   onSave={property =>validatableArticle.properties = onSaveProperty(validatableArticle, property)}
-                    />
+                                       onSave={property => validatableArticle.properties = onSaveProperty(validatableArticle, property)}
+                        />
+                    {/if}
                 </div>
 
                 <div class="float-left h-full w-1/2 py-0 px-4">
