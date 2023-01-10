@@ -145,31 +145,51 @@
                                            isBold: true,
                                        }}
                     />
-                    {#if article?.properties !== undefined}
-                        {#each article.properties as property, i}
-                            <PropertyInput errors={property.errors}
-                                           leftLabelOptions={{
-                                               className: 'text-gray-600 ml-2',
-                                               isBold: true,
-                                               name: 'prop-inner-name' + i,
-                                               text: $t('props.name'),
-                                           }}
-                                           parentId="prop-parent{i}"
-                                           parentLabelOptions={{
-                                               className: 'text-gray-600 mt-10',
-                                               hide: i !== 0,
-                                               isBold: true,
-                                               name: 'prop-inner-parent' + i,
-                                           }}
-                                           property={property.value}
-                                           onSave={property => validatableArticle.properties = onSaveProperty(validatableArticle, property, i)}
-                                           rightLabelOptions={{
-                                               className: 'text-gray-600 ml-2',
-                                               isBold: true,
-                                               name: 'prop-inner-description' + i,
-                                               text: $t('props.description'),
-                                           }}
-                            />
+                    {#if validatableArticle?.properties !== undefined}
+                        {#each validatableArticle.properties as property, i}
+                            {#if !edit}
+
+                                <InputFlexContainer leftClass="w-65p"
+                                                    rightClass="w-34p"
+                                >
+                                    <LabeledText labelText={$t('props.name')}
+                                                 text={property.value.name}
+                                                 slot="left">
+                                    </LabeledText>
+
+                                    <LabeledText labelText={$t('props.description')}
+                                                 text={property.value.description}
+                                                 slot="right">
+                                    </LabeledText>
+                                </InputFlexContainer>
+
+                            {:else}
+
+                                <PropertyInput errors={property.errors}
+                                               leftLabelOptions={{
+                                                   className: 'text-gray-600 ml-2',
+                                                   isBold: true,
+                                                   name: 'prop-inner-name' + i,
+                                                   text: $t('props.name'),
+                                               }}
+                                               parentId="prop-parent{i}"
+                                               parentLabelOptions={{
+                                                   className: 'text-gray-600 mt-10',
+                                                   hide: i !== 0,
+                                                   isBold: true,
+                                                   name: 'prop-inner-parent' + i,
+                                               }}
+                                               property={property.value}
+                                               onSave={property => validatableArticle.properties = onSaveProperty(validatableArticle, property, i)}
+                                               rightLabelOptions={{
+                                                   className: 'text-gray-600 ml-2',
+                                                   isBold: true,
+                                                   name: 'prop-inner-description' + i,
+                                                   text: $t('props.description'),
+                                               }}
+                                />
+
+                            {/if}
                         {/each}
                     {/if}
                     {#if edit}
