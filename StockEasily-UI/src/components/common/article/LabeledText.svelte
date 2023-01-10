@@ -7,7 +7,7 @@
 
 
 <div class="h-full">
-    <h5 class="font-bold{labelClass?.length > 0 ? ` ${labelClass}` : ''}">
+    <h5 class="font-bold text-gray-600{labelClass?.length > 0 ? ` ${labelClass}` : ''}">
         {labelText}
     </h5>
     <p class="pb-2 my-4{textClass?.length > 0 ? ` ${textClass}`:''}">
