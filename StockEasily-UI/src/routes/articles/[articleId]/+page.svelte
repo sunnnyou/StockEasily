@@ -37,7 +37,7 @@
     };
 
     function handleOnSubmit() {
-
+        toggleEdit();
     }
 
     onMount(async () => {
@@ -50,6 +50,10 @@
     });
 
     let edit = false;
+
+    function toggleEdit() {
+        edit = !edit;
+    }
 
 </script>
 
