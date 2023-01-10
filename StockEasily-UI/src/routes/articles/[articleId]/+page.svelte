@@ -192,23 +192,34 @@
                                           src={validatableArticle.image?.value}
                             />
                         {/if}
-                        <!-- Image error response and submit button area -->
-                        <div class="flex p-0 m-0 h-10 mt-4">
-                            <div class="w-full text-right">
-                                {#if responseErrors && Object.keys(responseErrors)?.length > 0 }
+                        {#if edit}
+                            <!-- Image error response and submit button area -->
+                            <div class="flex p-0 m-0 h-10 mt-4">
+                                <div class="w-full text-right">
+                                    {#if responseErrors && Object.keys(responseErrors)?.length > 0 }
                                     <span class="error w-full leading-10 pr-5">
                                         {getImageResponseMessage()}
                                     </span>
-                                {/if}
+                                    {/if}
+                                </div>
+                                <!-- Submit button -->
+                                <Button className="w-1/8 align-end float-right"
+                                        type={ButtonType.Submit}
+                                        priority={ButtonPriority.Primary}
+                                >
+                                    {$t('general.save')}
+                                </Button>
                             </div>
+                        {:else}
                             <!-- Submit button -->
                             <Button className="w-1/8 align-end float-right"
-                                    type={ButtonType.Submit}
+                                    type={ButtonType.Button}
                                     priority={ButtonPriority.Primary}
+                                    on:click={toggleEdit}
                             >
-                                {$t('general.add')}
+                                {$t('general.edit')}
                             </Button>
-                        </div>
+                        {/if}
                     </div>
                 </div>
             </div>
