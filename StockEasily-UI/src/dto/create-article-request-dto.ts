@@ -13,6 +13,7 @@ export class ValidatableArticle {
 
     public constructor(createResponse: GetArticleResponseDto) {
         this.image.value = createResponse.image;
+        this.category.value = createResponse.name;
         this.name.value = createResponse.name;
         this.properties = createResponse.properties.map(p => {
             return {
