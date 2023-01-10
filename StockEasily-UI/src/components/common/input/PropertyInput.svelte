@@ -12,8 +12,8 @@
     import Button from '$components/html/button/Button.svelte';
     import FaIcon from '$components/common/FaIcon.svelte';
     import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
-    import Label from '$components/html/input/Label.svelte';
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
+    import PropertiesLabel from "$components/common/article/PropertiesLabel.svelte";
 
     export let addMarginTop: boolean = true;
     export let edit = false;
@@ -70,20 +70,10 @@
 
 <div>
     {#if parentLabelOptions && !parentLabelOptions.hide}
-        <div class="flex flex-col{parentClass ? ' ' + parentClass : ''}">
-            <div class="flex items-end h-10 {addMarginTop ? ' mt-2' : ''}">
-                <Label className={parentLabelOptions.className}
-                       name={parentLabelOptions.name}
-                       bold={parentLabelOptions.isBold}
-                >
-                    {#if parentLabelOptions?.text?.length > 0}
-                        {parentLabelOptions.text}
-                    {:else}
-                        {$t('props') + ':'}
-                    {/if}
-                </Label>
-            </div>
-        </div>
+        <PropertiesLabel {addMarginTop}
+                         className={parentClass}
+                         labelOptions={parentLabelOptions}
+        />
     {/if}
     <div class="flex flex-row"
          id={parentLabelOptions.name}
