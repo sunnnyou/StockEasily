@@ -15,7 +15,7 @@
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
     import PropertiesLabel from "$components/common/article/PropertiesLabel.svelte";
 
-    export let addMarginTop: boolean = true;
+    export let addMarginTop = true;
     export let edit = false;
     export let errors = {name: '', description: ''};
     export let forceEdit = false;
