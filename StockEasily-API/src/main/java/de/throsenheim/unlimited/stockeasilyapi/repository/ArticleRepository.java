@@ -409,4 +409,38 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         }
     }
 
+    public int delete(long articleId) {
+        PreparedStatement preparedStatementArticlesProperties = null;
+        PreparedStatement preparedStatementUsersArticles = null;
+        PreparedStatement preparedStatement = null;
+        final String articles_properties_query = "delete from articles_properties where articleId=?";
+        final String users_articles_query = "delete from users_articles where articleId=?";
+        final String query = "delete from articles where id=?";
+
+        try {
+            preparedStatementArticlesProperties = connection.prepareStatement(articles_properties_query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatementUsersArticles = connection.prepareStatement(users_articles_query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+            preparedStatementArticlesProperties.setLong(1, articleId);
+            preparedStatementUsersArticles.setLong(1, articleId);
+            preparedStatement.setLong(1, articleId);
+
+            LogUtil.traceSqlStatement(preparedStatementArticlesProperties, LOGGER);
+            LogUtil.traceSqlStatement(preparedStatementUsersArticles, LOGGER);
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            LOGGER.debug("Affected Rows in delete query for articles_properties: {}", preparedStatementArticlesProperties.executeUpdate());
+            LOGGER.debug("Affected Rows in delete query for users_articles: {}", preparedStatementUsersArticles.executeUpdate());
+            int affectedRowsArticles = preparedStatement.executeUpdate();
+            LOGGER.debug("Affected Rows in delete query for articles: {}", affectedRowsArticles);
+            this.connection.commit(CommittedSqlCommand.DELETE);
+            return affectedRowsArticles;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatementArticlesProperties, LOGGER, e);
+            LogUtil.errorSqlStatement(preparedStatementUsersArticles, LOGGER, e);
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
 }
