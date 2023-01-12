@@ -46,10 +46,7 @@
     // TODO: add document.getElementById("MyElement").classList.add('MyClass'); change button colour to red if error
     function deleteArticle() {
         fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + $page.params.articleId, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            method: 'DELETE'
         }).then(response => {
             if (!response.ok) {
                 console.error('Could not delete article');
