@@ -10,6 +10,8 @@
     import InputFlexContainer from "$components/common/input/InputFlexContainer.svelte";
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
+    import {CreateArticleRequestDto} from "$dto/create-article-request-dto";
+    import {goto} from "$app/navigation";
 
     type Property = {
         id: number;
@@ -41,11 +43,41 @@
         image = article.image;
     }
 
+    // TODO: add document.getElementById("MyElement").classList.add('MyClass'); change button colour to red if error
+    function deleteArticle() {
+        fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + $page.params.articleId, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(response => {
+            if (!response.ok) {
+                console.error('Could not delete article');
+                return;
+            }
+
+            goto('/articles');
+        }).catch(error => {
+            if (!error) {
+                console.error('Could not reach backend, probably offline?');
+                return;
+            }
+            console.error('Unknown error: Could not delete article, response error:', error);
+        });
+    }
+
 </script>
 
 <PageContent>
     <PageCard title={$t('article')}>
         {#await setArticle() then _}
+
+            <button on:click={() => deleteArticle()}
+                    type="submit"
+                    class="p-2.5 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                Delete
+            </button>
+
             <Form className="inline-block w-full">
                 <!-- Submit button -->
                 <div class="float-left w-full">
