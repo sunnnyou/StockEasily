@@ -1,6 +1,6 @@
 <script lang="ts">
     import {page} from '$app/stores';
-    import {SESSION_INFO} from '../../../common/session-util';
+    import {SESSION_INFO} from '$common/session-util';
     import {t} from '$i18n/i18n';
 
     import Form from '$components/html/Form.svelte';
@@ -10,7 +10,6 @@
     import InputFlexContainer from "$components/common/input/InputFlexContainer.svelte";
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
-    import {CreateArticleRequestDto} from "$dto/create-article-request-dto";
     import {goto} from "$app/navigation";
 
     type Property = {
@@ -43,24 +42,30 @@
         image = article.image;
     }
 
-    // TODO: add document.getElementById("MyElement").classList.add('MyClass'); change button colour to red if error
+    // may show errors on $t but still works
     function deleteArticle() {
-        fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + $page.params.articleId, {
-            method: 'DELETE'
-        }).then(response => {
-            if (!response.ok) {
-                console.error('Could not delete article');
-                return;
-            }
-
-            goto('/articles');
-        }).catch(error => {
-            if (!error) {
-                console.error('Could not reach backend, probably offline?');
-                return;
-            }
-            console.error('Unknown error: Could not delete article, response error:', error);
-        });
+        if (confirm($t('articles.confirm.delete'))) {
+            fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + $page.params.articleId, {
+                method: 'DELETE'
+            }).then(response => {
+                if (!response.ok) {
+                    console.error('Could not delete article');
+                    alert($t('articles.error.unknown') + " " + $t('articles.error.delete'))
+                    return;
+                }
+                goto('/articles');
+            }).catch(error => {
+                if (!error) {
+                    console.error('Could not reach backend, probably offline?');
+                    alert($t('articles.error.backend') + " " + $t('articles.error.delete'))
+                    return;
+                }
+                console.error('Unknown error: Could not delete article, response error:', error);
+                alert($t('articles.error.unknown') + " " + $t('articles.error.delete'))
+            });
+        } else {
+            return;
+        }
     }
 
 </script>
@@ -127,7 +132,7 @@
                                        name='prop-inner-parent'
                                        bold=true
                                 >
-                                        {$t('props') + ':'}
+                                    {$t('props') + ':'}
                                 </Label>
                             </div>
                         </div>
@@ -169,7 +174,9 @@
 
                     <div class="float-left h-full w-1/2 pl-10">
                         <div class="w-full px-10 m-auto vr h-full">
-                            <img src="{`data:image/png;base64,${image}`}" alt="" class="w-full object-contain max-h-96"/>
+                            <img src="{`data:image/png;base64,${image}`}"
+                                 alt=""
+                                 class="w-full object-contain max-h-96"/>
                         </div>
                     </div>
                 </div>
