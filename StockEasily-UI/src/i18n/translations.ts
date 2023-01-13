@@ -61,6 +61,10 @@ export default {
         // categories
         'category': 'Category',
 
+        // qr-code
+        'qr.show': 'Show QR-Code',
+        'qr.download': "Download QR-Code",
+
         // validation
         'validation.between': '{{entity}} length must be between {{min}} and {{max}}',
         'validation.max': '{{entity}} maximum is {{max}}',

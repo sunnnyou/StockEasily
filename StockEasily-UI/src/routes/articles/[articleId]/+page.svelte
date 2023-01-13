@@ -42,21 +42,14 @@
     }
 
     // This creates a new QR Image from article without the image. This QR image is then displayed on a new tab
-    async function getQRImage() {
-
-
-        const articleWithoutImage: { image: null; quantity: number; name: string; id: number; category: object; properties: Property[] } = {
-            id: Number($page.params.articleId),
-            name: article.name,
-            properties: properties,
-            quantity: article.quantity,
-            category: article.category,
-            image: null
-        };
-        let articleString = JSON.stringify(articleWithoutImage)
-        let qrImage = await QRCode.toDataURL(articleString);
+    async function showQRImage() {
+        let qrImage = await QRCode.toDataURL(String($page.params.articleId));
         let newTab = window.open();
         newTab.document.write(`<img src="${qrImage}" alt="">`);
+    }
+
+    async function downloadQRImage() {
+        return await QRCode.toDataURL(String($page.params.articleId));
     }
 
 </script>
@@ -66,11 +59,23 @@
 
         {#await setArticle() then _}
 
-            <button on:click={() => getQRImage()}
-                    type="submit"
-                    class="p-2.5 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                Get QR-Code
-            </button>
+            <div class="inline-block w-full mb-4">
+                <button on:click={() => showQRImage()}
+                        type="submit"
+                        class="p-2.5 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                    {$t('qr.show')}
+                </button>
+
+                <button on:click="{async () => {
+                            let a = document.createElement('a');
+                            a.download = 'qr-image.png';
+                            a.href = await downloadQRImage();
+                            a.click();
+                            }}"
+                        class="p-2.5 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                    {$t('qr.download')}
+                </button>
+            </div>
 
             <Form className="inline-block w-full">
                 <!-- Submit button -->
@@ -124,7 +129,7 @@
                                        name='prop-inner-parent'
                                        bold=true
                                 >
-                                        {$t('props') + ':'}
+                                    {$t('props') + ':'}
                                 </Label>
                             </div>
                         </div>
@@ -166,7 +171,8 @@
 
                     <div class="float-left h-full w-1/2 pl-10">
                         <div class="w-full px-10 m-auto vr h-full">
-                            <img src="{`data:image/png;base64,${image}`}" alt="" class="w-full object-contain max-h-96"/>
+                            <img src="{`data:image/png;base64,${image}`}" alt=""
+                                 class="w-full object-contain max-h-96"/>
                         </div>
                     </div>
                 </div>
