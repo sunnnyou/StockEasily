@@ -4,7 +4,7 @@ import de.throsenheim.unlimited.stockeasilyapi.dto.request.CategoryRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.PropertyRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
-import de.throsenheim.unlimited.stockeasilyapi.dto.response.SearchArticleResponse;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.GetArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.model.Category;
 import de.throsenheim.unlimited.stockeasilyapi.model.Property;
@@ -125,11 +125,11 @@ class ArticlesControllerTest {
 
         when(articleRepository.findById(anyLong())).thenReturn(Optional.of(article));
 
-        ResponseEntity<SearchArticleResponse> result = articlesController.searchArticle("1");
+        ResponseEntity<GetArticleResponseDto> result = articlesController.searchArticle("1");
         assertEquals(HttpStatus.OK, result.getStatusCode());
 
         // Testing Body which is an article dto
-        SearchArticleResponse resultArticle = result.getBody();
+        GetArticleResponseDto resultArticle = result.getBody();
         assert resultArticle != null;
         assertEquals(resultArticle.getName(), article.getName());
         assertEquals(resultArticle.getCategory().getName(), article.getCategory().getName());
@@ -148,7 +148,7 @@ class ArticlesControllerTest {
     void searchArticleTestNotFound() {
         when(articleRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        ResponseEntity<SearchArticleResponse> result = articlesController.searchArticle("1");
+        ResponseEntity<GetArticleResponseDto> result = articlesController.searchArticle("1");
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
 
         assertNull(result.getBody());
@@ -199,11 +199,11 @@ class ArticlesControllerTest {
 
         when(articleRepository.findAll()).thenReturn(List.of(article, article2));
 
-        ResponseEntity<List<SearchArticleResponse>> result = articlesController.searchAllArticles();
+        ResponseEntity<List<GetArticleResponseDto>> result = articlesController.searchAllArticles();
         assertEquals(HttpStatus.OK, result.getStatusCode());
 
         // Testing Body which is an article dto
-        List<SearchArticleResponse> resultArticleList = result.getBody();
+        List<GetArticleResponseDto> resultArticleList = result.getBody();
         assert resultArticleList != null;
         assertEquals(2, resultArticleList.size());
         assertEquals(resultArticleList.get(0).getName(), article.getName());
@@ -266,11 +266,11 @@ class ArticlesControllerTest {
 
         when(articleRepository.findAllPage(10, 1)).thenReturn(List.of(article, article2));
 
-        ResponseEntity<List<SearchArticleResponse>> result = articlesController.searchAllArticlesPage(1);
+        ResponseEntity<List<GetArticleResponseDto>> result = articlesController.searchAllArticlesPage(1);
         assertEquals(HttpStatus.OK, result.getStatusCode());
 
         // Testing Body which is an article dto
-        List<SearchArticleResponse> resultArticleList = result.getBody();
+        List<GetArticleResponseDto> resultArticleList = result.getBody();
         assert resultArticleList != null;
         assertEquals(2, resultArticleList.size());
         assertEquals(resultArticleList.get(0).getName(), article.getName());
@@ -294,8 +294,8 @@ class ArticlesControllerTest {
 
     @Test
     void searchAllArticlesPageTestBadRequest() {
-        ResponseEntity<List<SearchArticleResponse>> result = articlesController.searchAllArticlesPage(0);
-        ResponseEntity<List<SearchArticleResponse>> result2 = articlesController.searchAllArticlesPage(-1);
+        ResponseEntity<List<GetArticleResponseDto>> result = articlesController.searchAllArticlesPage(0);
+        ResponseEntity<List<GetArticleResponseDto>> result2 = articlesController.searchAllArticlesPage(-1);
 
         assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
         assertEquals(HttpStatus.BAD_REQUEST, result2.getStatusCode());
@@ -388,11 +388,11 @@ class ArticlesControllerTest {
 
         when(articleRepository.findAllByQuery(query, 10, page)).thenReturn(List.of(article, article2));
 
-        ResponseEntity<List<SearchArticleResponse>> result = articlesController.searchFromQuery(query, page);
+        ResponseEntity<List<GetArticleResponseDto>> result = articlesController.searchFromQuery(query, page);
         assertEquals(HttpStatus.OK, result.getStatusCode());
 
         // Testing Body which is an article dto
-        List<SearchArticleResponse> resultArticleList = result.getBody();
+        List<GetArticleResponseDto> resultArticleList = result.getBody();
         assert resultArticleList != null;
         assertEquals(2, resultArticleList.size());
         assertEquals(resultArticleList.get(0).getName(), article.getName());
@@ -416,10 +416,10 @@ class ArticlesControllerTest {
 
     @Test
     void searchFromQueryTestBadRequest() {
-        ResponseEntity<List<SearchArticleResponse>> result = articlesController.searchFromQuery("something", 0);
-        ResponseEntity<List<SearchArticleResponse>> result2 = articlesController.searchFromQuery("something", -1);
-        ResponseEntity<List<SearchArticleResponse>> result3 = articlesController.searchFromQuery("   ", 1);
-        ResponseEntity<List<SearchArticleResponse>> result4 = articlesController.searchFromQuery(null, 1);
+        ResponseEntity<List<GetArticleResponseDto>> result = articlesController.searchFromQuery("something", 0);
+        ResponseEntity<List<GetArticleResponseDto>> result2 = articlesController.searchFromQuery("something", -1);
+        ResponseEntity<List<GetArticleResponseDto>> result3 = articlesController.searchFromQuery("   ", 1);
+        ResponseEntity<List<GetArticleResponseDto>> result4 = articlesController.searchFromQuery(null, 1);
 
         assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
         assertEquals(HttpStatus.BAD_REQUEST, result2.getStatusCode());
