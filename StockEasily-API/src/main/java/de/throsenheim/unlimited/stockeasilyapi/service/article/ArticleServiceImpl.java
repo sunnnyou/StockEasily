@@ -103,4 +103,9 @@ public class ArticleServiceImpl implements ArticleService {
     public int getArticleRepositorySizeQuery(String query) {
         return articleRepository.getSizeQuery(query);
     }
+
+    @Override
+    public Optional<Integer> deleteArticle(long articleId) {
+        return Optional.of(articleRepository.delete(articleId));
+    }
 }
