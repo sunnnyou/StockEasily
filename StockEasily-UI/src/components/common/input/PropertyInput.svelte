@@ -13,7 +13,7 @@
     import FaIcon from '$components/common/FaIcon.svelte';
     import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
-    import PropertiesLabel from "$components/common/article/PropertiesLabel.svelte";
+    import PropertiesLabel from '$components/common/article/PropertiesLabel.svelte';
 
     export let addMarginTop = true;
     export let edit = false;
