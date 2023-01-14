@@ -12,6 +12,7 @@ export default {
         'general.chooseImage': 'Choose image',
         'general.replaceImage': 'Replace image',
         'general.edit': 'Edit',
+        'general.delete': 'Delete',
         'general.error': 'Error',
         'general.guest': 'Guest',
         'general.image': 'Image',

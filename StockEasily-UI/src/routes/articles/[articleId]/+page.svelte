@@ -318,7 +318,7 @@
                                                 on:click={deleteArticle}
                                                 slot="left"
                                         >
-                                            Delete
+                                            {$t('general.delete')}
                                         </Button>
                                         <!-- Edit button -->
                                         <Button className="w-1/8 align-end float-right"
