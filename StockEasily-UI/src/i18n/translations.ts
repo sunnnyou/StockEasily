@@ -38,6 +38,7 @@ export default {
         'menu.user.logout': 'Logout',
         'menu.user.notifications': 'Notifications',
         'menu.articles': 'Articles',
+        'menu.qrCode': 'Scan QR-Code',
 
         // pages
 
