@@ -6,6 +6,7 @@ import de.throsenheim.unlimited.stockeasilyapi.dto.response.GetArticleResponseDt
 import org.springframework.validation.FieldError;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ArticleService {
     CreateArticleResponseDto create(CreateArticleRequestDto request);
