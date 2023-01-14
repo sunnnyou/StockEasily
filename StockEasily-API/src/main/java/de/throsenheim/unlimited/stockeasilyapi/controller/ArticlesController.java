@@ -166,7 +166,7 @@ public class ArticlesController {
     @CrossOrigin
     @ApiOperation(value = "Get articles from list with the amount depending on the limit and which ones on page and search query", response = List.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Successfully deleted Article", response = SearchArticleResponse.class),
+            @ApiResponse(code = 204, message = "Successfully deleted Article"),
             @ApiResponse(code = 404, message = "No article found with matching id", response = HttpClientErrorException.NotFound.class)
     })
     @ResponseStatus(HttpStatus.OK)
