@@ -27,4 +27,6 @@ public interface ArticleService {
     List<GetArticleResponseDto> searchAllByQuery(String query, int limit, int page);
 
     int getArticleRepositorySizeQuery(String query);
+
+    Optional<Integer> deleteArticle(long articleId);
 }

@@ -18,6 +18,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Api(tags = {"Articles"}) // Set correct heading
 @RestController
@@ -57,13 +58,6 @@ public class ArticlesController {
         return new ResponseEntity<>(result, httpStatus);
     }
 
-    @ApiOperation(value = "Get article", response = CreateArticleResponseDto.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Article found", response = CreateArticleResponseDto.class),
-            @ApiResponse(code = 400, message = "Parameter validation error", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Article not found", response = ApiErrorDto.class)
-    })
-    @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
     @GetMapping(path = "/{id}", consumes = {"*/*"})
     public ResponseEntity<GetArticleResponseDto> searchArticle(
@@ -80,6 +74,19 @@ public class ArticlesController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+//    @ApiOperation(value = "Get article list with specific name", response = List.class)
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 200, message = "Article list issued", response = List.class),
+//            @ApiResponse(code = 400, message = "Api parameter not a string", response = HttpClientErrorException.BadRequest.class),
+//            @ApiResponse(code = 404, message = "No articles with this name found", response = HttpClientErrorException.NotFound.class)
+//    })
+//    @ResponseStatus(HttpStatus.OK)
+//    @GetMapping(path = "/{articleName}", consumes = {"*/*"})
+//    public ResponseEntity<List<Article>> searchAllArticlesByName(
+//            @PathVariable String articleName) {
+//        final List<Article> resultList = articleService.searchAllByName(articleName);
+//        return validateResponseList(resultList);
+//    }
 
     @CrossOrigin
     @ApiOperation(value = "Get all articles", response = List.class)
@@ -156,4 +163,22 @@ public class ArticlesController {
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "Get articles from list with the amount depending on the limit and which ones on page and search query", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Successfully deleted Article", response = SearchArticleResponse.class),
+            @ApiResponse(code = 404, message = "No article found with matching id", response = HttpClientErrorException.NotFound.class)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping(path = "/{id}", consumes = {"*/*"})
+    public ResponseEntity<GetArticleResponseDto> deleteArticle(@PathVariable long id) {
+
+        LOG.debug("Delete-Request for Article with ID: {}", id);
+        final Optional<Integer> result = articleService.deleteArticle(id);
+        if (result.isPresent() && result.get() > 0) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

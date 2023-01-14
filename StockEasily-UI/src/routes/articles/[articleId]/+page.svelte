@@ -1,4 +1,7 @@
 <script lang="ts">
+    import {page} from '$app/stores';
+    import {SESSION_INFO} from '$common/session-util';
+    import Button from '$components/html/button/Button.svelte';
     import type {GetArticleResponseDto} from '$dto/response/get-article-response-dto';
 
     import {AcceptType} from '$components/common/input/file/accept-type.js';
@@ -22,6 +25,7 @@
     import LabeledText from '$components/common/article/LabeledText.svelte';
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
+    import {goto} from '$app/navigation';
     import PreviewImage from '$components/common/article/PreviewImage.svelte';
     import PropertiesLabel from '$components/common/article/PropertiesLabel.svelte';
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
@@ -57,6 +61,32 @@
         edit = !edit;
     }
 
+    // may show errors on $t but still works
+    function deleteArticle() {
+        if (confirm($t('articles.confirm.delete'))) {
+            fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + $page.params.articleId, {
+                method: 'DELETE',
+            }).then(response => {
+                if (!response.ok) {
+                    console.error('Could not delete article');
+                    alert($t('articles.error.unknown') + ' ' + $t('articles.error.delete'));
+                    return;
+                }
+                goto('/articles');
+            }).catch(error => {
+                if (!error) {
+                    console.error('Could not reach backend, probably offline?');
+                    alert($t('articles.error.backend') + ' ' + $t('articles.error.delete'));
+                    return;
+                }
+                console.error('Unknown error: Could not delete article, response error:', error);
+                alert($t('articles.error.unknown') + ' ' + $t('articles.error.delete'));
+            });
+        } else {
+            return;
+        }
+    }
+
 </script>
 
 <PageContent>
@@ -65,6 +95,12 @@
               on:submit|preventDefault={handleOnSubmit}>
             <div class="float-left w-full">
                 <div class="float-left w-1/2 vr py-0 px-4">
+                    <Button className="p-2.5 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+                            on:click={deleteArticle}
+                    >
+                        Delete
+                    </Button>
+
                     {#if !edit}
                         <LabeledText labelText={$t('general.name')}
                                      text={validatableArticle.name.value}
