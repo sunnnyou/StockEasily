@@ -1,12 +1,14 @@
 <script lang="ts">
-    import type {GetArticleResponseDto} from '$dto/response/get-article-response-dto';
+    import FaIcon from '$components/common/FaIcon.svelte';
+    import {GetArticleResponseDto} from '$dto/response/get-article-response-dto';
 
     import {AcceptType} from '$components/common/input/file/accept-type.js';
     import {ButtonPriority} from '$components/html/button/button-priority.js';
     import {ButtonType} from '$components/html/button/button-type.js';
     import {getImageResponseMessage, onImageSelected} from '$common/image-input-utils';
     import {goto} from '$app/navigation';
-    import {onMount} from 'svelte';
+    import {faImage} from '@fortawesome/free-solid-svg-icons';
+    import {onDestroy, onMount} from 'svelte';
     import {onSaveProperty} from '$common/property-utils';
     import {responseErrors, selectedFileName} from '$common/image-input-utils';
     import {page} from '$app/stores';
@@ -27,37 +29,30 @@
     import PreviewImage from '$components/common/article/PreviewImage.svelte';
     import PropertiesLabel from '$components/common/article/PropertiesLabel.svelte';
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
+    import {PropertyRequestDto} from '$dto/property-request-dto';
+    import {validatableArticleStore} from '../../../stores/validatable-stores';
 
     /** @type {import('./$types').PageData} */
     export let data;
 
-    let article: GetArticleResponseDto;
-    let validatableArticle: ValidatableArticle = {
-        category: {value: '', error: ''},
-        image: {value: '', error: ''},
-        name: {value: '', error: ''},
-        properties: [],
-        quantity: {value: 1, error: ''},
-    };
-
     function handleOnSubmit() {
         toggleEdit();
     }
+
+    onDestroy(() => {
+        validatableArticleStore.set(undefined);
+    });
 
     onMount(async () => {
         if (data.result === undefined) {
             await goto('/articles');
         }
         console.debug('Loaded data', data.result);
-        article = data.result;
-        validatableArticle = new ValidatableArticle(article);
+        const GET_ARTICLE_RESPONSE = new GetArticleResponseDto(data.result);
+        validatableArticleStore.set(GET_ARTICLE_RESPONSE.toValidatable());
     });
 
     let edit = false;
-
-    function toggleEdit() {
-        edit = !edit;
-    }
 
     // may show errors on $t but still works
     function deleteArticle() {
@@ -85,242 +80,263 @@
         }
     }
 
+    function onPropertyAdded(property: PropertyRequestDto, i = Number.NaN) {
+        const VALIDATABLE_ARTICLE = $validatableArticleStore;
+        let properties = onSaveProperty(VALIDATABLE_ARTICLE, property, i);
+        const article: ValidatableArticle = {...VALIDATABLE_ARTICLE, properties: properties};
+        validatableArticleStore.set(article);
+    }
+
+    function toggleEdit() {
+        edit = !edit;
+    }
+
 </script>
 
 <PageContent>
     <PageCard title={$t('article')}>
-        <form class="inline-block w-full"
-              on:submit|preventDefault={handleOnSubmit}>
-            <div class="float-left w-full">
-                <div class="float-left w-1/2 vr py-0 px-4">
-                    {#if !edit}
-                        <LabeledText labelText={$t('general.name')}
-                                     text={validatableArticle.name.value}
-                        />
-                    {:else}
-                        <!-- input name -->
-                        <LabeledInput addMarginTop={false}
-                                      error={validatableArticle.name.error}
-                                      labelOptions={{
+        {#if $validatableArticleStore?.name !== undefined}
+            <form class="inline-block w-full"
+                  on:submit|preventDefault={handleOnSubmit}>
+                <div class="float-left w-full">
+                    <div class="float-left w-1/2 vr py-0 px-4">
+                        {#if !edit}
+                            <LabeledText labelText={$t('general.name')}
+                                         text={$validatableArticleStore.name.value}
+                            />
+                        {:else}
+                            <!-- input name -->
+                            <LabeledInput addMarginTop={false}
+                                          error={$validatableArticleStore.name.error}
+                                          labelOptions={{
                                           className: 'text-gray-600',
                                           isBold: true,
                                           name: 'article-name',
                                           text: $t('general.name')
                                       }}
-                                      maxLength={30}
-                                      placeholder={$t('general.name.placeholder')}
-                                      value={validatableArticle.name.value}
-                                      on:change={event => validatableArticle.name.value = event.target.value.trim()}
-                        />
-                    {/if}
-
-                    <!-- category, quantity -->
-                    {#if !edit}
-                        <InputFlexContainer leftClass="w-65p"
-                                            rightClass="w-34p"
-                        >
-                            <LabeledText labelText={$t('general.category')}
-                                         text={validatableArticle.category.value}
-                                         slot="left"
+                                          maxLength={30}
+                                          placeholder={$t('general.name.placeholder')}
+                                          value={$validatableArticleStore.name.value}
+                                          on:change={event => $validatableArticleStore.name.value = event.target.value.trim()}
                             />
+                        {/if}
 
-                            <LabeledText labelText={$t('general.quantity')}
-                                         text={validatableArticle.quantity.value}
-                                         slot="right"
-                            />
-                        </InputFlexContainer>
-                    {:else}
-                        <InputFlexContainer leftClass="w-65p"
-                                            rightClass="w-34p"
-                        >
-                            <LabeledInput error={validatableArticle?.category?.error}
-                                          labelOptions={{
+                        <!-- category, quantity -->
+                        {#if !edit}
+                            <InputFlexContainer leftClass="w-65p"
+                                                rightClass="w-34p"
+                            >
+                                <LabeledText labelText={$t('general.category')}
+                                             text={$validatableArticleStore.category.value}
+                                             slot="left"
+                                />
+
+                                <LabeledText labelText={$t('general.quantity')}
+                                             text={$validatableArticleStore.quantity.value}
+                                             slot="right"
+                                />
+                            </InputFlexContainer>
+                        {:else}
+                            <InputFlexContainer leftClass="w-65p"
+                                                rightClass="w-34p"
+                            >
+                                <LabeledInput error={$validatableArticleStore.category?.error}
+                                              labelOptions={{
                                               className: 'text-gray-600',
                                               isBold: true,
                                               name: 'article-category',
                                               text: $t('general.category')
                                           }}
-                                          maxLength={30}
-                                          placeholder={$t('general.category.placeholder')}
-                                          on:change={event => validatableArticle.category.value = event.target.value.trim()}
-                                          value={validatableArticle.category.value}
-                                          slot="left"
-                            />
+                                              maxLength={30}
+                                              placeholder={$t('general.category.placeholder')}
+                                              on:change={event => $validatableArticleStore.category.value = event.target.value.trim()}
+                                              value={$validatableArticleStore.category.value}
+                                              slot="left"
+                                />
 
-                            <LabeledNumericInput className="w-full text-sm"
-                                                 error={validatableArticle.quantity.error}
-                                                 iconParentClass="pr-1 mt-1.5 text-sm"
-                                                 labelOptions={{
+                                <LabeledNumericInput className="w-full text-sm"
+                                                     error={$validatableArticleStore.quantity.error}
+                                                     iconParentClass="pr-1 mt-1.5 text-sm"
+                                                     labelOptions={{
                                                      className: 'text-gray-600',
                                                      isBold: true,
                                                      name: 'article-quantity',
                                                      text: $t('general.quantity')
                                                  }}
-                                                 min="0"
-                                                 offerSmallerSteps={true}
-                                                 bind:value={validatableArticle.quantity.value}
-                                                 on:change={event => validatableArticle.quantity.value = to_number(event.target.value)}
-                                                 slot="right"
-                            />
-                        </InputFlexContainer>
-                    {/if}
-
-                    {#if validatableArticle?.properties?.length > 0}
-                        <HorizontalRuler className="border-b-1 border-gray-300 my-4 mx-4"/>
-                        <PropertiesLabel addMarginTop={true}
-                                         className="mb-6"
-                                         labelOptions={{
-                                             className: 'text-gray-600 mt-10',
-                                             isBold: true,
-                                         }}
-                        />
-
-                        {#each validatableArticle.properties as property, i}
-                            {#if !edit}
-
-                                <InputFlexContainer leftClass="w-65p"
-                                                    rightClass="w-34p"
-                                >
-                                    <LabeledText labelText={$t('props.name')}
-                                                 text={property.value.name}
-                                                 slot="left">
-                                    </LabeledText>
-
-                                    <LabeledText labelText={$t('props.description')}
-                                                 text={property.value.description}
-                                                 slot="right">
-                                    </LabeledText>
-                                </InputFlexContainer>
-
-                            {:else}
-
-                                <PropertyInput errors={property.errors}
-                                               leftLabelOptions={{
-                                                   className: 'text-gray-600 ml-2',
-                                                   isBold: true,
-                                                   name: 'prop-inner-name' + i,
-                                                   text: $t('props.name'),
-                                               }}
-                                               parentId="prop-parent{i}"
-                                               parentLabelOptions={{
-                                                   className: 'text-gray-600 mt-10',
-                                                   hide: i !== 0,
-                                                   isBold: true,
-                                                   name: 'prop-inner-parent' + i,
-                                               }}
-                                               property={property.value}
-                                               onSave={property => validatableArticle.properties = onSaveProperty(validatableArticle, property, i)}
-                                               rightLabelOptions={{
-                                                   className: 'text-gray-600 ml-2',
-                                                   isBold: true,
-                                                   name: 'prop-inner-description' + i,
-                                                   text: $t('props.description'),
-                                               }}
+                                                     min="0"
+                                                     offerSmallerSteps={true}
+                                                     bind:value={$validatableArticleStore.quantity.value}
+                                                     on:change={event => $validatableArticleStore.quantity.value = to_number(event.target.value)}
+                                                     slot="right"
                                 />
+                            </InputFlexContainer>
+                        {/if}
 
-                            {/if}
-                        {/each}
-                    {/if}
-                    {#if edit}
-                        <PropertyInput edit={true}
-                                       forceEdit={true}
-                                       leftLabelOptions={{
-                                           className: 'text-gray-600 ml-2',
-                                           isBold: true,
-                                           name: 'prop-inner-name-new',
-                                           text: $t('props.name'),
-                                       }}
-                                       parentId="prop-parent-new"
-                                       parentLabelOptions={{
-                                       className: 'text-gray-600 mt-10',
-                                       hide: validatableArticle?.properties.length > 0,
-                                       isBold: true,
-                                   }}
-                                       rightLabelOptions={{
-                                           className: 'text-gray-600 ml-2',
-                                           isBold: true,
-                                           name: 'prop-inner-description-new',
-                                           text: $t('props.description'),
-                                       }}
-                                       onSave={property => validatableArticle.properties = onSaveProperty(validatableArticle, property)}
-                        />
-                    {/if}
-                </div>
+                        {#if $validatableArticleStore?.properties?.length > 0}
+                            <HorizontalRuler className="border-b-1 border-gray-300 my-4 mx-4"/>
+                            <PropertiesLabel addMarginTop={true}
+                                             className="mb-6"
+                                             labelOptions={{
+                                                 className: 'text-gray-600 mt-10',
+                                                 isBold: true,
+                                             }}
+                            />
 
-                <div class="float-left h-full w-1/2 py-0 px-4">
-                    <div class="w-full m-auto h-full">
-                        {#if edit}
-                            <LabeledFileInput accept={AcceptType.Image}
-                                              addMarginTop={false}
-                                              allowMultiple={false}
-                                              className="h-full"
-                                              labelOptions={{
-                                                  className: 'text-gray-600',
-                                                  isBold: true,
-                                                  name: 'article-image',
-                                                  text: $t('general.image')
-                                              }}
-                                              onFileChange={files => validatableArticle.image = onImageSelected(files, validatableArticle)}
-                                              previewImageOptions={{
-                                                alt: $selectedFileName,
-                                                show: true,
-                                                src: validatableArticle.image?.value || ''
-                                              }}
-                            />
-                        {:else}
-                            <PreviewImage alt={validatableArticle.name.value}
-                                          src={validatableArticle.image?.value}
-                            />
+                            {#each $validatableArticleStore.properties as property, i}
+                                {#if !edit}
+
+                                    <InputFlexContainer leftClass="w-65p"
+                                                        rightClass="w-34p"
+                                    >
+                                        <LabeledText labelText={$t('props.name')}
+                                                     text={property.value.name}
+                                                     slot="left">
+                                        </LabeledText>
+
+                                        <LabeledText labelText={$t('props.description')}
+                                                     text={property.value.description}
+                                                     slot="right"
+                                        >
+                                        </LabeledText>
+                                    </InputFlexContainer>
+
+                                {:else}
+
+                                    <PropertyInput errors={property.errors}
+                                                   leftLabelOptions={{
+                                                       className: 'text-gray-600 ml-2',
+                                                       isBold: true,
+                                                       name: 'prop-inner-name' + i,
+                                                       text: $t('props.name'),
+                                                   }}
+                                                   parentId="prop-parent{i}"
+                                                   parentLabelOptions={{
+                                                       className: 'text-gray-600 mt-10',
+                                                       isBold: true,
+                                                       name: 'prop-inner-parent' + i,
+                                                   }}
+                                                   {property}
+                                                   onSave={property => onPropertyAdded(property, i)}
+                                                   rightLabelOptions={{
+                                                       className: 'text-gray-600 ml-2',
+                                                       isBold: true,
+                                                       name: 'prop-inner-description' + i,
+                                                       text: $t('props.description'),
+                                                   }}
+                                    />
+
+                                {/if}
+                            {/each}
                         {/if}
                         {#if edit}
-                            <!-- Image error response and submit button area -->
-                            <div class="flex p-0 m-0 h-10 mt-4">
-                                <div class="w-full text-right">
-                                    {#if responseErrors && Object.keys(responseErrors)?.length > 0 }
+                            <PropertyInput edit={true}
+                                           forceEdit={true}
+                                           leftLabelOptions={{
+                                               className: 'text-gray-600 ml-2',
+                                               isBold: true,
+                                               name: 'prop-inner-name-new',
+                                               text: $t('props.name'),
+                                           }}
+                                           parentId="prop-parent-new"
+                                           parentLabelOptions={{
+                                               className: 'text-gray-600 mt-10',
+                                               hide: $validatableArticleStore?.properties.length > 0,
+                                               isBold: true,
+                                           }}
+                                           rightLabelOptions={{
+                                               className: 'text-gray-600 ml-2',
+                                               isBold: true,
+                                               name: 'prop-inner-description-new',
+                                               text: $t('props.description'),
+                                           }}
+                                           onSave={property => onPropertyAdded(property)}
+                            />
+                        {/if}
+                    </div>
+
+                    <div class="float-left h-full w-1/2 py-0 px-4">
+                        <div class="w-full m-auto h-full">
+                            {#if edit}
+                                <LabeledFileInput accept={AcceptType.Image}
+                                                  addMarginTop={false}
+                                                  allowMultiple={false}
+                                                  className="h-full"
+                                                  labelOptions={{
+                                                      className: 'text-gray-600',
+                                                      isBold: true,
+                                                      name: 'article-image',
+                                                      text: $t('general.image')
+                                                  }}
+                                                  onFileChange={files => $validatableArticleStore.image = onImageSelected(files, $validatableArticleStore)}
+                                                  previewImageOptions={{
+                                                      alt: $selectedFileName,
+                                                      show: true,
+                                                      src: $validatableArticleStore.image?.value || ''
+                                                  }}
+                                />
+                            {:else if $validatableArticleStore.image?.value?.length > 0 }
+                                <PreviewImage alt={$validatableArticleStore.name.value}
+                                              src={$validatableArticleStore.image.value || ''}
+                                />
+                            {:else}
+                                <div class="w-full">
+                                    <FaIcon className="my-8 mx-auto inset-0 w-24 h-24 flex justify-center items-center"
+                                            icon={faImage}
+                                            scale="10"
+                                    />
+                                    <p class="mx-auto w-full text-center italic">{`(${$t('general.unset')})`}</p>
+                                </div>
+                            {/if}
+                            {#if edit}
+                                <!-- Image error response and submit button area -->
+                                <div class="flex p-0 m-0 h-10 mt-4">
+                                    <div class="w-full text-right">
+                                        {#if responseErrors && Object.keys(responseErrors)?.length > 0 }
                                     <span class="error w-full leading-10 pr-5">
                                         {getImageResponseMessage()}
                                     </span>
-                                    {/if}
-                                </div>
-                                <!-- Submit button -->
-                                <Button className="w-1/8 align-end float-right"
-                                        type={ButtonType.Submit}
-                                        priority={ButtonPriority.Primary}
-                                >
-                                    {$t('general.save')}
-                                </Button>
-                            </div>
-                        {:else}
-                            <div class="w-1/3 float-right pt-4">
-                                <InputFlexContainer
-                                        leftClass="w-1/2"
-                                        parentClass="inline-flex w-full w-52"
-                                        rightClass="w-1/2"
-                                >
-                                    <!-- Dangerous Delete button -->
-                                    <Button className="font-bold font-medium border border-red-400"
-                                            priority={ButtonPriority.Dangerous}
-                                            on:click={deleteArticle}
-                                            slot="left"
-                                    >
-                                        Delete
-                                    </Button>
-                                    <!-- Edit button -->
+                                        {/if}
+                                    </div>
+                                    <!-- Submit button -->
                                     <Button className="w-1/8 align-end float-right"
-                                            type={ButtonType.Button}
+                                            type={ButtonType.Submit}
                                             priority={ButtonPriority.Primary}
-                                            on:click={toggleEdit}
-                                            slot="right"
                                     >
-                                        {$t('general.edit')}
+                                        {$t('general.save')}
                                     </Button>
-                                </InputFlexContainer>
-                            </div>
-                        {/if}
+                                </div>
+                            {:else}
+                                <div class="w-1/3 float-right pt-4">
+                                    <InputFlexContainer
+                                            leftClass="w-1/2"
+                                            parentClass="inline-flex w-full w-52"
+                                            rightClass="w-1/2"
+                                    >
+                                        <!-- Dangerous Delete button -->
+                                        <Button className="font-bold font-medium border border-red-400"
+                                                priority={ButtonPriority.Dangerous}
+                                                on:click={deleteArticle}
+                                                slot="left"
+                                        >
+                                            Delete
+                                        </Button>
+                                        <!-- Edit button -->
+                                        <Button className="w-1/8 align-end float-right"
+                                                type={ButtonType.Button}
+                                                priority={ButtonPriority.Primary}
+                                                on:click={toggleEdit}
+                                                slot="right"
+                                        >
+                                            {$t('general.edit')}
+                                        </Button>
+                                    </InputFlexContainer>
+                                </div>
+                            {/if}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        {/if}
     </PageCard>
 </PageContent>
 

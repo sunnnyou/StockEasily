@@ -24,6 +24,7 @@ export default {
         'general.save': 'Save',
         'general.search': 'Search',
         'general.step': 'Step',
+        'general.unset': 'Unset',
 
         // menu
         'menu.analytics': 'Analytics',

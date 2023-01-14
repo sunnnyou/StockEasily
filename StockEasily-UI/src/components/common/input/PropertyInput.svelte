@@ -29,9 +29,10 @@
     export let rightLabelOptions: LabelOptions | undefined;
     export let rightPlaceholder = '';
 
-    let internalProperty: PropertyRequestDto = property?.value ? property?.value : {description: '', name: ''};
+    let internalProperty: PropertyRequestDto | undefined;
 
     onMount(() => {
+        internalProperty = property?.value?.name ? {description: '', name: ''} : property.value;
         setHideProp();
     });
 
@@ -74,44 +75,46 @@
                          labelOptions={parentLabelOptions}
         />
     {/if}
-    <div class="flex flex-row"
-         id={parentLabelOptions.name}
-    >
-        <div class="w-10/12">
-            <InputFlexContainer
-                    leftClass="w-1/2"
-                    {parentId}
-                    rightClass="w-1/2"
-            >
-                <LabeledInput disabled={!edit}
-                              error={errors?.name}
-                              labelOptions={leftLabelOptions}
-                              maxLength={PROPERTY_LIMITS.MAX_LENGTH.NAME}
-                              placeholder={leftPlaceholder || $t('props.name.placeholder')}
-                              bind:value={internalProperty.name}
-                              on:change={event => internalProperty.name = event.target.value.trim()}
-                              slot="left"
-                />
-
-                <LabeledInput disabled={!edit}
-                              error={errors?.description}
-                              labelOptions={rightLabelOptions}
-                              maxLength={PROPERTY_LIMITS.MAX_LENGTH.DESCRIPTION}
-                              placeholder={rightPlaceholder || $t('props.description.placeholder')}
-                              bind:value={internalProperty.description}
-                              on:change={event => internalProperty.description = event.target.value.trim()}
-                              slot="right"
-                />
-            </InputFlexContainer>
-        </div>
-        <Button className="add-property h-10 w-1.5/12"
-                priority={ButtonPriority.TransparentHover}
-                title={forceEdit ? $t('general.add') : (edit ? $t('general.save') : $t('general.edit'))}
-                on:click={() => onButtonClick()}
+    {#if internalProperty?.name !== undefined }
+        <div class="flex flex-row"
+             id={parentLabelOptions.name}
         >
-            <FaIcon icon={forceEdit ? faPlus : (edit ? faCheck : faPen)}
-                    parentClass="mx-5"
-            />
-        </Button>
-    </div>
+            <div class="w-10/12">
+                <InputFlexContainer
+                        leftClass="w-1/2"
+                        {parentId}
+                        rightClass="w-1/2"
+                >
+                    <LabeledInput disabled={!edit}
+                                  error={errors?.name}
+                                  labelOptions={leftLabelOptions}
+                                  maxLength={PROPERTY_LIMITS.MAX_LENGTH.NAME}
+                                  placeholder={leftPlaceholder || $t('props.name.placeholder')}
+                                  value={internalProperty.name}
+                                  on:change={event => internalProperty.name = event.target.value.trim()}
+                                  slot="left"
+                    />
+
+                    <LabeledInput disabled={!edit}
+                                  error={errors?.description}
+                                  labelOptions={rightLabelOptions}
+                                  maxLength={PROPERTY_LIMITS.MAX_LENGTH.DESCRIPTION}
+                                  placeholder={rightPlaceholder || $t('props.description.placeholder')}
+                                  value={internalProperty.description}
+                                  on:change={event => internalProperty.description = event.target.value.trim()}
+                                  slot="right"
+                    />
+                </InputFlexContainer>
+            </div>
+            <Button className="add-property h-10 w-1.5/12"
+                    priority={ButtonPriority.TransparentHover}
+                    title={forceEdit ? $t('general.add') : (edit ? $t('general.save') : $t('general.edit'))}
+                    on:click={() => onButtonClick()}
+            >
+                <FaIcon icon={forceEdit ? faPlus : (edit ? faCheck : faPen)}
+                        parentClass="mx-5"
+                />
+            </Button>
+        </div>
+    {/if}
 </div>
