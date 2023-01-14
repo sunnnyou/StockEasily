@@ -1,7 +1,4 @@
 <script lang="ts">
-    import {page} from '$app/stores';
-    import {SESSION_INFO} from '$common/session-util';
-    import Button from '$components/html/button/Button.svelte';
     import type {GetArticleResponseDto} from '$dto/response/get-article-response-dto';
 
     import {AcceptType} from '$components/common/input/file/accept-type.js';
@@ -12,6 +9,8 @@
     import {onMount} from 'svelte';
     import {onSaveProperty} from '$common/property-utils';
     import {responseErrors, selectedFileName} from '$common/image-input-utils';
+    import {page} from '$app/stores';
+    import {SESSION_INFO} from '$common/session-util';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
     import {ValidatableArticle} from '$dto/create-article-request-dto';
@@ -25,7 +24,6 @@
     import LabeledText from '$components/common/article/LabeledText.svelte';
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
-    import {goto} from '$app/navigation';
     import PreviewImage from '$components/common/article/PreviewImage.svelte';
     import PropertiesLabel from '$components/common/article/PropertiesLabel.svelte';
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
@@ -95,12 +93,6 @@
               on:submit|preventDefault={handleOnSubmit}>
             <div class="float-left w-full">
                 <div class="float-left w-1/2 vr py-0 px-4">
-                    <Button className="p-2.5 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
-                            on:click={deleteArticle}
-                    >
-                        Delete
-                    </Button>
-
                     {#if !edit}
                         <LabeledText labelText={$t('general.name')}
                                      text={validatableArticle.name.value}
@@ -299,14 +291,31 @@
                                 </Button>
                             </div>
                         {:else}
-                            <!-- Submit button -->
-                            <Button className="w-1/8 align-end float-right"
-                                    type={ButtonType.Button}
-                                    priority={ButtonPriority.Primary}
-                                    on:click={toggleEdit}
-                            >
-                                {$t('general.edit')}
-                            </Button>
+                            <div class="w-1/3 float-right pt-4">
+                                <InputFlexContainer
+                                        leftClass="w-1/2"
+                                        parentClass="inline-flex w-full w-52"
+                                        rightClass="w-1/2"
+                                >
+                                    <!-- Dangerous Delete button -->
+                                    <Button className="font-bold font-medium border border-red-400"
+                                            priority={ButtonPriority.Dangerous}
+                                            on:click={deleteArticle}
+                                            slot="left"
+                                    >
+                                        Delete
+                                    </Button>
+                                    <!-- Edit button -->
+                                    <Button className="w-1/8 align-end float-right"
+                                            type={ButtonType.Button}
+                                            priority={ButtonPriority.Primary}
+                                            on:click={toggleEdit}
+                                            slot="right"
+                                    >
+                                        {$t('general.edit')}
+                                    </Button>
+                                </InputFlexContainer>
+                            </div>
                         {/if}
                     </div>
                 </div>
