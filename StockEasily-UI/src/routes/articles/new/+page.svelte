@@ -12,7 +12,6 @@
     import {SESSION_INFO} from '../../../common/session-util';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
-    import QRScanner from 'cordova-plugin-qrscanner';
 
     import Button from '$components/html/button/Button.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
@@ -242,46 +241,10 @@
     function validateTextLengthBetween1And30(field: { value: any; error: string }, entity: string, nullable: boolean = false): boolean {
         return validateTextLengthBetween(field, entity, 1, 30, nullable);
     }
-
-    function createArticleFromQRCode() {
-        QRScanner.prepare(onDone);
-    }
-
-    function onDone(err, status){
-        if (err) {
-            console.error(err);
-            return;
-        }
-        if (status.authorized) {
-            // Camera access allowed and the scanner is initialized
-            QRScanner.show();
-        } else if (status.denied) {
-            if(confirm("App doesn't have permission to access camera.\n" +
-                "Do you want to change the permissions of the app?")) {
-                // Will open settings and make the user change them to give app access to camera
-                QRScanner.openSettings();
-            } else {
-                return
-            }
-
-        } else {
-            // we didn't get permission, but we didn't get permanently denied. (On
-            // Android, a denial isn't permanent unless the user checks the "Don't
-            // ask again" box.) We can ask again at the next relevant opportunity.
-            return;
-        }
-    }
 </script>
 
 <PageContent>
     <PageCard title={$t('menu.addArticle')}>
-
-        <button on:click={() => createArticleFromQRCode()}
-                type="submit"
-                class="p-2.5 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-            Create from QR-Code
-        </button>
-
         <form class="inline-block w-full"
               on:submit|preventDefault={handleOnSubmit}>
             <div class="float-left w-full">
