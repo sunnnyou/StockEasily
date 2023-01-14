@@ -32,7 +32,7 @@
     let internalProperty: PropertyRequestDto | undefined;
 
     onMount(() => {
-        internalProperty = property?.value?.name ? {description: '', name: ''} : property.value;
+        internalProperty = property?.value?.name ?  property.value : {description: '', name: ''};
         setHideProp();
     });
 
