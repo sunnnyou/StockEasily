@@ -9,6 +9,9 @@ export class ValidatableArticle {
     name: Validatable<string> & {} = {error: '', value: ''};
     properties: ValidatableProperty[] = [];
     quantity: Validatable<number> & {} = {error: '', value: 0};
+
+    public constructor() {
+    }
 }
 
 export class CreateArticleRequestDto {
@@ -16,7 +19,7 @@ export class CreateArticleRequestDto {
     category: CategoryRequestDto = {name: ''};
     properties: PropertyRequestDto[] = [];
     quantity = 1;
-    image?: string;
+    image?: string | undefined;
 
     constructor(validatable: ValidatableArticle) {
         this.name = validatable.name.value;

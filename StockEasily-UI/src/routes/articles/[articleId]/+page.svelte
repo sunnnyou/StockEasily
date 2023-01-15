@@ -5,7 +5,7 @@
     import {AcceptType} from '$components/common/input/file/accept-type.js';
     import {ButtonPriority} from '$components/html/button/button-priority.js';
     import {ButtonType} from '$components/html/button/button-type.js';
-    import {getImageResponseMessage, onImageSelected} from '$common/image-input-utils';
+    import {getImageResponseMessage, imageSelected, onImageSelected} from '$common/image-input-utils';
     import {goto} from '$app/navigation';
     import {faImage} from '@fortawesome/free-solid-svg-icons';
     import {onDestroy, onMount} from 'svelte';
@@ -31,6 +31,7 @@
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
     import {PropertyRequestDto} from '$dto/property-request-dto';
     import {UpdateArticleRequestDto} from '$dto/request/update-article-request-dto';
+    import {validateForm} from '$common/validation';
     import {validatableArticleStore} from '../../../stores/validatable-stores';
 
     /** @type {import('./$types').PageData} */
@@ -39,13 +40,22 @@
     let articleId = $page.params.articleId;
 
     function handleOnSubmit() {
-        // toggleEdit();
-        // if invalid errors
-
         if (!articleId) {
             console.error('Cannot submit PATCH article form, article ID is', articleId);
             return;
         }
+
+        if (!validateForm($validatableArticleStore, $t)) {
+            console.error('Could not validate input data', $validatableArticleStore);
+            return;
+        }
+
+        if (imageSelected?.size > SESSION_INFO.IMAGE_MAX_SIZE) {
+            $validatableArticleStore.image = undefined;
+            console.debug('File size is too big (' + imageSelected.size + ') => aborting');
+            return;
+        }
+        validatableArticleStore.set($validatableArticleStore);
         requestUpdate();
     }
 
@@ -301,7 +311,7 @@
                                                       name: 'article-image',
                                                       text: $t('general.image')
                                                   }}
-                                                  onFileChange={files => $validatableArticleStore.image = onImageSelected(files, $validatableArticleStore)}
+                                                  onFileChange={files => $validatableArticleStore.image = onImageSelected(files, $validatableArticleStore, $t)}
                                                   previewImageOptions={{
                                                       alt: $selectedFileName,
                                                       show: true,
@@ -327,7 +337,7 @@
                                     <div class="w-full text-right">
                                         {#if responseErrors && Object.keys(responseErrors)?.length > 0 }
                                     <span class="error w-full leading-10 pr-5">
-                                        {getImageResponseMessage()}
+                                        {getImageResponseMessage($t)}
                                     </span>
                                         {/if}
                                     </div>

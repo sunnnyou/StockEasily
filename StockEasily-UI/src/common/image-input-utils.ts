@@ -12,7 +12,7 @@ export let responseErrors: { image: string } | undefined = undefined;
 export let imageSelected: File | undefined = undefined;
 export let selectedFileName = writable<string | undefined>();
 
-export function getImageResponseMessage(): string | undefined {
+export function getImageResponseMessage(t: any): string | undefined {
     if (imageSelected === undefined) {
         console.debug('No image was selected, returning empty response message');
         return undefined;
@@ -20,11 +20,10 @@ export function getImageResponseMessage(): string | undefined {
 
     const IMAGE_ERROR = responseErrors?.image;
     console.debug('Error:', IMAGE_ERROR);
-    return `${$t('general.error')}: ${IMAGE_ERROR}`;
+    return `${t('general.error')}: ${IMAGE_ERROR}`;
 }
 
-export function onImageSelected(files: File[], article: ValidatableArticle): Validatable<string> | undefined {
-    console.log('onImageSelected');
+export function onImageSelected(files: File[], article: ValidatableArticle, t: any): Validatable<string | undefined> | undefined {
     if (files === undefined) {
         console.error('Could not get selected image, files is undefined');
         selectedFiles.set([]);
@@ -43,7 +42,7 @@ export function onImageSelected(files: File[], article: ValidatableArticle): Val
     if (imageSelected.size > SESSION_INFO.IMAGE_MAX_SIZE) {
         const EXPECTED = formatBytesAsKilobytes(SESSION_INFO.IMAGE_MAX_SIZE);
         responseErrors = {
-            image: $t('validation.image', {expected: EXPECTED}),
+            image: t('validation.image', {expected: EXPECTED}),
         };
         console.warn(`Image selected is too big ( ${formatBytesAsKilobytes(imageSelected.size)} ). Maximum size allowed: ${EXPECTED}`);
 
