@@ -74,19 +74,6 @@ public class ArticlesController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-//    @ApiOperation(value = "Get article list with specific name", response = List.class)
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "Article list issued", response = List.class),
-//            @ApiResponse(code = 400, message = "Api parameter not a string", response = HttpClientErrorException.BadRequest.class),
-//            @ApiResponse(code = 404, message = "No articles with this name found", response = HttpClientErrorException.NotFound.class)
-//    })
-//    @ResponseStatus(HttpStatus.OK)
-//    @GetMapping(path = "/{articleName}", consumes = {"*/*"})
-//    public ResponseEntity<List<Article>> searchAllArticlesByName(
-//            @PathVariable String articleName) {
-//        final List<Article> resultList = articleService.searchAllByName(articleName);
-//        return validateResponseList(resultList);
-//    }
 
     @CrossOrigin
     @ApiOperation(value = "Get all articles", response = List.class)
