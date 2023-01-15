@@ -1,10 +1,12 @@
 <script lang="ts">
-    import PageContent from "$components/common/PageContent.svelte";
-    import PageCard from "$components/common/PageCard.svelte";
-    import {t} from "$i18n/i18n.js";
     import {goto} from "$app/navigation";
     import {onMount} from "svelte";
     import {page} from "$app/stores";
+    import {SESSION_INFO} from '../../../../common/session-util';
+    import {t} from "$i18n/i18n.js";
+
+    import PageCard from "$components/common/PageCard.svelte";
+    import PageContent from "$components/common/PageContent.svelte";
 
     let articles = [];
     let size = 0;
@@ -21,14 +23,14 @@
         try {
             if (pageQuery) {
                 console.log($page.params.page);
-                let response = await fetch('http://localhost:8080/api/v1/articles/search/' + pageQuery + '/' + $page.params.page);
+                let response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/search/' + pageQuery + '/' + $page.params.page);
                 if (response.ok) {
                     articles = await response.json();
                 } else {
                     console.log(response.status)
                 }
             } else {
-                let response = await fetch('http://localhost:8080/api/v1/articles/page/' + $page.params.page);
+                let response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/page/' + $page.params.page);
                 if (response.ok) {
                     articles = await response.json();
                 } else {
@@ -55,7 +57,7 @@
         try {
             let response
             if (pageQuery) {
-                response = await fetch('http://localhost:8080/api/v1/articles/size/' + pageQuery);
+                response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/size/' + pageQuery);
                 hrefEndPaginator = "?" + pageQuery;
                 if (response.ok) {
                     size = await response.json();
@@ -69,7 +71,7 @@
                     console.log(response.status)
                 }
             } else {
-                response = await fetch('http://localhost:8080/api/v1/articles/size/');
+                response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/size/');
                 if (response.ok) {
                     size = await response.json();
                     maxPage = Math.ceil(size / limit);
@@ -89,13 +91,15 @@
     }
 
     onMount(() => {
-        let pageQuery = window.location.search;
-        pageQuery = pageQuery.toString().replaceAll("?", "")
-        console.log(pageQuery);
-        getArticles(pageQuery);
-        getSize(pageQuery);
+        const PAGE_QUERY = window.location.search;
+        if (PAGE_QUERY === undefined) {
+            console.error('Could not get page query')
+            return;
+        }
+        const ENCODED_PAGE_QUERY: string = encodeURIComponent(PAGE_QUERY.replace(/^\?/,''));
+        getArticles(ENCODED_PAGE_QUERY);
+        getSize(ENCODED_PAGE_QUERY);
     })
-
 
 </script>
 

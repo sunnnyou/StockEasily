@@ -169,6 +169,25 @@ public class ArticlesController {
         return validateResponseList(resultList);
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "Get articles from list with the amount depending on the limit and which ones on page and search query", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Successfully deleted Article", response = SearchArticleResponse.class),
+            @ApiResponse(code = 404, message = "No article found with matching id", response = HttpClientErrorException.NotFound.class)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping(path = "/{articleId}", consumes = {"*/*"})
+    public ResponseEntity<SearchArticleResponse> deleteArticle(@PathVariable long articleId) {
+
+        LOG.debug("Delete-Request for Article with ID: {}", articleId);
+        final Optional<Integer> result = articleService.deleteArticle(articleId);
+        if (result.isPresent() && result.get() > 0) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     private ResponseEntity<List<SearchArticleResponse>> validateResponseList(List<SearchArticleResponse> resultList) {
         try {
             if (resultList==null) {

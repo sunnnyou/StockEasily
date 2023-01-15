@@ -1,15 +1,18 @@
 <script lang="ts">
-    import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
     import type {ValidatableArticle} from '$dto/create-article-request-dto';
     import type {Validatable} from '../../../common/validatable';
     import type {PropertyRequestDto, ValidatableProperty} from '../../../dto/property-request-dto';
+
     import {AcceptType} from '$components/common/input/file/accept-type';
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {ButtonType} from '$components/html/button/button-type';
+    import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
     import {goto} from '$app/navigation';
+    import {isPropertyDescriptionValid, isPropertyNameValid, PROPERTY_LIMITS} from '../../../dto/property-request-dto';
+    import {SESSION_INFO} from '../../../common/session-util';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
-    import {isPropertyDescriptionValid, isPropertyNameValid, PROPERTY_LIMITS} from '../../../dto/property-request-dto';
+
     import Button from '$components/html/button/Button.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
     import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
@@ -19,8 +22,6 @@
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
-
-    const IMAGE_MAXIMUM_SIZE = 524288;
 
     let files: File[] = [];
     let responseErrors: Object | undefined;
@@ -51,12 +52,13 @@
             return;
         }
 
-        if (imageSelected?.size > IMAGE_MAXIMUM_SIZE) {
+        if (imageSelected?.size > SESSION_INFO.IMAGE_MAX_SIZE) {
             validatableArticle.image = undefined;
             console.debug('File size is too big (' + imageSelected.size + ') => aborting');
             return;
         }
-        fetch('http://localhost:8080/api/v1/articles', {
+
+        fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles', {
             method: 'POST',
             body: JSON.stringify(new CreateArticleRequestDto(validatableArticle)),
             headers: {
@@ -110,8 +112,8 @@
         }
         imageSelected = HTML_TARGET.files![0];
         console.log('image size:', imageSelected.size);
-        if (imageSelected.size > IMAGE_MAXIMUM_SIZE) {
-            const EXPECTED = formatBytesAsKilobytes(IMAGE_MAXIMUM_SIZE);
+        if (imageSelected.size > SESSION_INFO.IMAGE_MAX_SIZE) {
+            const EXPECTED = formatBytesAsKilobytes(SESSION_INFO.IMAGE_MAX_SIZE);
             responseErrors = {
                 image: $t('validation.image', {expected: EXPECTED}),
             };
