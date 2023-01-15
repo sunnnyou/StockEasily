@@ -15,8 +15,6 @@
 
         let stopScanning = true;
 
-        video.hidden = true;
-
         // I'm not using console.log here because it will make this perform worse
         camera_button.addEventListener('click', async function () {
 
@@ -61,7 +59,7 @@
 <PageContent>
     <PageCard title={$t('qrcode.title')}>
         <div class=" flex flex-col items-center justify-center">
-            <video id="video" width="full" height="full" src="" autoplay>
+            <video id="video" width="full" height="full" src="" autoplay hidden>
                 <track kind="captions" src="">
             </video>
             <button id="start-camera"
