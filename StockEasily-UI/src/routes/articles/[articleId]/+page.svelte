@@ -116,7 +116,7 @@
                 return;
             }
 
-            goto(ROUTE);
+            toggleEdit();
         }).catch(error => {
             if (!error) {
                 console.error('Could not reach backend, probably offline?');
