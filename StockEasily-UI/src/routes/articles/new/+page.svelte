@@ -124,9 +124,6 @@
         if (!property.value) {
             isValid = false;
         } else {
-
-        }
-        if (property.value) {
             isValid = isValid ? validatePropertyName(property) : false;
             isValid = isValid ? validatePropertyDescription(property) : false;
         }
