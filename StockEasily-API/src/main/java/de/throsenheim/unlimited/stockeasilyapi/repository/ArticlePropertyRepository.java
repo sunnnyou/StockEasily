@@ -90,13 +90,14 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
-            if (preparedStatement.executeUpdate() == 1) {
-                if (commit) {
-                    this.connection.commit(CommittedSqlCommand.INSERT);
-                }
-                return relation;
+            if (preparedStatement.executeUpdate() != 1) {
+                connection.rollback();
+                return null;
             }
-            return null;
+            if (commit) {
+                connection.commit(CommittedSqlCommand.INSERT);
+            }
+            return relation;
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);

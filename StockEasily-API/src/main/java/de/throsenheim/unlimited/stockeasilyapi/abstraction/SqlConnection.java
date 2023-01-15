@@ -57,4 +57,13 @@ public class SqlConnection {
             throw new RuntimeException(e);
         }
     }
+
+    public void rollback() {
+        try {
+            logger.warn("Rolling back changes");
+            connection.rollback();
+        } catch (SQLException e) {
+            logger.error("Error rolling back transaction: " + e.getMessage());
+        }
+    }
 }

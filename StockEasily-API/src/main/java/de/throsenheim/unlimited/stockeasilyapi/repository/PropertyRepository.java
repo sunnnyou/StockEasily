@@ -111,16 +111,18 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
-            if (preparedStatement.executeUpdate() == 1) {
-                ResultSet resultSet = preparedStatement.getGeneratedKeys();
-                if (resultSet.next()) {
-                    if (commit) {
-                        this.connection.commit(CommittedSqlCommand.INSERT);
-                    }
-                    property.setId(resultSet.getLong("insert_id"));
-                    LogUtil.traceFetchId(Property.class, property.getId(), LOGGER);
-                    return property;
+            if (preparedStatement.executeUpdate() != 1) {
+                connection.rollback();
+                return null;
+            }
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                if (commit) {
+                    this.connection.commit(CommittedSqlCommand.INSERT);
                 }
+                property.setId(resultSet.getLong("insert_id"));
+                LogUtil.traceFetchId(Property.class, property.getId(), LOGGER);
+                return property;
             }
             return null;
         } catch (SQLException e) {

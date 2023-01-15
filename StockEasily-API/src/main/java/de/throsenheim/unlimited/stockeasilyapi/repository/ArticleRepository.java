@@ -199,16 +199,18 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
-            if (preparedStatement.executeUpdate() == 1) {
-                ResultSet resultSet = preparedStatement.getGeneratedKeys();
-                if (resultSet.next()) {
-                    if (commit) {
-                        this.connection.commit(CommittedSqlCommand.INSERT);
-                    }
-                    article.setId(resultSet.getLong("insert_id"));
-                    LogUtil.traceFetchId(Article.class, article.getId(), LOGGER);
-                    return article;
+            if (preparedStatement.executeUpdate() != 1) {
+                connection.rollback();
+                return null;
+            }
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                if (commit) {
+                    this.connection.commit(CommittedSqlCommand.INSERT);
                 }
+                article.setId(resultSet.getLong("insert_id"));
+                LogUtil.traceFetchId(Article.class, article.getId(), LOGGER);
+                return article;
             }
             LOGGER.debug(EMPTY_ARTICLE_LOG);
             return null;
@@ -474,11 +476,12 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
-            if (preparedStatement.executeUpdate() != 1) {
+            if (preparedStatement.executeUpdate() == 0) {
+                connection.rollback();
                 return null;
             }
             if (commit) {
-                this.connection.commit(CommittedSqlCommand.UPDATE);
+                connection.commit(CommittedSqlCommand.UPDATE);
             }
             return article;
         } catch (SQLException e) {
