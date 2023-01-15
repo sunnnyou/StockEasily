@@ -16,7 +16,11 @@
         let canvas = document.getElementById("canvas");
 
         camera_button.addEventListener('click', async function () {
-            video.srcObject = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
+            video.srcObject = await navigator.mediaDevices.getUserMedia({video: true, audio: false})
+                .catch(error => {
+                    console.log(error);
+                    alert("Can't access camera. " + error.message);
+                });
         });
 
         click_button.addEventListener('click', function () {
@@ -30,9 +34,11 @@
                 .then(result => {
                     console.log(result);
                     goto("/articles/" + result);
-                }
-                )
-                .catch(error => console.log(error || 'No QR code found.'));
+                })
+                .catch(error => {
+                    console.log(error || 'No QR code found.');
+                    alert('No QR code found.');
+                });
         });
     });
 </script>
@@ -42,6 +48,6 @@
         <button id="start-camera">Start Camera</button>
         <video id="video" width="320" height="240" autoplay></video>
         <button id="click_photo">Click Photo</button>
-        <canvas id="canvas" width="320" height="240"></canvas>
+        <canvas id="canvas" width="320" height="240" hidden="hidden"></canvas>
     </PageCard>
 </PageContent>
