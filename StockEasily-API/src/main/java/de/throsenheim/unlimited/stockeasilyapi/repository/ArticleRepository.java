@@ -143,6 +143,9 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             final List<Property> resultProperties = (List<Property>) propertyRepository.saveAll(existingProperties);
             article.setProperties(resultProperties);
 
+            List<ArticleProperty> articlePropertyRelations = getArticlePropertyRelations(article);
+            articlePropertyRepository.saveAll(articlePropertyRelations);
+
             return update(article, commit);
         }
 
