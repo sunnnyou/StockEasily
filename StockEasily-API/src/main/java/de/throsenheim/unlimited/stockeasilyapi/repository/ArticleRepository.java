@@ -79,6 +79,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
     public int getSizeQuery(String query) {
         return countQuery(query);
     }
+
     public List<Article> findAllByQuery(String query, int limit, int page) {
         return selectAllQuery(query, limit, page);
     }
