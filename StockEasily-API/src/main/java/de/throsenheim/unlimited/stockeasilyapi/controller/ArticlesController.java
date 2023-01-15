@@ -137,7 +137,7 @@ public class ArticlesController {
     public ResponseEntity<List<GetArticleResponseDto>> searchAllArticlesPage(
             @PathVariable int page) {
         final int limit = 10;
-        if(page > 0) {
+        if (page > 0) {
             final List<GetArticleResponseDto> resultList = articleService.searchAllPage(limit, page);
             return new ResponseEntity<>(resultList, HttpStatus.OK);
         } else {
