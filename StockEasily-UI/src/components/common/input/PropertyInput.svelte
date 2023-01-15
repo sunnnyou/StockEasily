@@ -76,7 +76,7 @@
         />
     {/if}
     {#if internalProperty?.name !== undefined }
-        <div class="flex flex-row"
+        <div class="flex flex-row items-end"
              id={parentLabelOptions.name}
         >
             <div class="w-10/12">
@@ -106,7 +106,7 @@
                     />
                 </InputFlexContainer>
             </div>
-            <Button className="add-property h-10 w-0.5/12"
+            <Button className="m-0 w-0.5/12"
                     priority={ButtonPriority.TransparentHover}
                     title={forceEdit ? $t('general.add') : (edit ? $t('general.save') : $t('general.edit'))}
                     on:click={() => onButtonClick()}
