@@ -30,6 +30,7 @@
     import PropertiesLabel from '$components/common/article/PropertiesLabel.svelte';
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
     import {PropertyRequestDto} from '$dto/property-request-dto';
+    import {UpdateArticleRequestDto} from '$dto/request/update-article-request-dto';
     import {validatableArticleStore} from '../../../stores/validatable-stores';
 
     /** @type {import('./$types').PageData} */
@@ -45,7 +46,7 @@
             console.error('Cannot submit PATCH article form, article ID is', articleId);
             return;
         }
-        //requestUpdate();
+        requestUpdate();
     }
 
     onDestroy(() => {
@@ -100,6 +101,30 @@
         edit = !edit;
     }
 
+    async function requestUpdate() {
+        const ROUTE = `/api/v1/articles/${articleId}`;
+        fetch(SESSION_INFO.API_ENDPOINT + ROUTE, {
+            method: 'PATCH',
+            body: JSON.stringify(new UpdateArticleRequestDto($validatableArticleStore)),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(response => {
+            if (!response.ok) {
+                responseErrors = response.json()['errors'];
+                console.error('Could not PATCH article, response errors:', responseErrors);
+                return;
+            }
+
+            goto(ROUTE);
+        }).catch(error => {
+            if (!error) {
+                console.error('Could not reach backend, probably offline?');
+                return;
+            }
+            console.error('Unknown error: Could not PATCH article, response error:', error);
+        });
+    }
 </script>
 
 <PageContent>
