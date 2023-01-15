@@ -106,13 +106,13 @@
                     />
                 </InputFlexContainer>
             </div>
-            <Button className="add-property h-10 w-1.5/12"
+            <Button className="add-property h-10 w-0.5/12"
                     priority={ButtonPriority.TransparentHover}
                     title={forceEdit ? $t('general.add') : (edit ? $t('general.save') : $t('general.edit'))}
                     on:click={() => onButtonClick()}
             >
                 <FaIcon icon={forceEdit ? faPlus : (edit ? faCheck : faPen)}
-                        parentClass="mx-5"
+                        parentClass="mx-1"
                 />
             </Button>
         </div>
