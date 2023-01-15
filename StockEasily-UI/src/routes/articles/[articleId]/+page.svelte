@@ -29,7 +29,20 @@
     }
 
     async function getJson() {
-        let response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + $page.params.articleId);
+
+        let response;
+        try {
+            response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + $page.params.articleId, {
+                method: 'GET'
+            });
+        } catch (error) {
+            alert($t("articles.error.backend"));
+        }
+        if (!response.ok) {
+            console.error('Could not fetch article');
+            await goto('/error');
+            return;
+        }
         return JSON.parse(await response.text());
     }
 
