@@ -1,27 +1,27 @@
 <script lang="ts">
-    import FaIcon from '$components/common/FaIcon.svelte';
-    import {GetArticleResponseDto} from '$dto/response/get-article-response-dto';
-
     import {AcceptType} from '$components/common/input/file/accept-type.js';
     import {ButtonPriority} from '$components/html/button/button-priority.js';
     import {ButtonType} from '$components/html/button/button-type.js';
-    import {getImageResponseMessage, imageSelected, onImageSelected} from '$common/image-input-utils';
+    import {GetArticleResponseDto} from '$dto/response/get-article-response-dto';
+    import {PropertyRequestDto} from '$dto/property-request-dto';
+    import {UpdateArticleRequestDto} from '$dto/request/update-article-request-dto';
+    import {ValidatableArticle} from '$dto/create-article-request-dto';
+
+    import {getImageResponseMessage, imageSelected, onImageSelected, selectedFiles} from '$common/image-input-utils';
     import {goto} from '$app/navigation';
     import {faImage} from '@fortawesome/free-solid-svg-icons';
     import {onDestroy, onMount} from 'svelte';
     import {onSaveProperty} from '$common/property-utils';
-    import {responseErrors, selectedFileName} from '$common/image-input-utils';
+    import {selectedFileName} from '$common/image-input-utils';
     import {page} from '$app/stores';
     import {SESSION_INFO} from '$common/session-util';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
-    import {PropertyRequestDto} from '$dto/property-request-dto';
-    import {UpdateArticleRequestDto} from '$dto/request/update-article-request-dto';
     import {validatableArticleStore} from '../../../stores/validatable-stores';
-    import {ValidatableArticle} from '$dto/create-article-request-dto';
     import {validateForm} from '$common/validation';
 
     import Button from '$components/html/button/Button.svelte';
+    import FaIcon from '$components/common/FaIcon.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
     import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
     import LabeledFileInput from '$components/common/input/file/LabeledFileInput.svelte';
@@ -63,6 +63,8 @@
     }
 
     onDestroy(() => {
+        selectedFileName.set(undefined);
+        selectedFiles.set([]);
         validatableArticleStore.set(undefined);
     });
 
@@ -135,8 +137,8 @@
             },
         }).then(response => {
             if (!response.ok) {
-                responseErrors = response.json()['errors'];
-                console.error('Could not PATCH article, response errors:', responseErrors);
+                $validatableArticleStore.image.errors = response.json()['errors'];
+                console.error('Could not PATCH article, response errors:', $validatableArticleStore.image.errors);
                 return;
             }
 
@@ -342,7 +344,12 @@
                                                       name: 'article-image',
                                                       text: $t('general.image')
                                                   }}
-                                                  onFileChange={files => $validatableArticleStore.image = onImageSelected(files, $validatableArticleStore, $t)}
+                                                  onFileChange={files => {
+                                                      $validatableArticleStore.image = onImageSelected(files, $validatableArticleStore, $t)
+                                                      validatableArticleStore.set($validatableArticleStore);
+                                                      selectedFiles.set($selectedFiles);
+                                                      selectedFileName.set($selectedFileName);
+                                                  }}
                                                   previewImageOptions={{
                                                       alt: $selectedFileName,
                                                       show: true,
@@ -366,10 +373,10 @@
                                 <!-- Image error response and submit button area -->
                                 <div class="flex p-0 m-0 h-10 mt-4">
                                     <div class="w-full text-right">
-                                        {#if responseErrors && Object.keys(responseErrors)?.length > 0 }
-                                    <span class="error w-full leading-10 pr-5">
-                                        {getImageResponseMessage($t)}
-                                    </span>
+                                        {#if $validatableArticleStore.image?.errors?.length > 0}
+                                            <span class="error w-full leading-10 pr-5">
+                                                {getImageResponseMessage($validatableArticleStore, $t)}
+                                            </span>
                                         {/if}
                                     </div>
                                     <!-- Submit button -->

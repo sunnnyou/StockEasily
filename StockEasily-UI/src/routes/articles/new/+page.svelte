@@ -1,18 +1,18 @@
 <script lang="ts">
-    import {onDestroy, onMount} from 'svelte';
-
     import {AcceptType} from '$components/common/input/file/accept-type';
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {ButtonType} from '$components/html/button/button-type';
     import {CreateArticleRequestDto} from '$dto/create-article-request-dto';
-    import {imageSelected, responseErrors, selectedFileName} from '$common/image-input-utils';
+
     import {goto} from '$app/navigation';
-    import {validateForm} from '../../../common/validation';
     import {getImageResponseMessage, onImageSelected} from '$common/image-input-utils';
+    import {imageSelected, selectedFileName, selectedFiles} from '$common/image-input-utils';
+    import {onDestroy, onMount} from 'svelte';
     import {onSaveProperty} from '$common/property-utils';
     import {SESSION_INFO} from '../../../common/session-util';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
+    import {validateForm} from '../../../common/validation';
 
     import Button from '$components/html/button/Button.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
@@ -47,8 +47,8 @@
             },
         }).then(response => {
             if (!response.ok) {
-                responseErrors = response.json()['errors'];
-                console.error('Could not POST article, response errors:', responseErrors);
+                $validatableArticleStore.image.errors = response.json()['errors'];
+                console.error('Could not POST article, response errors:', $validatableArticleStore.image.errors);
                 return;
             }
 
@@ -64,13 +64,15 @@
     }
 
     onDestroy(() => {
+        selectedFileName.set(undefined);
+        selectedFiles.set([]);
         validatableArticleStore.set(undefined);
     });
 
     onMount(() => {
         validatableArticleStore.set({
             category: {value: '', error: ''},
-            image: {value: '', error: ''},
+            image: {value: '', errors: []},
             name: {value: '', error: ''},
             properties: [],
             quantity: {value: 1, error: ''},
@@ -199,9 +201,7 @@
                                                   name: 'article-image',
                                                   text: $t('general.image')
                                               }}
-                                              onFileChange={files => {
-                                                  $validatableArticleStore.image = onImageSelected(files, $validatableArticleStore, $t);
-                                              }}
+                                              onFileChange={files => $validatableArticleStore.image = onImageSelected(files, $validatableArticleStore, $t)}
                                               previewImageOptions={{
                                                 alt: $selectedFileName,
                                                 show: true,
@@ -212,10 +212,10 @@
                             <!-- Image error response and submit button area -->
                             <div class="flex p-0 m-0 h-10 mt-4">
                                 <div class="w-full text-right">
-                                    {#if responseErrors && Object.keys(responseErrors)?.length > 0 }
-                                    <span class="error w-full leading-10 pr-5">
-                                        {getImageResponseMessage($t)}
-                                    </span>
+                                    {#if $validatableArticleStore.image?.errors?.length > 0}
+                                            <span class="error w-full leading-10 pr-5">
+                                                {getImageResponseMessage($validatableArticleStore, $t)}
+                                            </span>
                                     {/if}
                                 </div>
                                 <!-- Submit button -->

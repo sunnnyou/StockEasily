@@ -76,6 +76,7 @@ export default {
         'validation.between': '{{entity}} length must be between {{min}} and {{max}}',
         'validation.max': '{{entity}} maximum is {{max}}',
         'validation.image': 'The selected image is too big. Max. size: {{expected}}',
+        'validation.unknown': 'An unknown error occurred.',
 
         // footer
         'about': 'About',

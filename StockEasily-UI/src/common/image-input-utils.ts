@@ -1,33 +1,33 @@
-import type {Validatable} from './validatable';
 import type {ValidatableArticle} from '../dto/create-article-request-dto';
-import type {Writable} from 'svelte/store';
+import type {ValidatableImage} from '../validation/validatable-image';
 
 import {formatBytesAsKilobytes} from './number-util';
 import {SESSION_INFO} from './session-util';
-import {t} from '$i18n/i18n';
 import {writable} from 'svelte/store';
 
-export const selectedFiles: Writable<File[]> = writable([]);
-export let responseErrors: { image: string } | undefined = undefined;
+export const selectedFiles = writable<File[]>([]);
+export const selectedFileName = writable<string | undefined>();
 export let imageSelected: File | undefined = undefined;
-export let selectedFileName = writable<string | undefined>();
 
-export function getImageResponseMessage(t: any): string | undefined {
+export function getImageResponseMessage(article: ValidatableArticle, t: any): string | undefined {
     if (imageSelected === undefined) {
         console.debug('No image was selected, returning empty response message');
         return t('articles.image.deleted');
     }
 
-    const IMAGE_ERROR = responseErrors?.image;
+    const IMAGE_ERROR = article.image.errors[0];
     console.debug('Error:', IMAGE_ERROR);
     return `${t('general.error')}: ${IMAGE_ERROR}`;
 }
 
-export function onImageSelected(files: File[], article: ValidatableArticle, t: any): Validatable<string | undefined> | undefined {
+export function onImageSelected(files: File[], article: ValidatableArticle, t: any): ValidatableImage | undefined {
     if (files === undefined) {
         console.error('Could not get selected image, files is undefined');
         selectedFiles.set([]);
-        return undefined;
+        return {
+            value: undefined,
+            errors: [t('validation.unkown')],
+        };
     }
     if (files.length === 0) {
         console.warn('No file selected');
@@ -37,21 +37,21 @@ export function onImageSelected(files: File[], article: ValidatableArticle, t: a
         article.image.value = undefined;
         return {
             value: undefined,
-            error: t('articles.image.deleted'),
+            errors: [t('articles.image.deleted')],
         };
     }
     imageSelected = files[0];
     console.log('Selected image size:', imageSelected.size);
     if (imageSelected.size > SESSION_INFO.IMAGE_MAX_SIZE) {
         const EXPECTED = formatBytesAsKilobytes(SESSION_INFO.IMAGE_MAX_SIZE);
-        responseErrors = {
-            image: t('validation.image', {expected: EXPECTED}),
-        };
         console.warn(`Image selected is too big ( ${formatBytesAsKilobytes(imageSelected.size)} ). Maximum size allowed: ${EXPECTED}`);
 
         const INSERT_VALUE: File[] = imageSelected === undefined ? [] : [imageSelected];
         selectedFiles.set(INSERT_VALUE);
-        return undefined;
+        return {
+            value: undefined,
+            errors: [t('validation.image', {expected: EXPECTED})],
+        };
     }
 
     let reader = new FileReader();
