@@ -24,7 +24,7 @@ public class UpdateArticleRequestDto {
     // which is a common thing in terms of bookkeeping
     @ApiModelProperty(notes = "Article quantity", example = "2")
     @PositiveOrZero(message = "Quantity must greater than or equal to 0")
-    private int quantity = 1;
+    private int quantity = -1;
 
     private String image;
 
