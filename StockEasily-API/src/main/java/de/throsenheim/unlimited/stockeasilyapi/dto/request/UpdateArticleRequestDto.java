@@ -39,4 +39,28 @@ public class UpdateArticleRequestDto {
     public String getName() {
         return name;
     }
+
+    public List<PropertyRequestDto> getProperties() {
+        return properties;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setCategory(CategoryRequestDto category) {
+        this.category = category;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setProperties(List<PropertyRequestDto> properties) {
+        this.properties = properties;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }
