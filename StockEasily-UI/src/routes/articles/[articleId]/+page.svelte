@@ -388,7 +388,7 @@
                                     </Button>
                                 </div>
                             {:else}
-                                <div class="w-1/3 float-right pt-4">
+                                <div class="w-1/3 float-right pt-10">
                                     <InputFlexContainer
                                             leftClass="w-1/2"
                                             parentClass="inline-flex w-full w-52"
