@@ -68,7 +68,7 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
         for (Property property : properties) {
             Property resultProperty = save(property);
             if (resultProperty == null) {
-                LOGGER.debug("Skipping property with ID " + property.getId() + " on saveAll");
+                LOGGER.debug("Skipping property with ID {} on saveAll", property.getId());
                 continue;
             }
             result.add(resultProperty);
