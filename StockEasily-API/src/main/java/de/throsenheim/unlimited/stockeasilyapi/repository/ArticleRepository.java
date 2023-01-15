@@ -143,16 +143,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             final List<Property> resultProperties = (List<Property>) propertyRepository.saveAll(existingProperties);
             article.setProperties(resultProperties);
 
-//            return update(article);
-
-            //propertyRepository.findAllById();
-            // find existing properties?
-            // fill/insert/use missing
-            // return result
-
-            // deletion missing
-
-            return article;
+            return update(article, commit);
         }
 
         // Insert new
@@ -464,6 +455,33 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatementArticlesProperties, LOGGER, e);
 //            LogUtil.errorSqlStatement(preparedStatementUsersArticles, LOGGER, e);
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Article update(Article article, boolean commit) {
+        PreparedStatement preparedStatement = null;
+        final String query = "UPDATE articles SET name = ?, categoryId = ?, quantity = ?, image = ? WHERE id = ? LIMIT 1";
+        try {
+            preparedStatement = connection.prepareStatement(query, Statement.SUCCESS_NO_INFO);
+
+            preparedStatement.setString(1, article.getName());
+            preparedStatement.setLong(2, article.getCategory().getId());
+            preparedStatement.setInt(3, article.getQuantity());
+            preparedStatement.setBlob(4, article.getImage());
+            preparedStatement.setLong(5, article.getId());
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            if (preparedStatement.executeUpdate() != 1) {
+                return null;
+            }
+            if (commit) {
+                this.connection.commit(CommittedSqlCommand.UPDATE);
+            }
+            return article;
+        } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);
         }
