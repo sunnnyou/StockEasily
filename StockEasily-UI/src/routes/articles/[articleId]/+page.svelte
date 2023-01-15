@@ -372,7 +372,7 @@
                             {#if edit}
                                 <!-- Image error response and submit button area -->
                                 <div class="flex p-0 m-0 h-10 mt-4">
-                                    <div class="w-full text-right">
+                                    <div class="w-full text-right my-2">
                                         {#if $validatableArticleStore.image?.errors?.length > 0}
                                             <span class="error w-full leading-10 pr-5">
                                                 {getImageResponseMessage($validatableArticleStore, $t)}
