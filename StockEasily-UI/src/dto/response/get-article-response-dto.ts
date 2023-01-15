@@ -22,7 +22,7 @@ export class GetArticleResponseDto {
     public toValidatable(): ValidatableArticle {
         return {
             image: {value: this.image},
-            category: {value: this.name},
+            category: {value: this.category.name},
             name: {value: this.name},
             properties: this.properties.map((p: PropertyResponseDto) => {
                 return {
