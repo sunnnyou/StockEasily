@@ -102,8 +102,8 @@
     }
 
     async function requestUpdate() {
-        const ROUTE = `/api/v1/articles/${articleId}`;
-        fetch(SESSION_INFO.API_ENDPOINT + ROUTE, {
+        const ROUTE = `/articles/${articleId}`;
+        fetch(`${SESSION_INFO.API_ENDPOINT}/api/v1${ROUTE}`, {
             method: 'PATCH',
             body: JSON.stringify(new UpdateArticleRequestDto($validatableArticleStore)),
             headers: {
