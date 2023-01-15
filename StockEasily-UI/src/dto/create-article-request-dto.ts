@@ -13,10 +13,10 @@ export class ValidatableArticle {
 
 export class CreateArticleRequestDto {
     name = '';
-    quantity = 1;
     category: CategoryRequestDto = {name: ''};
-    image: string | undefined;
     properties: PropertyRequestDto[] = [];
+    quantity = 1;
+    image?: string;
 
     constructor(validatable: ValidatableArticle) {
         this.name = validatable.name.value;
