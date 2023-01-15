@@ -11,7 +11,6 @@
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
     import {goto} from "$app/navigation";
-    import Label from "$components/html/input/Label.svelte";
     import QRCode from 'qrcode';
 
     type Property = {
