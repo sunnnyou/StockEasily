@@ -69,7 +69,7 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
 
     @Override
     public Category save(Category category) {
-        return save(category, false);
+        return save(category, true);
     }
 
     @Override
