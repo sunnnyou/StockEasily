@@ -46,6 +46,9 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
     public Iterable<ArticleProperty> saveAll(Iterable<ArticleProperty> relations) {
         boolean shouldCommit = false;
         for (ArticleProperty relation : relations) {
+            if (find(relation) != null) {
+                continue;
+            }
             if (save(relation) != null && !shouldCommit) {
                 shouldCommit = true;
             }
