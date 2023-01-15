@@ -121,7 +121,7 @@ public class ArticlesController {
         }
 
         // INTERNAL SERVER ERROR should NOT occur
-        final HttpStatus httpStatus = result == null ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.CREATED;
+        final HttpStatus httpStatus = result == null ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.OK;
         return new ResponseEntity<>(result, httpStatus);
     }
 
