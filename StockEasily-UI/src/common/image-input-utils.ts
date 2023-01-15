@@ -15,7 +15,7 @@ export let selectedFileName = writable<string | undefined>();
 export function getImageResponseMessage(t: any): string | undefined {
     if (imageSelected === undefined) {
         console.debug('No image was selected, returning empty response message');
-        return undefined;
+        return t('articles.image.deleted');
     }
 
     const IMAGE_ERROR = responseErrors?.image;
@@ -35,7 +35,10 @@ export function onImageSelected(files: File[], article: ValidatableArticle, t: a
         imageSelected = undefined;
         selectedFileName.set(undefined);
         article.image.value = undefined;
-        return undefined;
+        return {
+            value: undefined,
+            error: t('articles.image.deleted'),
+        };
     }
     imageSelected = files[0];
     console.log('Selected image size:', imageSelected.size);
