@@ -11,7 +11,7 @@
     export let value = '';
 
     function getButtonClass() {
-        return priority === ButtonPriority.Transparent ? '' : 'btn h-10 px-5 m-2 ';
+        return priority === ButtonPriority.Transparent ? '' : 'btn h-10 px-5 ';
     }
 
     function getPriorityClass() {
