@@ -35,8 +35,17 @@
     /** @type {import('./$types').PageData} */
     export let data;
 
+    let articleId = $page.params.articleId;
+
     function handleOnSubmit() {
-        toggleEdit();
+        // toggleEdit();
+        // if invalid errors
+
+        if (!articleId) {
+            console.error('Cannot submit PATCH article form, article ID is', articleId);
+            return;
+        }
+        //requestUpdate();
     }
 
     onDestroy(() => {
@@ -57,7 +66,7 @@
     // may show errors on $t but still works
     function deleteArticle() {
         if (confirm($t('articles.confirm.delete'))) {
-            fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + $page.params.articleId, {
+            fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + articleId, {
                 method: 'DELETE',
             }).then(response => {
                 if (!response.ok) {
