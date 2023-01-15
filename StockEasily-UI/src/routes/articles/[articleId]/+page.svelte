@@ -154,7 +154,7 @@
 </script>
 
 <PageContent>
-    <PageCard title={$t('article')}>
+    <PageCard title={edit ? $t('article.edit') : $t('article')}>
         {#if $validatableArticleStore?.name !== undefined}
             <div class="inline-block w-full mb-4">
                 <button on:click={() => showQRImage()}

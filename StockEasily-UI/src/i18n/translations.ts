@@ -55,6 +55,7 @@ export default {
 
         // articles
         'article': 'Article',
+        'article.edit': 'Edit Article',
         'articles.name': 'Name',
         'articles.id' : 'ID',
         'articles.notFound': 'No articles found.',
