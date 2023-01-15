@@ -401,7 +401,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             preparedStatement.setString(1, searchQuery);
             preparedStatement.setString(2, searchQuery);
             preparedStatement.setString(3, searchQuery);
-            preparedStatement.setInt(4, (page*limit));
+            preparedStatement.setInt(4, (page * limit));
             preparedStatement.setInt(5, limit);
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
