@@ -47,6 +47,8 @@
         }
 
         if (!validateForm($validatableArticleStore, $t)) {
+            // refresh UI
+            validatableArticleStore.set($validatableArticleStore);
             console.error('Could not validate input data', $validatableArticleStore);
             return;
         }
