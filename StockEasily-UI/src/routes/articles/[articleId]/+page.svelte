@@ -15,7 +15,11 @@
     import {SESSION_INFO} from '$common/session-util';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
+    import {PropertyRequestDto} from '$dto/property-request-dto';
+    import {UpdateArticleRequestDto} from '$dto/request/update-article-request-dto';
+    import {validatableArticleStore} from '../../../stores/validatable-stores';
     import {ValidatableArticle} from '$dto/create-article-request-dto';
+    import {validateForm} from '$common/validation';
 
     import Button from '$components/html/button/Button.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
@@ -29,10 +33,7 @@
     import PreviewImage from '$components/common/article/PreviewImage.svelte';
     import PropertiesLabel from '$components/common/article/PropertiesLabel.svelte';
     import PropertyInput from '$components/common/input/PropertyInput.svelte';
-    import {PropertyRequestDto} from '$dto/property-request-dto';
-    import {UpdateArticleRequestDto} from '$dto/request/update-article-request-dto';
-    import {validateForm} from '$common/validation';
-    import {validatableArticleStore} from '../../../stores/validatable-stores';
+    import QRCode from 'qrcode';
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -73,6 +74,17 @@
     });
 
     let edit = false;
+
+    // This creates a new QR Image from article without the image. This QR image is then displayed on a new tab
+    async function showQRImage() {
+        let qrImage = await QRCode.toDataURL(String($page.params.articleId));
+        let newTab = window.open();
+        newTab.document.write(`<img src="${qrImage}" alt="">`);
+    }
+
+    async function downloadQRImage() {
+        return await QRCode.toDataURL(String($page.params.articleId));
+    }
 
     // may show errors on $t but still works
     function deleteArticle() {
@@ -140,6 +152,23 @@
 <PageContent>
     <PageCard title={$t('article')}>
         {#if $validatableArticleStore?.name !== undefined}
+            <div class="inline-block w-full mb-4">
+                <button on:click={() => showQRImage()}
+                        type="submit"
+                        class="p-2.5 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                    {$t('qr.show')}
+                </button>
+
+                <button on:click="{async () => {
+                            let a = document.createElement('a');
+                            a.download = 'qr-image.png';
+                            a.href = await downloadQRImage();
+                            a.click();
+                            }}"
+                        class="p-2.5 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                    {$t('qr.download')}
+                </button>
+            </div>
             <form class="inline-block w-full"
                   on:submit|preventDefault={handleOnSubmit}>
                 <div class="float-left w-full">
