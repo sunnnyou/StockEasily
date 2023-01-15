@@ -1,5 +1,5 @@
 import type {CategoryRequestDto} from '../category-request-dto';
-import type {ValidatableArticle} from '../create-article-request-dto';
+import type {ValidatableArticle} from '$validation/validatable-article';
 import type {PropertyRequestDto} from '../property-request-dto';
 
 export class UpdateArticleRequestDto {

@@ -1,4 +1,4 @@
-import type {ValidatableArticle} from '../dto/create-article-request-dto';
+import type {ValidatableArticle} from '$validation/validatable-article';
 import type {ValidatableImage} from '../validation/validatable-image';
 
 import {formatBytesAsKilobytes} from './number-util';

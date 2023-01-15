@@ -1,4 +1,4 @@
-import type {ValidatableArticle} from '../dto/create-article-request-dto';
+import type {ValidatableArticle} from '$validation/validatable-article';
 import type {ValidatableProperty} from '../dto/property-request-dto';
 import type {Validatable} from './validatable';
 

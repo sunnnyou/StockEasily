@@ -5,7 +5,7 @@
     import {GetArticleResponseDto} from '$dto/response/get-article-response-dto';
     import {PropertyRequestDto} from '$dto/property-request-dto';
     import {UpdateArticleRequestDto} from '$dto/request/update-article-request-dto';
-    import {ValidatableArticle} from '$dto/create-article-request-dto';
+    import type {ValidatableArticle} from '$validation/validatable-article';
 
     import {getImageResponseMessage, imageSelected, onImageSelected, selectedFiles} from '$common/image-input-utils';
     import {goto} from '$app/navigation';

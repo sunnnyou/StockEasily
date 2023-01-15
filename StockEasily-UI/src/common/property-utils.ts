@@ -1,5 +1,5 @@
-import type {PropertyRequestDto, ValidatableProperty} from '../dto/property-request-dto';
-import type {ValidatableArticle} from '../dto/create-article-request-dto';
+import type {PropertyRequestDto, ValidatableProperty} from '$dto/property-request-dto';
+import type {ValidatableArticle} from '$validation/validatable-article';
 
 function isEditingExistingProperty(article: ValidatableArticle, index: number): boolean {
     return index !== Number.NaN && article.properties.length > index;

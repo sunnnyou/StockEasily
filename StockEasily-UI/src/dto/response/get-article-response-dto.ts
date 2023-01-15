@@ -1,6 +1,6 @@
 import type {CategoryResponseDto} from './category-response-dto';
 import type {PropertyResponseDto} from './property-response-dto';
-import type {ValidatableArticle} from '../create-article-request-dto';
+import type {ValidatableArticle} from '$validation/validatable-article';
 
 export class GetArticleResponseDto {
     id: number = 0;
