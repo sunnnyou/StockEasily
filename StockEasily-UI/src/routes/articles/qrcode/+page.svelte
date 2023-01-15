@@ -10,10 +10,12 @@
     onMount(() => {
         let camera_button = document.getElementById("start-camera");
         let video = document.getElementById("video");
-        let canvas = document.getElementById("canvas");
+        const canvas = document.createElement('canvas');
+        const qrEngine = QrScanner.createQrEngine();
 
         let stopScanning = true;
 
+        // I'm not using console.log here because it will make this perform worse
         camera_button.addEventListener('click', async function () {
 
             stopScanning = !stopScanning;
@@ -26,18 +28,14 @@
             while (!stopScanning) {
                 camera_button.innerText = "Stop Scanning";
                 canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-                let image_data_url = canvas.toDataURL('image/png');
 
-                // data url of the image
-                console.log(image_data_url);
-
-                QrScanner.scanImage(image_data_url)
+                QrScanner.scanImage(canvas, await qrEngine)
                     .then(result => {
                         console.log(result);
                         goto("/articles/" + result);
                     })
                     .catch(error => {
-                        console.log(error || 'No QR code found.');
+                        // nothing
                     })
                 await sleep(200);
             }
@@ -57,6 +55,5 @@
         <video id="video" width="full" height="full" autoplay>
             <track kind="captions" src="">
         </video>
-        <canvas id="canvas" width="500" height="500" hidden="hidden"></canvas>
     </PageCard>
 </PageContent>
