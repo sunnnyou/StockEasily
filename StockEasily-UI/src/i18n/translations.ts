@@ -39,7 +39,6 @@ export default {
         'menu.user.notifications': 'Notifications',
         'menu.articles': 'Articles',
 
-
         // pages
 
         // /articles/new
