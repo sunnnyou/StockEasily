@@ -57,9 +57,17 @@ export default {
         'articles.id' : 'ID',
         'articles.notFound': 'No articles found.',
         'articles.loading': 'Loading',
+        'articles.error.unknown': 'Unknown error occurred.',
+        'articles.error.backend': 'Error with backend.',
+        'articles.error.delete': 'Couldn\'t delete article',
+        'articles.confirm.delete': 'Are you sure that you want to delete this article?',
 
         // categories
         'category': 'Category',
+
+        // qr-code
+        'qr.show': 'Show QR-Code',
+        'qr.download': "Download QR-Code",
 
         // validation
         'validation.between': '{{entity}} length must be between {{min}} and {{max}}',
