@@ -15,6 +15,8 @@
 
         let stopScanning = true;
 
+        video.hidden = true;
+
         // I'm not using console.log here because it will make this perform worse
         camera_button.addEventListener('click', async function () {
 
@@ -27,6 +29,11 @@
                         error: error.message}));
                     stopScanning = true;
                 });
+
+            if(!stopScanning) {
+                video.hidden = false;
+            }
+
             while (!stopScanning) {
                 camera_button.innerText = $t("qrcode.stop");
                 canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -54,7 +61,7 @@
 <PageContent>
     <PageCard title={$t('qrcode.title')}>
         <div class=" flex flex-col items-center justify-center">
-            <video id="video" width="full" height="full" autoplay>
+            <video id="video" width="full" height="full" src="" autoplay>
                 <track kind="captions" src="">
             </video>
             <button id="start-camera"
