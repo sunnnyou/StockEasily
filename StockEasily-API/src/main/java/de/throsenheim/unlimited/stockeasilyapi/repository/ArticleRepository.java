@@ -131,6 +131,14 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
     @Override
     public Article save(Article article, boolean commit) {
+        if (article.getId() > 0) {
+            // Update existing
+
+
+            return article;
+        }
+
+        // Insert new
         Category category = article.getCategory();
         if (category != null && category.getName() != null) {
             category = categoryRepository.save(category, true);

@@ -7,13 +7,14 @@ import org.slf4j.LoggerFactory;
 import javax.sql.rowset.serial.SerialBlob;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.List;
 
 public class Article {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Article.class);
 
-    private long id;
+    private long id = 0;
     private String name;
     private Category category;
     private List<Property> properties;
@@ -92,4 +93,14 @@ public class Article {
             throw new RuntimeException(e);
         }
     }
+
+    public void setImage(String encodedImage) {
+        if (encodedImage == null) {
+            return;
+        }
+        encodedImage = encodedImage.substring(encodedImage.indexOf(',') + 1);
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedImage);
+        setImage(decodedBytes);
+    }
+
 }

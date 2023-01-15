@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Property {
 
-    private long id;
+    private long id = 0;
 
     @NotNull(message = "Property name is mandatory")
     @Size(min = 1, max = 30, message = "Property name must be between 1 and 30 characters")

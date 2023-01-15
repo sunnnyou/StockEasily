@@ -1,12 +1,17 @@
 package de.throsenheim.unlimited.stockeasilyapi.service.article;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.UpdateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.GetArticleResponseDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.UpdateArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.repository.ArticleRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
@@ -15,6 +20,8 @@ import java.util.*;
 
 @Component
 public class ArticleServiceImpl implements ArticleService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleServiceImpl.class);
 
     private final ArticleRepository articleRepository;
 
@@ -98,6 +105,16 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Nullable
+    public Long getParsedIdOrNull(String id) {
+        try {
+            return Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    @Override
     public List<GetArticleResponseDto> searchAllByQuery(String query, int limit, int page) {
         final List<Article> articleList = articleRepository.findAllByQuery(query, limit, page);
         final List<GetArticleResponseDto> articleResponseList = new ArrayList<>();
@@ -115,5 +132,18 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Optional<Integer> deleteArticle(long articleId) {
         return Optional.of(articleRepository.delete(articleId));
+    }
+
+    @Override
+    public UpdateArticleResponseDto update(long id, UpdateArticleRequestDto request, @NonNull GetArticleResponseDto existingArticle) {
+        Article articleExist = existingArticle.toModel();
+        articleExist.setId(id);
+        Article articleUpdated = this.articleRepository.save(articleExist);
+        if (articleUpdated == null) {
+            LOGGER.error("Could not update article with id {}", id);
+            return null;
+        }
+        return new UpdateArticleResponseDto(articleUpdated);
+
     }
 }

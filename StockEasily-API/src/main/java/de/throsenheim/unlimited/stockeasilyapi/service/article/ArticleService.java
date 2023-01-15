@@ -1,10 +1,13 @@
 package de.throsenheim.unlimited.stockeasilyapi.service.article;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.UpdateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.GetArticleResponseDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.UpdateArticleResponseDto;
 import org.springframework.validation.FieldError;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,9 +28,13 @@ public interface ArticleService {
 
     int getArticleRepositorySize();
 
+    Long getParsedIdOrNull(String id);
+
     List<GetArticleResponseDto> searchAllByQuery(String query, int limit, int page);
 
     int getArticleRepositorySizeQuery(String query);
 
     Optional<Integer> deleteArticle(long articleId);
+
+    UpdateArticleResponseDto update(long id, UpdateArticleRequestDto request, @NotNull GetArticleResponseDto existingArticle);
 }

@@ -1,9 +1,11 @@
 package de.throsenheim.unlimited.stockeasilyapi.controller;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.UpdateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.ApiErrorDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.GetArticleResponseDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.UpdateArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.exception.InvalidBodyException;
 import de.throsenheim.unlimited.stockeasilyapi.service.article.ArticleService;
 import io.swagger.annotations.*;
@@ -86,6 +88,41 @@ public class ArticlesController {
     public ResponseEntity<List<GetArticleResponseDto>> searchAllArticles() {
         final List<GetArticleResponseDto> result = articleService.searchAll();
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Update existing article", response = UpdateArticleResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Article updated", response = UpdateArticleResponseDto.class),
+            @ApiResponse(code = 400, message = "Parameter validation error", response = ApiErrorDto.class),
+            @ApiResponse(code = 500, message = "Entity serialization error", response = ApiErrorDto.class)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping(path = "/{id}")
+    public ResponseEntity<UpdateArticleResponseDto> updateArticle(
+            @ApiParam(name = "article") @Valid @RequestBody UpdateArticleRequestDto request,
+            BindingResult bindingResult,
+            @PathVariable String id) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidBodyException(bindingResult);
+        }
+        Long articleId = articleService.getParsedIdOrNull(id);
+        UpdateArticleResponseDto result;
+        if (articleId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        GetArticleResponseDto existingArticle = articleService.search(articleId);
+        if (existingArticle == null) {
+            return ResponseEntity.notFound().build();
+        }
+        result = articleService.update(articleId, request, existingArticle);
+        if (result != null && request.getImage() != null && !result.isImageInvalid()) {
+            bindingResult.addError(articleService.getImageFieldError());
+            throw new InvalidBodyException(bindingResult);
+        }
+
+        // INTERNAL SERVER ERROR should NOT occur
+        final HttpStatus httpStatus = result == null ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.CREATED;
+        return new ResponseEntity<>(result, httpStatus);
     }
 
     @CrossOrigin

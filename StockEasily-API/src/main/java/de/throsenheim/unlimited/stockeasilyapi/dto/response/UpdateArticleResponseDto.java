@@ -1,5 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.model.Property;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,8 +15,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GetArticleResponseDto {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GetArticleResponseDto.class);
+public class UpdateArticleResponseDto {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UpdateArticleResponseDto.class);
 
     private CategoryResponseDto category;
 
@@ -34,7 +35,11 @@ public class GetArticleResponseDto {
     @ApiModelProperty(notes = "Base64 image string")
     private String image;
 
-    public GetArticleResponseDto(Article article) {
+    @JsonIgnore
+    private boolean isImageInvalid = true;
+
+
+    public UpdateArticleResponseDto(Article article) {
         setCategory(new CategoryResponseDto(article.getCategory()));
         setId(article.getId());
         setName(article.getName());
@@ -88,28 +93,32 @@ public class GetArticleResponseDto {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public boolean isImageInvalid() {
+        return isImageInvalid;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public List<PropertyResponseDto> getProperties() {
         return properties;
     }
 
-    public void setProperties(List<Property> properties) {
-        this.properties = properties.stream().map(PropertyResponseDto::new).collect(Collectors.toList());
-    }
-
     public int getQuantity() {
         return quantity;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setProperties(List<Property> properties) {
+        this.properties = properties.stream().map(PropertyResponseDto::new).collect(Collectors.toList());
     }
 
     public void setQuantity(int quantity) {
@@ -136,5 +145,4 @@ public class GetArticleResponseDto {
         Tika tika = new Tika();
         return tika.detect(imageBytes);
     }
-
 }
