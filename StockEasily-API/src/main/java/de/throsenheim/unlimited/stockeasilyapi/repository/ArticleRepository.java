@@ -466,7 +466,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         PreparedStatement preparedStatement = null;
         final String query = "UPDATE articles SET name = ?, categoryId = ?, quantity = ?, image = ? WHERE id = ? LIMIT 1";
         try {
-            preparedStatement = connection.prepareStatement(query, Statement.SUCCESS_NO_INFO);
+            preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setString(1, article.getName());
             preparedStatement.setLong(2, article.getCategory().getId());
