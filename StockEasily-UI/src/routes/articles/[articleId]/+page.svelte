@@ -18,7 +18,7 @@
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
     import {validatableArticleStore} from '../../../stores/validatable-stores';
-    import {validateForm} from '$common/validation';
+    import {validateForm} from '../../../validation/validation';
 
     import Button from '$components/html/button/Button.svelte';
     import FaIcon from '$components/common/FaIcon.svelte';

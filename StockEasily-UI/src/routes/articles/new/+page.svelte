@@ -12,7 +12,7 @@
     import {SESSION_INFO} from '../../../common/session-util';
     import {t} from '$i18n/i18n';
     import {to_number} from 'svelte/internal';
-    import {validateForm} from '../../../common/validation';
+    import {validateForm} from '../../../validation/validation';
 
     import Button from '$components/html/button/Button.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';

@@ -1,4 +1,4 @@
-import type {Validatable} from '../common/validatable';
+import type {Validatable} from '../validation/validatable';
 
 export type ValidatableProperty = Validatable<PropertyRequestDto> & {
     errors: {

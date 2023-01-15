@@ -1,6 +1,6 @@
 import type {CategoryRequestDto} from './category-request-dto';
 import type {PropertyRequestDto} from './property-request-dto';
-import type {Validatable} from '../common/validatable';
+import type {Validatable} from '../validation/validatable';
 import type {ValidatableImage} from '../validation/validatable-image';
 import type {ValidatableProperty} from './property-request-dto';
 

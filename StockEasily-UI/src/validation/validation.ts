@@ -1,8 +1,8 @@
 import type {ValidatableArticle} from '../dto/create-article-request-dto';
-import type {ValidatableProperty} from '$dto/property-request-dto';
+import type {ValidatableProperty} from '../dto/property-request-dto';
 import type {Validatable} from './validatable';
 
-import {isPropertyDescriptionValid, isPropertyNameValid, PROPERTY_LIMITS} from '$dto/property-request-dto';
+import {isPropertyDescriptionValid, isPropertyNameValid, PROPERTY_LIMITS} from '../dto/property-request-dto';
 
 export function validateForm(validatableArticle: ValidatableArticle, t: any) {
     let isValid = true;
