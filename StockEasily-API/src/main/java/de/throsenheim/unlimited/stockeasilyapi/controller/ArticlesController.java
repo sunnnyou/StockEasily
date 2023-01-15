@@ -100,8 +100,8 @@ public class ArticlesController {
     @PatchMapping(path = "/{id}")
     public ResponseEntity<UpdateArticleResponseDto> updateArticle(
             @ApiParam(name = "article") @Valid @RequestBody UpdateArticleRequestDto request,
-            BindingResult bindingResult,
-            @PathVariable String id) {
+            @PathVariable String id,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidBodyException(bindingResult);
         }
