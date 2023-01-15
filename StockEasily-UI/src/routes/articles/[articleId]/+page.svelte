@@ -11,6 +11,8 @@
     import PageCard from '$components/common/PageCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
     import {goto} from "$app/navigation";
+    import Label from "$components/html/input/Label.svelte";
+    import QRCode from 'qrcode';
 
     type Property = {
         id: number;
@@ -40,6 +42,17 @@
         article = await getJson();
         properties = article.properties;
         image = article.image;
+    }
+
+    // This creates a new QR Image from article without the image. This QR image is then displayed on a new tab
+    async function showQRImage() {
+        let qrImage = await QRCode.toDataURL(String($page.params.articleId));
+        let newTab = window.open();
+        newTab.document.write(`<img src="${qrImage}" alt="">`);
+    }
+
+    async function downloadQRImage() {
+        return await QRCode.toDataURL(String($page.params.articleId));
     }
 
     // may show errors on $t but still works
@@ -73,6 +86,25 @@
 <PageContent>
     <PageCard title={$t('article')}>
         {#await setArticle() then _}
+
+            <div class="inline-block w-full mb-4">
+                <button on:click={() => showQRImage()}
+                        type="submit"
+                        class="p-2.5 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                    {$t('qr.show')}
+                </button>
+
+                <button on:click="{async () => {
+                            let a = document.createElement('a');
+                            a.download = 'qr-image.png';
+                            a.href = await downloadQRImage();
+                            a.click();
+                            }}"
+                        class="p-2.5 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                    {$t('qr.download')}
+                </button>
+            </div>
+
 
             <button on:click={() => deleteArticle()}
                     type="submit"
