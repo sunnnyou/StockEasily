@@ -36,5 +36,5 @@ public interface ArticleService {
 
     Optional<Integer> deleteArticle(long articleId);
 
-    UpdateArticleResponseDto update(long id, UpdateArticleRequestDto request, @NotNull GetArticleResponseDto existingArticle);
+    UpdateArticleResponseDto update(UpdateArticleRequestDto request, @NotNull GetArticleResponseDto existingArticle);
 }

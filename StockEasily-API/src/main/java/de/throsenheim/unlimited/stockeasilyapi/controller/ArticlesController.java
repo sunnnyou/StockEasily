@@ -114,7 +114,7 @@ public class ArticlesController {
         if (existingArticle == null) {
             return ResponseEntity.notFound().build();
         }
-        result = articleService.update(articleId, request, existingArticle);
+        result = articleService.update(request, existingArticle);
         if (result != null && request.getImage() != null && !result.isImageInvalid()) {
             bindingResult.addError(articleService.getImageFieldError());
             throw new InvalidBodyException(bindingResult);

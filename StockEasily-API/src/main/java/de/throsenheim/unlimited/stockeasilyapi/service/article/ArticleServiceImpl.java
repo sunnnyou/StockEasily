@@ -1,6 +1,8 @@
 package de.throsenheim.unlimited.stockeasilyapi.service.article;
 
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.CategoryRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.PropertyRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.UpdateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.GetArticleResponseDto;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class ArticleServiceImpl implements ArticleService {
@@ -135,12 +138,39 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public UpdateArticleResponseDto update(long id, UpdateArticleRequestDto request, @NonNull GetArticleResponseDto existingArticle) {
-        Article articleExist = existingArticle.toModel();
-        articleExist.setId(id);
-        Article articleUpdated = this.articleRepository.save(articleExist);
+    public UpdateArticleResponseDto update(UpdateArticleRequestDto request, @NonNull GetArticleResponseDto existingArticle) {
+        Article updatedArticle = existingArticle.toModel();
+
+        final CategoryRequestDto category = request.getCategory();
+        if (category != null) {
+            updatedArticle.setCategory(category.toModel());
+        }
+
+        final List<PropertyRequestDto> properties = request.getProperties();
+        if (properties != null && properties.size() > 0) {
+            updatedArticle.setProperties(properties.stream().map(PropertyRequestDto::toModel).collect(Collectors.toList()));
+        }
+
+        final int quantity = request.getQuantity();
+        if (quantity < 0) {
+            updatedArticle.setQuantity(quantity);
+        }
+
+        final String name = request.getName();
+        if (name != null) {
+            updatedArticle.setName(name);
+        }
+
+        final String image = request.getImage();
+        if (image != null) {
+            final String previousValue = updatedArticle.getImage() == null ? "NULL" : "";
+            updatedArticle.setImage(image);
+            LOGGER.debug("Updating article with id, set image {} -> {}", previousValue, image);
+        }
+
+        Article articleUpdated = this.articleRepository.save(updatedArticle);
         if (articleUpdated == null) {
-            LOGGER.error("Could not update article with id {}", id);
+            LOGGER.error("Could not update article with id {}", updatedArticle.getId());
             return null;
         }
         return new UpdateArticleResponseDto(articleUpdated);
