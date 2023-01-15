@@ -93,16 +93,19 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
-            if (preparedStatement.executeUpdate() == 1) {
-                ResultSet resultSet = preparedStatement.getGeneratedKeys();
-                if (resultSet.next()) {
-                    if (commit) {
-                        this.connection.commit(CommittedSqlCommand.INSERT);
-                    }
-                    category.setId(resultSet.getLong("insert_id"));
-                    LogUtil.traceFetchId(Category.class, category.getId(), LOGGER);
-                    return category;
+            if (preparedStatement.executeUpdate() != 1) {
+                connection.rollback();
+                return null;
+            }
+
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                if (commit) {
+                    this.connection.commit(CommittedSqlCommand.INSERT);
                 }
+                category.setId(resultSet.getLong("insert_id"));
+                LogUtil.traceFetchId(Category.class, category.getId(), LOGGER);
+                return category;
             }
             return null;
         } catch (SQLException e) {
