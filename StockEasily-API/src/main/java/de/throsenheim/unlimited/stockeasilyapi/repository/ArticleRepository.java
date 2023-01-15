@@ -134,6 +134,22 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         if (article.getId() > 0) {
             // Update existing
 
+            final Category existingCategory = article.getCategory();
+            final Category resultCategory = categoryRepository.save(existingCategory);
+            article.setCategory(resultCategory);
+
+            final List<Property> existingProperties = article.getProperties();
+            final List<Property> resultProperties = (List<Property>) propertyRepository.saveAll(existingProperties);
+            article.setProperties(resultProperties);
+
+//            return update(article);
+
+            //propertyRepository.findAllById();
+            // find existing properties?
+            // fill/insert/use missing
+            // return result
+
+            // deletion missing
 
             return article;
         }

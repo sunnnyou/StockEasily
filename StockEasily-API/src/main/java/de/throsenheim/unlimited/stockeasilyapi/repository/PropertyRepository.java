@@ -87,7 +87,10 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
     @Override
     public Property save(Property property, boolean commit) {
         Property result = findByName(property.getName());
-        // TODO implement updating the article
+        if (property.getId() > 0) {
+            // TODO update?
+        }
+
         if (result == null || !result.getDescription().equals(property.getDescription())) {
             result = insert(property, commit);
             LOGGER.debug("Saved new property with ID " + result.getId());
