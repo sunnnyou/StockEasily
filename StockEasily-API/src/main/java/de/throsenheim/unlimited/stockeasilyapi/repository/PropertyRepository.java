@@ -88,7 +88,10 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
     public Property save(Property property, boolean commit) {
         Property result = findByName(property.getName());
         if (property.getId() > 0) {
-            // TODO update?
+            Optional<Property> propertyFound = findById(property.getId());
+            if (propertyFound.isPresent()) {
+                return propertyFound.get();
+            }
         }
 
         if (result == null || !result.getDescription().equals(property.getDescription())) {
