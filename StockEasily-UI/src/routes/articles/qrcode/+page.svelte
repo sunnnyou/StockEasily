@@ -53,9 +53,14 @@
 
 <PageContent>
     <PageCard title={$t('qrcode.title')}>
-        <button id="start-camera">{$t('qrcode.start')}</button>
-        <video id="video" width="full" height="full" autoplay>
-            <track kind="captions" src="">
-        </video>
+        <div class=" flex flex-col items-center justify-center">
+            <video id="video" width="full" height="full" autoplay>
+                <track kind="captions" src="">
+            </video>
+            <button id="start-camera"
+                    class="flex justify-center items-center p-2.5 my-4 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                {$t('qrcode.start')}
+            </button>
+        </div>
     </PageCard>
 </PageContent>
