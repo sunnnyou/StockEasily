@@ -1,6 +1,6 @@
-import type {ValidatableProperty} from '../dto/property-request-dto';
 import type {Validatable} from './validatable';
 import type {ValidatableImage} from './validatable-image';
+import type {ValidatableProperty} from './validatable-property';
 
 export type ValidatableArticle = {
     category: Validatable<string> & {},

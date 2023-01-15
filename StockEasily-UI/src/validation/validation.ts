@@ -1,6 +1,6 @@
-import type {ValidatableArticle} from '$validation/validatable-article';
-import type {ValidatableProperty} from '../dto/property-request-dto';
 import type {Validatable} from './validatable';
+import type {ValidatableArticle} from './validatable-article';
+import type {ValidatableProperty} from './validatable-property';
 
 import {isPropertyDescriptionValid, isPropertyNameValid, PROPERTY_LIMITS} from '../dto/property-request-dto';
 
@@ -13,13 +13,9 @@ export function validateForm(validatableArticle: ValidatableArticle, t: any) {
     if (!validateTextLengthBetween1And30(validatableArticle.category, 'Category', t)) {
         isValid = false;
     }
-    if (!validateProperties(validatableArticle, t )) {
+    if (!validateProperties(validatableArticle, t)) {
         isValid = false;
     }
-
-    // sadly this is currently needed so UI gets refreshed
-    // validatableArticle = validatableArticle;
-
     return isValid;
 }
 
@@ -59,7 +55,7 @@ export function validateProperty(property: ValidatableProperty, t: any): boolean
         isValid = false;
     } else {
         isValid = isValid ? validatePropertyName(property, t) : false;
-        isValid = isValid ? validatePropertyDescription(property,t ) : false;
+        isValid = isValid ? validatePropertyDescription(property, t) : false;
     }
 
     return isValid;
