@@ -308,14 +308,14 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         }
     }
 
-    private List<Article> selectAllPage(int limit, int page){
+    private List<Article> selectAllPage(int limit, int page) {
         page = page - 1;
         PreparedStatement preparedStatement = null;
         final String query = "select id, name, quantity, image, categoryId from articles LIMIT ?, ?";
 
         try {
             preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, (page*limit));
+            preparedStatement.setInt(1, (page * limit));
             preparedStatement.setInt(2, limit);
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
