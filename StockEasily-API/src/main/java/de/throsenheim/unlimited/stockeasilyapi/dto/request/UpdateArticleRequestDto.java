@@ -3,7 +3,6 @@ package de.throsenheim.unlimited.stockeasilyapi.dto.request;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -12,11 +11,9 @@ public class UpdateArticleRequestDto {
 
     @ApiModelProperty(notes = "Article category", example = "Cables", required = true)
     @Valid
-    @NotNull(message = "Category name is mandatory")
     private CategoryRequestDto category;
 
     @ApiModelProperty(notes = "Article name", example = "HDX42 Widescreen Monitor", required = true)
-    @NotNull(message = "Article name is mandatory")
     @Size(min = 1, max = 30, message = "Article name must be between 1 and 30 characters")
     private String name;
 
