@@ -23,10 +23,12 @@
             video.srcObject = await navigator.mediaDevices.getUserMedia({video: true, audio: false})
                 .catch(error => {
                     console.log(error);
-                    alert("Can't access camera. " + error.message);
+                    alert($t('qrcode.error', {
+                        error: error.message}));
+                    stopScanning = true;
                 });
             while (!stopScanning) {
-                camera_button.innerText = "Stop Scanning";
+                camera_button.innerText = $t("qrcode.stop");
                 canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
                 QrScanner.scanImage(canvas, await qrEngine)
@@ -39,7 +41,7 @@
                     })
                 await sleep(200);
             }
-            camera_button.innerText = "Start QR-Scan";
+            camera_button.innerText = $t("qrcode.start");
 
         });
 
@@ -50,8 +52,8 @@
 </script>
 
 <PageContent>
-    <PageCard title={$t('menu.qrCode')}>
-        <button id="start-camera">Start QR-Scan</button>
+    <PageCard title={$t('qrcode.title')}>
+        <button id="start-camera">{$t('qrcode.start')}</button>
         <video id="video" width="full" height="full" autoplay>
             <track kind="captions" src="">
         </video>

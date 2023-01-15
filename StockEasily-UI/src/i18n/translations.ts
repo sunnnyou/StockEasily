@@ -38,7 +38,6 @@ export default {
         'menu.user.logout': 'Logout',
         'menu.user.notifications': 'Notifications',
         'menu.articles': 'Articles',
-        'menu.qrCode': 'Scan QR-Code',
 
         // pages
 
@@ -66,6 +65,12 @@ export default {
         'validation.between': '{{entity}} length must be between {{min}} and {{max}}',
         'validation.max': '{{entity}} maximum is {{max}}',
         'validation.image': 'The selected image is too big. Max. size: {{expected}}',
+
+        // qrcode
+        'qrcode.title': 'Scan QR-Code',
+        'qrcode.start': 'Start QR-Scan',
+        'qrcode.stop': 'Stop Scanning',
+        'qrcode.error': 'Can\'t access camera. {{error}}',
 
         // footer
         'about': 'About',
