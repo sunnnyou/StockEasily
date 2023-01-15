@@ -152,7 +152,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         final int quantity = request.getQuantity();
-        if (quantity < 0) {
+        if (quantity >= 0) {
             updatedArticle.setQuantity(quantity);
         }
 
