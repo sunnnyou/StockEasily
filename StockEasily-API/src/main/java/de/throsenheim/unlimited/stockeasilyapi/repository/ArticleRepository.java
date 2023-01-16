@@ -323,8 +323,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
     private boolean existsWithCategory(Category category) {
         PreparedStatement preparedStatement = null;
-        final String query = "SELECT EXISTS(SELECT * FROM articles WHERE categoryId = ? LIMIT 1)";
-//        final String query = "SELECT COUNT(articles.id) as count FROM articles WHERE category_id = ? LIMIT 1";
+        final String query = "SELECT EXISTS(SELECT 1 FROM articles WHERE categoryId = ? LIMIT 1) as exist";
 
         final long categoryId = category.getId();
         try {
@@ -334,11 +333,12 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
             ResultSet resultSet = preparedStatement.executeQuery();
+            boolean result = false;
             if (resultSet.next()) {
-                return resultSet.getInt("count") == 0;
+                result = resultSet.getBoolean("exist");
             }
             LOGGER.error("An error occurred while getting count of articles with categoryId {}", categoryId);
-            return false;
+            return result;
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);
