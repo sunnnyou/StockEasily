@@ -156,20 +156,15 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
     @Override
     public Property save(Property property, boolean commit) {
         Optional<Property> findResult = find(property);
-        if (property.getId() > 0) {
-            Optional<Property> propertyFound = findById(property.getId());
-            if (propertyFound.isPresent()) {
-                return propertyFound.get();
-            }
+        if (findResult.isPresent()) {
+            final Property foundProperty = findResult.get();
+            LOGGER.debug("Using existing property with ID {} instead of saving", foundProperty.getId());
+            return foundProperty;
         }
 
         Property result;
-        if (findResult.isEmpty() || !(result = findResult.get()).getDescription().equals(property.getDescription())) {
-            result = insert(property, commit);
-            LOGGER.debug("Saved new property with ID {}", result.getId());
-            return result;
-        }
-        LOGGER.debug("Using existing property with ID {} instead of saving", result.getId());
+        result = insert(property, commit);
+        LOGGER.debug("Saved new property with ID {}", result.getId());
         return result;
     }
 

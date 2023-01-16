@@ -168,7 +168,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
             final List<Property> currentProperties = articleFound.getProperties();
             final List<Property> requestProperties = article.getProperties();
-            final List<Property> properties = updateProperties(requestProperties, currentProperties);
+            final List<Property> properties = updateProperties(requestProperties);
             if (properties != null) {
                 article.setProperties(properties);
             }
@@ -210,10 +210,9 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         propertyRepository.deleteAll(orphanedProperties);
     }
 
-    private List<Property> updateProperties(final List<Property> requestProperties, final List<Property> currentProperties) {
+    private List<Property> updateProperties(final List<Property> requestProperties) {
         // Save properties if any new (added or replaced old one)
-        final List<Property> newProperties = ListUtil.getNewItems(requestProperties, currentProperties);
-        return (List<Property>) propertyRepository.saveAll(newProperties);
+        return (List<Property>) propertyRepository.saveAll(requestProperties);
     }
 
     private void updateRelations(Article requestArticle, Article foundArticle) {
