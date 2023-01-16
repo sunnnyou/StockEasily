@@ -172,17 +172,8 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             if (properties != null) {
                 article.setProperties(properties);
             }
-            // ArticleProperty
-            // Save ArticleProperty relations if any new
-            final List<ArticleProperty> currentRelations = getArticlePropertyRelations(articleFound);
-            final List<ArticleProperty> requestRelations = getArticlePropertyRelations(article);
 
-            final List<ArticleProperty> newRelations = ListUtil.getNewItems(requestRelations, currentRelations);
-            articlePropertyRepository.saveAll(newRelations);
-
-            // Remove old relations
-            final List<ArticleProperty> oldRelations = ListUtil.getUnusedItems(requestRelations, currentRelations);
-            articlePropertyRepository.deleteAll(oldRelations);
+            updateRelations(article, articleFound);
 
             // Remove orphaned properties
             final List<Property> orphanedProperties = ListUtil.getUnusedItems(requestProperties, currentProperties);
@@ -220,6 +211,19 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         // Save properties if any new (added or replaced old one)
         final List<Property> newProperties = ListUtil.getNewItems(requestProperties, currentProperties);
         return (List<Property>) propertyRepository.saveAll(newProperties);
+    }
+
+    private void updateRelations(Article requestArticle, Article foundArticle) {
+        // Save ArticleProperty relations if any new
+        final List<ArticleProperty> currentRelations = getArticlePropertyRelations(foundArticle);
+        final List<ArticleProperty> requestRelations = getArticlePropertyRelations(requestArticle);
+
+        final List<ArticleProperty> newRelations = ListUtil.getNewItems(requestRelations, currentRelations);
+        articlePropertyRepository.saveAll(newRelations);
+
+        // Remove old relations
+        final List<ArticleProperty> oldRelations = ListUtil.getUnusedItems(requestRelations, currentRelations);
+        articlePropertyRepository.deleteAll(oldRelations);
     }
 
     @Nullable
