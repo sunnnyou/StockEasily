@@ -163,7 +163,8 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
             }
         }
 
-        if (result == null || !result.getDescription().equals(property.getDescription())) {
+        Property result;
+        if (findResult.isEmpty() || !(result = findResult.get()).getDescription().equals(property.getDescription())) {
             result = insert(property, commit);
             LOGGER.debug("Saved new property with ID {}", result.getId());
             return result;
