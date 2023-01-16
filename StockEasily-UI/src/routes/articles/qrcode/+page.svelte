@@ -39,6 +39,7 @@
                 QrScanner.scanImage(canvas, await qrEngine)
                     .then(result => {
                         console.log(result);
+                        stopScanning = true;
                         goto("/articles/" + result);
                     })
                     .catch(error => {
