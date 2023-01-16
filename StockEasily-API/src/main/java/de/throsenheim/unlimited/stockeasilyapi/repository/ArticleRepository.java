@@ -1,6 +1,7 @@
 package de.throsenheim.unlimited.stockeasilyapi.repository;
 
 import de.throsenheim.unlimited.stockeasilyapi.abstraction.SqlConnection;
+import de.throsenheim.unlimited.stockeasilyapi.common.collections.ListUtil;
 import de.throsenheim.unlimited.stockeasilyapi.common.logging.CommittedSqlCommand;
 import de.throsenheim.unlimited.stockeasilyapi.common.logging.LogUtil;
 import de.throsenheim.unlimited.stockeasilyapi.exception.NotImplementedException;
@@ -12,6 +13,7 @@ import de.throsenheim.unlimited.stockeasilyapi.model.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -42,6 +44,21 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         this.propertyRepository = propertyRepository;
         this.categoryRepository = categoryRepository;
         this.articlePropertyRepository = articlePropertyRepository;
+    }
+
+    @Override
+    public boolean deleteAll(Iterable<Article> entities) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public boolean delete(Article entity) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public boolean deleteById(Long id) {
+        throw new NotImplementedException();
     }
 
     @Override
@@ -79,6 +96,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
     public int getSizeQuery(String query) {
         return countQuery(query);
     }
+
     public List<Article> findAllByQuery(String query, int limit, int page) {
         return selectAllQuery(query, limit, page);
     }
@@ -129,8 +147,39 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         }
     }
 
+    @Nullable
     @Override
     public Article save(Article article, boolean commit) {
+        if (article.getId() > 0) {
+            // Update existing
+
+            // Get previous article state for comparing
+            final Optional<Article> articleFoundResult = findById(article.getId());
+            if (articleFoundResult.isEmpty()) {
+                // TODO error handling
+                return null;
+            }
+            final Article articleFound = articleFoundResult.get();
+
+            final Category category = updateCategory(article, articleFound);
+            if (category != null) {
+                article.setCategory(category);
+            }
+
+            final List<Property> currentProperties = articleFound.getProperties();
+            final List<Property> requestProperties = article.getProperties();
+            final List<Property> properties = updateProperties(requestProperties);
+            if (properties != null) {
+                article.setProperties(properties);
+            }
+
+            updateRelations(article, articleFound);
+
+            removeOrphanedProperties(requestProperties, currentProperties);
+
+            return update(article, commit);
+        }
+
         Category category = article.getCategory();
         if (category != null && category.getName() != null) {
             category = categoryRepository.save(category, true);
@@ -154,6 +203,47 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         List<ArticleProperty> articlePropertyRelations = getArticlePropertyRelations(result);
         articlePropertyRepository.saveAll(articlePropertyRelations);
         return result;
+    }
+
+    private void removeOrphanedProperties(final List<Property> requestProperties, final List<Property> currentProperties) {
+        final List<Property> orphanedProperties = ListUtil.getUnusedItems(requestProperties, currentProperties);
+        propertyRepository.deleteAll(orphanedProperties);
+    }
+
+    private List<Property> updateProperties(final List<Property> requestProperties) {
+        // Save properties if any new (added or replaced old one)
+        return (List<Property>) propertyRepository.saveAll(requestProperties);
+    }
+
+    private void updateRelations(Article requestArticle, Article foundArticle) {
+        // Save ArticleProperty relations if any new
+        final List<ArticleProperty> currentRelations = getArticlePropertyRelations(foundArticle);
+        final List<ArticleProperty> requestRelations = getArticlePropertyRelations(requestArticle);
+
+        final List<ArticleProperty> newRelations = ListUtil.getNewItems(requestRelations, currentRelations);
+        articlePropertyRepository.saveAll(newRelations);
+
+        // Remove old relations
+        final List<ArticleProperty> oldRelations = ListUtil.getUnusedItems(requestRelations, currentRelations);
+        articlePropertyRepository.deleteAll(oldRelations);
+    }
+
+    @Nullable
+    private Category updateCategory(Article requestArticle, Article foundArticle) {
+        // Save Category if new
+        final Category currentCategory = foundArticle.getCategory();
+        final Category resultCategory = categoryRepository.save(requestArticle.getCategory());
+        if (resultCategory == null) {
+            // TODO error handling
+            return null;
+        }
+
+        // Remove old Category if orphaned
+        if (!currentCategory.equals(resultCategory) && !existsWithCategory(currentCategory)) {
+            categoryRepository.delete(currentCategory);
+            LOGGER.debug("Deleted orphaned category with id {}", currentCategory.getId());
+        }
+        return resultCategory;
     }
 
     @Override
@@ -183,16 +273,18 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
-            if (preparedStatement.executeUpdate() == 1) {
-                ResultSet resultSet = preparedStatement.getGeneratedKeys();
-                if (resultSet.next()) {
-                    if (commit) {
-                        this.connection.commit(CommittedSqlCommand.INSERT);
-                    }
-                    article.setId(resultSet.getLong("insert_id"));
-                    LogUtil.traceFetchId(Article.class, article.getId(), LOGGER);
-                    return article;
+            if (preparedStatement.executeUpdate() != 1) {
+                connection.rollback();
+                return null;
+            }
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                if (commit) {
+                    this.connection.commit(CommittedSqlCommand.INSERT);
                 }
+                article.setId(resultSet.getLong("insert_id"));
+                LogUtil.traceFetchId(Article.class, article.getId(), LOGGER);
+                return article;
             }
             LOGGER.debug(EMPTY_ARTICLE_LOG);
             return null;
@@ -222,6 +314,32 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             }
             LOGGER.debug(EMPTY_ARTICLE_LOG);
             return null;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean existsWithCategory(Category category) {
+        PreparedStatement preparedStatement = null;
+        final String query = "SELECT EXISTS(SELECT 1 FROM articles WHERE categoryId = ? LIMIT 1) as exist";
+
+        final long categoryId = category.getId();
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, categoryId);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            boolean result = false;
+            if (resultSet.next()) {
+                result = resultSet.getBoolean("exist");
+            }
+            resultSet.close();
+            preparedStatement.close();
+            LOGGER.error("An error occurred while checking whether article exists with categoryId {}", categoryId);
+            return result;
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);
@@ -283,14 +401,14 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         }
     }
 
-    private List<Article> selectAllPage(int limit, int page){
+    private List<Article> selectAllPage(int limit, int page) {
         page = page - 1;
         PreparedStatement preparedStatement = null;
         final String query = "select id, name, quantity, image, categoryId from articles LIMIT ?, ?";
 
         try {
             preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, (page*limit));
+            preparedStatement.setInt(1, (page * limit));
             preparedStatement.setInt(2, limit);
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
@@ -385,7 +503,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             preparedStatement.setString(1, searchQuery);
             preparedStatement.setString(2, searchQuery);
             preparedStatement.setString(3, searchQuery);
-            preparedStatement.setInt(4, (page*limit));
+            preparedStatement.setInt(4, (page * limit));
             preparedStatement.setInt(5, limit);
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
@@ -439,6 +557,34 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatementArticlesProperties, LOGGER, e);
 //            LogUtil.errorSqlStatement(preparedStatementUsersArticles, LOGGER, e);
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Article update(Article article, boolean commit) {
+        PreparedStatement preparedStatement = null;
+        final String query = "UPDATE articles SET name = ?, categoryId = ?, quantity = ?, image = ? WHERE id = ? LIMIT 1";
+        try {
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, article.getName());
+            preparedStatement.setLong(2, article.getCategory().getId());
+            preparedStatement.setInt(3, article.getQuantity());
+            preparedStatement.setBlob(4, article.getImage());
+            preparedStatement.setLong(5, article.getId());
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            if (preparedStatement.executeUpdate() == 0) {
+                connection.rollback();
+                return null;
+            }
+            if (commit) {
+                connection.commit(CommittedSqlCommand.UPDATE);
+            }
+            return article;
+        } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);
         }

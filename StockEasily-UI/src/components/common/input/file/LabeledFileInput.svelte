@@ -11,9 +11,10 @@
     export let allowMultiple = true;
     export let className = '';
     export let error = '';
-    export let files: File[] = [];
     export let labelOptions: LabelOptions | undefined;
     export let name = '';
+    export let onDelete: Function | undefined = undefined;
+    export let onFileChange: ((files: File[]) => void) = () => {};
     export let parentClass: string | undefined = undefined;
     export let previewImageOptions: PreviewImageOptions = {alt: '', show: false, src: ''};
 </script>
@@ -25,11 +26,13 @@
               {error}
               {labelOptions}
               {name}
+              {onDelete}
+              {onFileChange}
               {parentClass}
               {previewImageOptions}
               type={InputType.File}
               on:change
-              bind:files>
+>
     <slot name="label"/>
     <slot name="inner"/>
 </LabeledInput>

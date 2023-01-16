@@ -3,6 +3,7 @@ package de.throsenheim.unlimited.stockeasilyapi.repository;
 import de.throsenheim.unlimited.stockeasilyapi.abstraction.SqlConnection;
 import de.throsenheim.unlimited.stockeasilyapi.common.logging.LogUtil;
 import de.throsenheim.unlimited.stockeasilyapi.common.logging.CommittedSqlCommand;
+import de.throsenheim.unlimited.stockeasilyapi.exception.NotImplementedException;
 import de.throsenheim.unlimited.stockeasilyapi.factory.DatabaseConnectionFactory;
 import de.throsenheim.unlimited.stockeasilyapi.model.ArticleProperty;
 import org.slf4j.Logger;
@@ -28,6 +29,49 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
     }
 
     @Override
+    public boolean deleteAll(Iterable<ArticleProperty> entities) {
+        boolean result = true;
+        for (ArticleProperty entity : entities) {
+            if (delete(entity)) {
+                continue;
+            }
+            LOGGER.warn("Could not delete ArticleProperty relation with article_id {} and property_id {}", entity.getArticleId(), entity.getPropertyId());
+            result = false;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean delete(ArticleProperty relation) {
+        PreparedStatement preparedStatement = null;
+        final String query = "DELETE FROM articles_properties WHERE articleId = ? and propertyId = ? LIMIT 1";
+
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, relation.getArticleId());
+            preparedStatement.setLong(2, relation.getPropertyId());
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+            if (preparedStatement.executeUpdate() == 0) {
+                LOGGER.error("Could not delete articles_properties record with articleId {} and propertyId {}", relation.getArticleId(), relation.getPropertyId());
+                return false;
+            }
+            LOGGER.debug("Deleted articles_properties record with articleId {} and propertyId {}", relation.getArticleId(), relation.getPropertyId());
+            this.connection.commit(CommittedSqlCommand.DELETE);
+            return true;
+
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean deleteById(Long id) {
+        throw new NotImplementedException();
+    }
+
+    @Override
     public Iterable<ArticleProperty> findAllById(Iterable<Long> longs) {
         return null;
     }
@@ -46,6 +90,9 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
     public Iterable<ArticleProperty> saveAll(Iterable<ArticleProperty> relations) {
         boolean shouldCommit = false;
         for (ArticleProperty relation : relations) {
+            if (find(relation) != null) {
+                continue;
+            }
             if (save(relation) != null && !shouldCommit) {
                 shouldCommit = true;
             }
@@ -90,13 +137,14 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
-            if (preparedStatement.executeUpdate() == 1) {
-                if (commit) {
-                    this.connection.commit(CommittedSqlCommand.INSERT);
-                }
-                return relation;
+            if (preparedStatement.executeUpdate() != 1) {
+                connection.rollback();
+                return null;
             }
-            return null;
+            if (commit) {
+                connection.commit(CommittedSqlCommand.INSERT);
+            }
+            return relation;
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);

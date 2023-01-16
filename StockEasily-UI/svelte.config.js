@@ -30,6 +30,8 @@ const config = {
             $common: 'src/common',
             $dto: 'src/dto',
             $i18n: 'src/i18n',
+            $services: 'src/services',
+            $validation: 'src/validation',
         },
     }
 };

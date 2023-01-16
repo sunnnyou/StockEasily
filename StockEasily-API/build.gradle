@@ -28,6 +28,9 @@ dependencies {
     // Swagger
     // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
     implementation "io.springfox:springfox-boot-starter:3.0.0"
+
+    // https://mvnrepository.com/artifact/org.apache.tika/tika-core
+    implementation 'org.apache.tika:tika-core:2.6.0'
 }
 
 tasks.named('test') {

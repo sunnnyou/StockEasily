@@ -34,4 +34,11 @@ public class CategoryResponseDto {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Category toModel() {
+        Category result = new Category();
+        result.setId(getId());
+        result.setName(getName());
+        return result;
+    }
 }

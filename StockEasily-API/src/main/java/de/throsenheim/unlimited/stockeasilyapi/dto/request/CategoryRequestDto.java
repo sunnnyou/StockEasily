@@ -1,5 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.dto.request;
 
+import de.throsenheim.unlimited.stockeasilyapi.model.Category;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotEmpty;
@@ -18,5 +19,11 @@ public class CategoryRequestDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Category toModel() {
+        Category result = new Category();
+        result.setName(getName());
+        return result;
     }
 }
