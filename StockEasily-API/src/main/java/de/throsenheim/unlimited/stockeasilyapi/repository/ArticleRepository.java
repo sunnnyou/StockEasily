@@ -191,7 +191,6 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             return update(article, commit);
         }
 
-        // Insert new
         Category category = article.getCategory();
         if (category != null && category.getName() != null) {
             category = categoryRepository.save(category, true);
