@@ -13,8 +13,14 @@ export async function load({fetch, params}: { fetch: any, params: any }) {
         };
     }
 
-    let response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + articleId);
-    return {
-        result: JsonService.deserialize<GetArticleResponseDto>(await response.text()),
-    };
+    try {
+        let response = await fetch(SESSION_INFO.API_ENDPOINT + '/api/v1/articles/' + articleId);
+        return {
+            result: JsonService.deserialize<GetArticleResponseDto>(await response.text()),
+        };
+    } catch (e) {
+        return {
+            result: undefined,
+        };
+    }
 }

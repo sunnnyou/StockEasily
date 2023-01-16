@@ -72,6 +72,7 @@
 
     onMount(async () => {
         if (data.result === undefined) {
+            alert($t('articles.error.backend'))
             await goto('/articles');
         }
         console.debug('Loaded data', data.result);
