@@ -1,0 +1,66 @@
+image: node:latest
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+stages:
+  - build
+  - lint
+  - deploy
+
+build_backend:
+  stage: build
+  image: gradle:latest
+  script:
+    - cd StockEasily-API
+    - gradle build
+  artifacts:
+    paths:
+      - StockEasily-API/build/libs/*.jar
+
+build_frontend:
+  stage: build
+  script:
+    - cd StockEasily-UI
+    - npm clean-install
+    - npm run build
+  artifacts:
+    paths:
+      - StockEasily-UI/.sveltekit/output/*
+
+#test_backend:
+#  stage: test
+#  image: gradle:latest
+#  script:
+#    - cd StockEasily-API
+#    - gradle test
+
+#test_frontend:
+#  stage: test
+#  script:
+#    - cd StockEasily-UI
+#    - npx playwright install
+#    - npm run test
+
+
+#lint_backend:
+#  stage: lint
+#  image: gradle:latest
+#  script:
+#    - cd StockEasily-API
+#    - gradle lint # gives an error
+
+#lint_frontend:
+#  stage: lint
+#  script:
+#    - cd StockEasily-UI
+#    - npm clean-install
+#    - npm run lint # gives an error, linter not successful
+
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying to production environment"
+  only:
+    - master
