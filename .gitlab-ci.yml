@@ -58,5 +58,6 @@ dockerize-frontend:
     - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
     - cd $PROJECT_DIR_FRONTEND
-    - docker build --pull -t "$CI_REGISTRY_IMAGE:svelte" -f DockerfileFrontend .
+    - ls
+    - docker build -t "$CI_REGISTRY_IMAGE:svelte" -f DockerfileFrontend .
     - docker push "$CI_REGISTRY_IMAGE:svelte"
