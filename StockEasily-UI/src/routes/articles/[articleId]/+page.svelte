@@ -160,21 +160,22 @@
     <PageCard title={edit ? $t('article.edit') : $t('article')}>
         {#if $validatableArticleStore?.name !== undefined}
             <div class="inline-block w-full mb-4">
-                <button on:click={() => showQRImage()}
-                        type="submit"
-                        class="p-2.5 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                <Button on:click={() => showQRImage()}
+                        type="button"
+                        >
                     {$t('qr.show')}
-                </button>
+                </Button>
 
-                <button on:click="{async () => {
+                <Button on:click="{async () => {
                             let a = document.createElement('a');
                             a.download = 'qr-image.png';
                             a.href = await downloadQRImage();
                             a.click();
                             }}"
-                        class="p-2.5 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                        type="button"
+                        >
                     {$t('qr.download')}
-                </button>
+                </Button>
             </div>
             <form class="inline-block w-full"
                   on:submit|preventDefault={handleOnSubmit}>
