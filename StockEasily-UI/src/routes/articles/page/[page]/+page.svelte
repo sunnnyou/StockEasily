@@ -219,7 +219,7 @@
                                     {#if $page.params.page > 1}
                                         <a class="ui-button border-black float-left p-2 no-underline"
                                            rel="external"
-                                           href={beforePage}>&laquo;
+                                           href={1}>&laquo;
                                         </a>
                                     {:else}
                                         <div class="border-black float-left p-2 no-underline">&laquo;</div>
@@ -239,7 +239,7 @@
                                     {#if $page.params.page < maxPage}
                                         <a class="ui-button border-black float-left p-2 no-underline"
                                            rel="external"
-                                           href={afterPage}>&raquo;
+                                           href={maxPage}>&raquo;
                                         </a>
                                     {:else}
                                         <div class="border-black float-left p-2 no-underline">&raquo;</div>
@@ -256,6 +256,11 @@
 </PageContent>
 <style>
     .article:hover {
+        cursor: pointer;
+        background: #ccc;
+        color: #fff;
+    }
+    a:hover {
         cursor: pointer;
         background: #ccc;
         color: #fff;
