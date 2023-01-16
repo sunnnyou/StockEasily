@@ -10,7 +10,7 @@ public class ListUtil {
     }
 
     public static <T> List<T> getUnusedItems(List<T> requestItems, List<T> existingItems) {
-        Predicate<T> notExists = element -> !existingItems.contains(element);
-        return requestItems.stream().filter(notExists).toList();
+        Predicate<T> notExists = element -> !requestItems.contains(element);
+        return existingItems.stream().filter(notExists).toList();
     }
 }
