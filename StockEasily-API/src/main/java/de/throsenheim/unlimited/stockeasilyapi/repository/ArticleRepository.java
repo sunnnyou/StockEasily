@@ -175,9 +175,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
 
             updateRelations(article, articleFound);
 
-            // Remove orphaned properties
-            final List<Property> orphanedProperties = ListUtil.getUnusedItems(requestProperties, currentProperties);
-            propertyRepository.deleteAll(orphanedProperties);
+            removeOrphanedProperties(requestProperties, currentProperties);
 
             return update(article, commit);
         }
@@ -205,6 +203,11 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         List<ArticleProperty> articlePropertyRelations = getArticlePropertyRelations(result);
         articlePropertyRepository.saveAll(articlePropertyRelations);
         return result;
+    }
+
+    private void removeOrphanedProperties(List<Property> requestProperties, List<Property> currentProperties) {
+        final List<Property> orphanedProperties = ListUtil.getUnusedItems(requestProperties, currentProperties);
+        propertyRepository.deleteAll(orphanedProperties);
     }
 
     private List<Property> updateProperties(List<Property> requestProperties, List<Property> currentProperties) {
