@@ -1,0 +1,36 @@
+version: "3.5"
+
+services:
+  db:
+    env_file:
+      - .env
+    image: mariadb:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    command:
+      - /bin/sh -c "databaseInit.sh"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  spring:
+    container_name: spring-app
+    image: inf-docker.fh-rosenheim.de/sINFdahent/stockeasily:spring
+    depends_on:
+      - db
+    command: sh -c "sleep 40 && java -jar -Dspring.profiles.active=prod /opt/app/StockEasily-1.0-Snapshot.jar
+      - "8080:8080"
+
+  svelte:
+    image: svelte
+    depends_on:
+      - spring
+    ports:
+      - "5173:5173"
+
+volumes:
+  db-data:
