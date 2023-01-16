@@ -9,7 +9,7 @@ variables:
 
 build-java:
   stage: build
-  image: gradle:7.1-jdk17
+  image: gradle:7.3-jdk17
   script:
     - - cd $PROJECT_DIR
       - echo "Compiling"
@@ -21,7 +21,7 @@ build-java:
 
 test-java:
   stage: check
-  image: gradle:7.1-jdk11
+  image: gradle:7.3-jdk17
   script:
     - cd $PROJECT_DIR
     - echo "Running Unit Tests and Static Code analysis"
