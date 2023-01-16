@@ -12,10 +12,10 @@ services:
       MARIADB_DATABASE: ${MARIADB_DATABASE}
       MARIADB_USER: ${MARIADB_USER}
       MARIADB_PASSWORD: ${MARIADB_PASSWORD}
-    command:
-      - /bin/sh -c "databaseInit.sh"
     volumes:
-      - db-data:/var/lib/mysql
+      - ./database/dump.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/database-init.sh:/docker-entrypoint-initdb.d/init.sh
+      - /.db-data:/var/lib/mysql
 
   spring:
     container_name: spring-app
@@ -28,7 +28,7 @@ services:
   svelte:
     image: svelte
     depends_on:
-      - spring
+      - backend
     ports:
       - "5173:5173"
 
