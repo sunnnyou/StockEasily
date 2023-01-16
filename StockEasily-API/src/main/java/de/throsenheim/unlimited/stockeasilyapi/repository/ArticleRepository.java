@@ -339,7 +339,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             }
             resultSet.close();
             preparedStatement.close();
-            LOGGER.error("An error occurred while getting count of articles with categoryId {}", categoryId);
+            LOGGER.error("An error occurred while checking whether article exists with categoryId {}", categoryId);
             return result;
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
