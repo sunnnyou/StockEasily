@@ -45,7 +45,6 @@
 
     function onDeleteImage(){
         if (onDelete) {
-            console.log('bla')
             onDelete();
         }
     }
