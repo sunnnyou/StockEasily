@@ -161,20 +161,9 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             }
             final Article articleFound = articleFoundResult.get();
 
-            // Category
-            // Save Category if new
-            final Category currentCategory = articleFound.getCategory();
-            final Category resultCategory = categoryRepository.save(article.getCategory());
-            if (resultCategory == null) {
-                // TODO error handling
-                return null;
-            }
-            article.setCategory(resultCategory);
-
-            // Remove old Category if orphaned
-            if (!currentCategory.equals(resultCategory) && !existsWithCategory(currentCategory)) {
-                categoryRepository.delete(currentCategory);
-                LOGGER.debug("Deleted orphaned category with id {}", currentCategory.getId());
+            final Category category = updateCategory(article, articleFound);
+            if (category != null) {
+                article.setCategory(category);
             }
 
             // Property
@@ -229,6 +218,24 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         List<ArticleProperty> articlePropertyRelations = getArticlePropertyRelations(result);
         articlePropertyRepository.saveAll(articlePropertyRelations);
         return result;
+    }
+
+    @Nullable
+    private Category updateCategory(Article requestArticle, Article foundArticle) {
+        // Save Category if new
+        final Category currentCategory = foundArticle.getCategory();
+        final Category resultCategory = categoryRepository.save(requestArticle.getCategory());
+        if (resultCategory == null) {
+            // TODO error handling
+            return null;
+        }
+
+        // Remove old Category if orphaned
+        if (!currentCategory.equals(resultCategory) && !existsWithCategory(currentCategory)) {
+            categoryRepository.delete(currentCategory);
+            LOGGER.debug("Deleted orphaned category with id {}", currentCategory.getId());
+        }
+        return resultCategory;
     }
 
     @Override
