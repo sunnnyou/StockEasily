@@ -1,0 +1,49 @@
+stages:
+  - build
+  - check
+  - deploy
+  - acceptance
+
+variables:
+  PROJECT_DIR: "./StockEasily-API"
+
+build-java:
+  stage: build
+  image: gradle:7.1-jdk17
+  script:
+    - - cd $PROJECT_DIR
+      - echo "Compiling"
+      - gradle assemble
+  artifacts:
+    paths:
+      - $PROJECT_DIR/build/*
+    expire_in: 1 day
+
+test-java:
+  stage: check
+  image: gradle:7.1-jdk11
+  script:
+    - cd $PROJECT_DIR
+    - echo "Running Unit Tests and Static Code analysis"
+    - gradle check
+  artifacts:
+    reports:
+      junit:
+        - $PROJECT_DIR/build/test-results/test/TEST-*.xml
+    paths:
+      - $PROJECT_DIR/build/*
+    expire_in: 1 day
+
+dockerize-reactive:
+  # Official docker image.
+  image: docker:latest
+  stage: deploy
+  services:
+    - docker:dind
+  before_script:
+    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  script:
+    - cd $PROJECT_DIR
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:spring" .
+    - docker push "$CI_REGISTRY_IMAGE:spring"
+
