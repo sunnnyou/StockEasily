@@ -45,7 +45,7 @@ dockerize-backend:
     - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
     - cd $PROJECT_DIR_BACKEND
-    - docker build --pull -t -f "$CI_REGISTRY_IMAGE:spring" .
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:spring" .
     - docker push "$CI_REGISTRY_IMAGE:spring"
 
 dockerize-frontend:
@@ -58,6 +58,5 @@ dockerize-frontend:
     - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
     - cd $PROJECT_DIR_FRONTEND
-    - docker build --pull -t -f "$CI_REGISTRY_IMAGE:svelte" .
+    - docker build -f ./DockerfileFrontend --pull -t "$CI_REGISTRY_IMAGE:svelte" .
     - docker push "$CI_REGISTRY_IMAGE:svelte"
-
