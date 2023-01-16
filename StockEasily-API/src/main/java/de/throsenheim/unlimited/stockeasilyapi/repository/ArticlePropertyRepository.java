@@ -30,12 +30,40 @@ public class ArticlePropertyRepository implements HumaneRepository<ArticleProper
 
     @Override
     public boolean deleteAll(Iterable<ArticleProperty> entities) {
-        throw new NotImplementedException();
+        boolean result = true;
+        for (ArticleProperty entity : entities) {
+            if (delete(entity)) {
+                continue;
+            }
+            LOGGER.warn("Could not delete ArticleProperty relation with article_id {} and property_id {}", entity.getArticleId(), entity.getPropertyId());
+            result = false;
+        }
+        return result;
     }
 
     @Override
-    public boolean delete(ArticleProperty entity) {
-        throw new NotImplementedException();
+    public boolean delete(ArticleProperty relation) {
+        PreparedStatement preparedStatement = null;
+        final String query = "DELETE FROM properties WHERE article_id = ? and property_id = ? LIMIT 1";
+
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, relation.getArticleId());
+            preparedStatement.setLong(2, relation.getPropertyId());
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+            if (preparedStatement.executeUpdate() == 0) {
+                LOGGER.error("Could not delete articles_properties record with article_id {} and property_id {}", relation.getArticleId(), relation.getPropertyId());
+                return false;
+            }
+            LOGGER.debug("Deleted properties record with article_id {} and property_id {}", relation.getArticleId(), relation.getPropertyId());
+            this.connection.commit(CommittedSqlCommand.DELETE);
+            return true;
+
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
