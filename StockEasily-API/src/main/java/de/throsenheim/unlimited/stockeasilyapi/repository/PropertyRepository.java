@@ -165,10 +165,10 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
 
         if (result == null || !result.getDescription().equals(property.getDescription())) {
             result = insert(property, commit);
-            LOGGER.debug("Saved new property with ID " + result.getId());
+            LOGGER.debug("Saved new property with ID {}", result.getId());
             return result;
         }
-        LOGGER.debug("Using existing property with ID " + result.getId() + " instead of saving");
+        LOGGER.debug("Using existing property with ID {} instead of saving", result.getId());
         return result;
     }
 
