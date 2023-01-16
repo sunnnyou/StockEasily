@@ -1,49 +1,63 @@
 stages:
   - build
   - check
-  - deploy
-  - acceptance
+  - deployBackend
+  - deployFrontend
 
 variables:
-  PROJECT_DIR: "./StockEasily-API"
+  PROJECT_DIR_BACKEND: "./StockEasily-API"
+  PPROJECT_DIR_FRONTEND: "./StockEasily-UI"
 
 build-java:
   stage: build
   image: gradle:7.3-jdk17
   script:
-    - - cd $PROJECT_DIR
+    - - cd $PROJECT_DIR_BACKEND
       - echo "Compiling"
       - gradle assemble
   artifacts:
     paths:
-      - $PROJECT_DIR/build/*
+      - $PROJECT_DIR_BACKEND/build/*
     expire_in: 1 day
 
 test-java:
   stage: check
   image: gradle:7.3-jdk17
   script:
-    - cd $PROJECT_DIR
+    - cd $PROJECT_DIR_BACKEND
     - echo "Running Unit Tests and Static Code analysis"
     - gradle check
   artifacts:
     reports:
       junit:
-        - $PROJECT_DIR/build/test-results/test/TEST-*.xml
+        - $PROJECT_DIR_BACKEND/build/test-results/test/TEST-*.xml
     paths:
-      - $PROJECT_DIR/build/*
+      - $PROJECT_DIR_BACKEND/build/*
     expire_in: 1 day
 
-dockerize-reactive:
+dockerize-backend:
   # Official docker image.
   image: docker:latest
-  stage: deploy
+  stage: deployBackend
   services:
     - docker:dind
   before_script:
     - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - cd $PROJECT_DIR
+    - cd $PROJECT_DIR_BACKEND
     - docker build --pull -t "$CI_REGISTRY_IMAGE:spring" .
     - docker push "$CI_REGISTRY_IMAGE:spring"
+
+dockerize-frontend:
+  # Official docker image.
+  image: docker:latest
+  stage: deployFrontend
+  services:
+    - docker:dind
+  before_script:
+    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  script:
+    - cd $PROJECT_DIR_FRONTEND
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:svelte" .
+    - docker push "$CI_REGISTRY_IMAGE:svelte"
 
