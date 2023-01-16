@@ -80,6 +80,33 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
         return Optional.ofNullable(selectId(aLong));
     }
 
+    private Optional<Property> find(Property property) {
+        final String query = "SELECT id FROM properties WHERE name = ? and description = ? LIMIT 1";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, property.getName());
+            preparedStatement.setString(2, property.getDescription());
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            Property result = null;
+            if (resultSet.next()) {
+                result = new Property();
+                result.setId(resultSet.getInt("id"));
+                result.setName(property.getName());
+                result.setDescription(property.getDescription());
+            }
+            resultSet.close();
+            preparedStatement.close();
+            return Optional.ofNullable(result);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public Property findByName(String name) {
         final String query = "SELECT id, description FROM properties WHERE name = ? LIMIT 1";
@@ -129,7 +156,7 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
 
     @Override
     public Property save(Property property, boolean commit) {
-        Property result = findByName(property.getName());
+        Optional<Property> findResult = find(property);
         if (property.getId() > 0) {
             Optional<Property> propertyFound = findById(property.getId());
             if (propertyFound.isPresent()) {
