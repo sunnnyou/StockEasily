@@ -150,7 +150,7 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
 
     @Override
     public Property save(Property property) {
-        return save(property, false);
+        return save(property, true);
     }
 
     @Override
