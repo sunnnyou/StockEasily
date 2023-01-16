@@ -1,5 +1,5 @@
 export const enum ButtonType {
-    Button,
-    Submit,
-    Reset,
+    Button = 'button',
+    Submit = 'submit',
+    Reset = 'reset',
 }

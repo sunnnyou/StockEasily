@@ -1,9 +1,16 @@
-import { derived, writable } from 'svelte/store';
+import {derived, writable} from 'svelte/store';
 import translations from './translations';
 
 export const locale = writable("en");
 export const locales = Object.keys(translations);
 
+/**
+ * Returns the translation found by current locale and key with parameters added
+ * @param {string} locale the locale selected
+ * @param {string} key the key to search for
+ * @param {Object} vars the parameters to add
+ * @returns {string} the final translation
+ */
 function translate(locale, key, vars) {
     // Let's throw some errors if we're trying to use keys/locales that don't exist.
     // We could improve this by using Typescript and/or fallback values.
@@ -24,6 +31,13 @@ function translate(locale, key, vars) {
     return text;
 }
 
-export const t = derived(locale, ($locale) => (key, vars = {}) =>
-    translate($locale, key, vars)
+export const t = derived(locale,
+    ($locale) =>
+        /**
+         * Returns the translation found by current locale and key with parameters added
+         * @param {string} key the key to search for
+         * @param {Object} vars the parameters to add
+         * @returns {string} the final translation
+         */
+            (key, vars = {}) => translate($locale, key, vars)
 );

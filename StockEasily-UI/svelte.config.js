@@ -3,22 +3,37 @@ import preprocess from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	// Consult https://github.com/sveltejs/svelte-preprocess
-	// for more information about preprocessors
-	preprocess: [
-		preprocess({
-			postcss: true,
-		}),
-	],
+    env: {
+        development: {
+            dotenv: '.env',
+        },
+        staging: {
+            dotenv: '.env',
+        },
+        production: {
+            dotenv: '.env',
+        },
+    },
 
-	kit: {
-		adapter: adapter(),
-		alias: {
-			$components: 'src/components',
-			$common: 'src/common',
-			$i18n: 'src/i18n',
-		},
-	}
+    // Consult https://github.com/sveltejs/svelte-preprocess
+    // for more information about preprocessors
+    preprocess: [
+        preprocess({
+            postcss: true,
+        }),
+    ],
+
+    kit: {
+        adapter: adapter(),
+        alias: {
+            $components: 'src/components',
+            $common: 'src/common',
+            $dto: 'src/dto',
+            $i18n: 'src/i18n',
+            $services: 'src/services',
+            $validation: 'src/validation',
+        },
+    }
 };
 
 export default config;

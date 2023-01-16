@@ -26,13 +26,55 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
     }
 
     @Override
+    public boolean deleteAll(Iterable<Category> entities) {
+        boolean result = true;
+        for (Category entity : entities) {
+            if (delete(entity)) {
+                continue;
+            }
+            LOGGER.warn("Could not delete orphaned category with id {}", entity.getId());
+            result = false;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean delete(Category entity) {
+        return deleteById(entity.getId());
+    }
+
+    @Override
+    public boolean deleteById(Long id) {
+        PreparedStatement preparedStatement = null;
+        final String query = "DELETE FROM categories WHERE id = ? LIMIT 1";
+
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, id);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+            if (preparedStatement.executeUpdate() == 0) {
+                LOGGER.error("Could not delete categories record with id {}", id);
+                return false;
+            }
+            LOGGER.debug("Deleted categories record with id {}", id);
+            this.connection.commit(CommittedSqlCommand.DELETE);
+            return true;
+
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public Iterable<Category> findAllById(Iterable<Long> longs) {
         return null;
     }
 
     @Override
     public Optional<Category> findById(Long aLong) {
-        return Optional.empty();
+        return Optional.ofNullable(selectId(aLong));
     }
 
     @Override
@@ -69,7 +111,7 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
 
     @Override
     public Category save(Category category) {
-        return save(category, false);
+        return save(category, true);
     }
 
     @Override
@@ -93,18 +135,47 @@ public class CategoryRepository implements HumaneRepository<Category, Long> {
 
             LogUtil.traceSqlStatement(preparedStatement, LOGGER);
 
-            if (preparedStatement.executeUpdate() == 1) {
-                ResultSet resultSet = preparedStatement.getGeneratedKeys();
-                if (resultSet.next()) {
-                    if (commit) {
-                        this.connection.commit(CommittedSqlCommand.INSERT);
-                    }
-                    category.setId(resultSet.getLong("insert_id"));
-                    LogUtil.traceFetchId(Category.class, category.getId(), LOGGER);
-                    return category;
+            if (preparedStatement.executeUpdate() != 1) {
+                connection.rollback();
+                return null;
+            }
+
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                if (commit) {
+                    this.connection.commit(CommittedSqlCommand.INSERT);
                 }
+                category.setId(resultSet.getLong("insert_id"));
+                LogUtil.traceFetchId(Category.class, category.getId(), LOGGER);
+                return category;
             }
             return null;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Category selectId(long id) {
+        PreparedStatement preparedStatement = null;
+        final String query = "SELECT name FROM categories WHERE id = ? LIMIT 1";
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, id);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            Category result = null;
+            if (resultSet.next()) {
+                result = new Category();
+                result.setId(id);
+                result.setName(resultSet.getString("name"));
+            } else {
+                LOGGER.debug("Could not find category with id {}", id);
+            }
+            return result;
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);

@@ -1,13 +1,14 @@
 <script lang="ts">
     import {faInbox, faServer, faTasks, faUserPlus, faUsers, faWallet} from '@fortawesome/free-solid-svg-icons';
 
+    import type {MetricCardType} from '$components/template/card/metric-card-type';
+
     import MetricCardBoard from '$components/template/card/MetricCardBoard.svelte';
     import TableCard from '$components/template/card/TableCard.svelte';
     import TemplateCard from '$components/template/card/TemplateCard.svelte';
     import PageContent from '$components/common/PageContent.svelte';
     import A from '$components/html/a/A.svelte';
     import HorizontalRuler from '$components/html/HorizontalRuler.svelte';
-    import type {MetricCardType} from '../components/template/card/metric-card-type';
 
     const metricCards: MetricCardType[] = [
         {color: 'green', icon: faWallet, title: 'Total Revenue', value: '$3249'},

@@ -47,4 +47,12 @@ public class PropertyResponseDto {
         this.name = name;
     }
 
+    public Property toModel() {
+        Property result = new Property();
+        result.setId(getId());
+        result.setName(getName());
+        result.setDescription(getDescription());
+        return result;
+    }
+
 }

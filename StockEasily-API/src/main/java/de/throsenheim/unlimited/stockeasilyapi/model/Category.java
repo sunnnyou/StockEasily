@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 
 public class Category {
 
-    private long id;
+    private long id = 0;
 
     @NotEmpty(message = "Category name must not be null or empty")
     @Size(min = 1, max = 30, message = "Category name must be between 1 and 30 characters")
@@ -37,4 +37,14 @@ public class Category {
         this.name = (name != null ? name.trim() : null);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Property other)) {
+            return false;
+        }
+        return this.getName().equals(other.getName());
+    }
 }

@@ -28,6 +28,21 @@ public class UserArticleRepository implements HumaneRepository<UserArticle, Long
     }
 
     @Override
+    public boolean deleteAll(Iterable<UserArticle> entities) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(UserArticle entity) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteById(Long aLong) {
+        return false;
+    }
+
+    @Override
     public Iterable<UserArticle> findAllById(Iterable<Long> longs) {
         return null;
     }

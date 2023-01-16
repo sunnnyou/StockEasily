@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Property {
 
-    private long id;
+    private long id = 0;
 
     @NotNull(message = "Property name is mandatory")
     @Size(min = 1, max = 30, message = "Property name must be between 1 and 30 characters")
@@ -29,6 +29,9 @@ public class Property {
 
     public static List<Property> getProperties(List<PropertyRequestDto> propertyRequests) {
         List<Property> result = new LinkedList<>();
+        if (propertyRequests == null) {
+            return result;
+        }
         for (PropertyRequestDto propertyRequest : propertyRequests) {
             result.add(new Property(propertyRequest));
         }
@@ -59,4 +62,15 @@ public class Property {
         this.description = (description != null ? description.trim() : null);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Property other)) {
+            return false;
+        }
+        return this.getName().equals(other.getName())
+                && this.getDescription().equals(other.getDescription());
+    }
 }

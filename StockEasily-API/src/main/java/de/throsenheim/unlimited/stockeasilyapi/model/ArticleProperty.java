@@ -23,6 +23,17 @@ public class ArticleProperty {
         this.propertyId = propertyId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ArticleProperty that = (ArticleProperty) o;
+        return articleId == that.articleId && propertyId == that.propertyId;
+    }
 
     @Override
     public String toString() {

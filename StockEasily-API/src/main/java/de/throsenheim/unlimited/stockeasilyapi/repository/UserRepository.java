@@ -30,6 +30,21 @@ public class UserRepository implements HumaneRepository<User, Long> {
     }
 
     @Override
+    public boolean deleteAll(Iterable<User> entities) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(User entity) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteById(Long aLong) {
+        return false;
+    }
+
+    @Override
     public Iterable<User> findAllById(Iterable<Long> longs) {
         return null;
     }
