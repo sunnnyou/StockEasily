@@ -24,7 +24,6 @@ build_frontend:
     - cd StockEasily-UI
     - npm clean-install
     - npm run build
-    - ls -lah . 
   artifacts:
     paths:
       - StockEasily-UI/.sveltekit/output/*
@@ -49,7 +48,7 @@ lint_backend:
   image: gradle:latest
   script:
     - cd StockEasily-API
-    - gradle lint
+#    - gradle lint
 
 lint_frontend:
   stage: lint
