@@ -37,4 +37,14 @@ public class Category {
         this.name = (name != null ? name.trim() : null);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Property other)) {
+            return false;
+        }
+        return this.getName().equals(other.getName());
+    }
 }

@@ -62,4 +62,15 @@ public class Property {
         this.description = (description != null ? description.trim() : null);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Property other)) {
+            return false;
+        }
+        return this.getName().equals(other.getName())
+                && this.getDescription().equals(other.getDescription());
+    }
 }

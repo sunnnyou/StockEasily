@@ -13,11 +13,11 @@ public interface HumaneRepository<T, ID> extends Repository<T, ID> {
 
 //    void deleteAll();
 
-//    void deleteAll(Iterable<T> entities);
+    boolean deleteAll(Iterable<T> entities);
 
-//    void delete(T entity);
+    boolean delete(T entity);
 
-//    void deleteById(ID id);
+    boolean deleteById(ID id);
 
 //    boolean existsById(ID id);
 

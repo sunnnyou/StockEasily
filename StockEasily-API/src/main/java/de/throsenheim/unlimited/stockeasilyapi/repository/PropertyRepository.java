@@ -3,6 +3,7 @@ package de.throsenheim.unlimited.stockeasilyapi.repository;
 import de.throsenheim.unlimited.stockeasilyapi.abstraction.SqlConnection;
 import de.throsenheim.unlimited.stockeasilyapi.common.logging.LogUtil;
 import de.throsenheim.unlimited.stockeasilyapi.common.logging.CommittedSqlCommand;
+import de.throsenheim.unlimited.stockeasilyapi.exception.NotImplementedException;
 import de.throsenheim.unlimited.stockeasilyapi.factory.DatabaseConnectionFactory;
 import de.throsenheim.unlimited.stockeasilyapi.model.Property;
 import org.slf4j.Logger;
@@ -25,6 +26,21 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
     @Autowired
     public PropertyRepository(DatabaseConnectionFactory databaseConnectionFactory) {
         this.connection = databaseConnectionFactory.getConnection(false, PropertyRepository.class, PropertyRepository.class, LOGGER);
+    }
+
+    @Override
+    public boolean deleteAll(Iterable<Property> entities) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public boolean delete(Property entity) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public boolean deleteById(Long id) {
+        throw new NotImplementedException();
     }
 
     @Override

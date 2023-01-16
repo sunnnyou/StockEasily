@@ -1,6 +1,7 @@
 package de.throsenheim.unlimited.stockeasilyapi.repository;
 
 import de.throsenheim.unlimited.stockeasilyapi.abstraction.SqlConnection;
+import de.throsenheim.unlimited.stockeasilyapi.common.collections.ListUtil;
 import de.throsenheim.unlimited.stockeasilyapi.common.logging.CommittedSqlCommand;
 import de.throsenheim.unlimited.stockeasilyapi.common.logging.LogUtil;
 import de.throsenheim.unlimited.stockeasilyapi.exception.NotImplementedException;
@@ -12,6 +13,7 @@ import de.throsenheim.unlimited.stockeasilyapi.model.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -42,6 +44,21 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         this.propertyRepository = propertyRepository;
         this.categoryRepository = categoryRepository;
         this.articlePropertyRepository = articlePropertyRepository;
+    }
+
+    @Override
+    public boolean deleteAll(Iterable<Article> entities) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public boolean delete(Article entity) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public boolean deleteById(Long id) {
+        throw new NotImplementedException();
     }
 
     @Override
@@ -130,21 +147,55 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         }
     }
 
+    @Nullable
     @Override
     public Article save(Article article, boolean commit) {
         if (article.getId() > 0) {
             // Update existing
 
-            final Category existingCategory = article.getCategory();
-            final Category resultCategory = categoryRepository.save(existingCategory);
+            // Get previous article state for comparing
+            final Optional<Article> articleFoundResult = findById(article.getId());
+            if (articleFoundResult.isEmpty()) {
+                // TODO error handling
+                return null;
+            }
+            final Article articleFound = articleFoundResult.get();
+
+            // Save Category if new
+            final Category currentCategory = articleFound.getCategory();
+            final Category resultCategory = categoryRepository.save(article.getCategory());
+            if (resultCategory == null) {
+                // TODO error handling
+                return null;
+            }
             article.setCategory(resultCategory);
 
-            final List<Property> existingProperties = article.getProperties();
-            final List<Property> resultProperties = (List<Property>) propertyRepository.saveAll(existingProperties);
-            article.setProperties(resultProperties);
+            // Remove old Category if orphaned
+            if (!currentCategory.equals(resultCategory) && !existsWithCategory(currentCategory)) {
+                categoryRepository.delete(currentCategory);
+                LOGGER.debug("Deleted orphaned category with id {}", currentCategory.getId());
+            }
 
-            List<ArticleProperty> articlePropertyRelations = getArticlePropertyRelations(article);
-            articlePropertyRepository.saveAll(articlePropertyRelations);
+            // Save properties if any new (added or "edited")
+//            final List<Property> currentProperties = articleFound.getProperties();
+//            final List<Property> requestProperties = article.getProperties();
+
+//            final List<Property> newProperties = ListUtil.getNewItems(requestProperties, currentProperties);
+//            final List<Property> resultProperties = (List<Property>) propertyRepository.saveAll(newProperties);
+//            article.setProperties(resultProperties);
+
+            // Save ArticleProperty relations if any new
+//            final List<ArticleProperty> currentRelations = getArticlePropertyRelations(articleFound);
+//            final List<ArticleProperty> requestRelations = getArticlePropertyRelations(article);
+
+//            final List<ArticleProperty> newRelations = ListUtil.getNewItems(requestRelations, currentRelations);
+//            final List<ArticleProperty> resultRelations = (List<ArticleProperty>) articlePropertyRepository.saveAll(requestRelations);
+
+            // Remove unwanted ArticleProperty relations
+
+            // Remove old properties if any orphaned
+//            final List<Property> unusedProperties = ListUtil.getUnusedItems(requestProperties, currentProperties);
+
 
             return update(article, commit);
         }
@@ -243,6 +294,30 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             }
             LOGGER.debug(EMPTY_ARTICLE_LOG);
             return null;
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean existsWithCategory(Category category) {
+        PreparedStatement preparedStatement = null;
+        final String query = "SELECT EXISTS(SELECT * FROM articles WHERE category_id = ? LIMIT 1)";
+//        final String query = "SELECT COUNT(articles.id) as count FROM articles WHERE category_id = ? LIMIT 1";
+
+        final long categoryId = category.getId();
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, categoryId);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("count") == 0;
+            }
+            LOGGER.error("An error occurred while getting count of articles with category_id {}", categoryId);
+            return false;
         } catch (SQLException e) {
             LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
             throw new RuntimeException(e);
