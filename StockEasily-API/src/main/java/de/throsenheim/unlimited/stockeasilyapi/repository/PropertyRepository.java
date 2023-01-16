@@ -30,17 +30,44 @@ public class PropertyRepository implements HumaneRepository<Property, Long> {
 
     @Override
     public boolean deleteAll(Iterable<Property> entities) {
-        throw new NotImplementedException();
+        boolean result = true;
+        for (Property entity : entities) {
+            if (delete(entity)) {
+                continue;
+            }
+            LOGGER.warn("Could not delete orphaned category with id {}", entity.getId());
+            result = false;
+        }
+        return result;
     }
 
     @Override
     public boolean delete(Property entity) {
-        throw new NotImplementedException();
+        return deleteById(entity.getId());
     }
 
     @Override
     public boolean deleteById(Long id) {
-        throw new NotImplementedException();
+        PreparedStatement preparedStatement = null;
+        final String query = "DELETE FROM properties WHERE id = ? LIMIT 1";
+
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, id);
+
+            LogUtil.traceSqlStatement(preparedStatement, LOGGER);
+            if (preparedStatement.executeUpdate() == 0) {
+                LOGGER.error("Could not delete properties record with id {}", id);
+                return false;
+            }
+            LOGGER.debug("Deleted properties record with id {}", id);
+            this.connection.commit(CommittedSqlCommand.DELETE);
+            return true;
+
+        } catch (SQLException e) {
+            LogUtil.errorSqlStatement(preparedStatement, LOGGER, e);
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

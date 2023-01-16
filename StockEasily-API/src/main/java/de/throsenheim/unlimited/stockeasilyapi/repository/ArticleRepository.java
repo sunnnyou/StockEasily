@@ -177,19 +177,23 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             }
 
             // Save properties if any new (added or "edited")
-//            final List<Property> currentProperties = articleFound.getProperties();
-//            final List<Property> requestProperties = article.getProperties();
+            final List<Property> currentProperties = articleFound.getProperties();
+            final List<Property> requestProperties = article.getProperties();
 
-//            final List<Property> newProperties = ListUtil.getNewItems(requestProperties, currentProperties);
-//            final List<Property> resultProperties = (List<Property>) propertyRepository.saveAll(newProperties);
-//            article.setProperties(resultProperties);
+            final List<Property> newProperties = ListUtil.getNewItems(requestProperties, currentProperties);
+            final List<Property> resultProperties = (List<Property>) propertyRepository.saveAll(newProperties);
+            article.setProperties(resultProperties);
+
+            // Remove old properties that are orphaned
+            final List<Property> orphanedProperties = ListUtil.getUnusedItems(requestProperties, currentProperties);
+            propertyRepository.deleteAll(orphanedProperties);
 
             // Save ArticleProperty relations if any new
-//            final List<ArticleProperty> currentRelations = getArticlePropertyRelations(articleFound);
-//            final List<ArticleProperty> requestRelations = getArticlePropertyRelations(article);
+            final List<ArticleProperty> currentRelations = getArticlePropertyRelations(articleFound);
+            final List<ArticleProperty> requestRelations = getArticlePropertyRelations(article);
 
-//            final List<ArticleProperty> newRelations = ListUtil.getNewItems(requestRelations, currentRelations);
-//            final List<ArticleProperty> resultRelations = (List<ArticleProperty>) articlePropertyRepository.saveAll(requestRelations);
+            final List<ArticleProperty> newRelations = ListUtil.getNewItems(requestRelations, currentRelations);
+            final List<ArticleProperty> resultRelations = (List<ArticleProperty>) articlePropertyRepository.saveAll(requestRelations);
 
             // Remove unwanted ArticleProperty relations
 
