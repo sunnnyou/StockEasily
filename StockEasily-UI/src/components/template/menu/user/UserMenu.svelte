@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {faBell, faUser} from '@fortawesome/free-solid-svg-icons';
+    import {faBell, faSignOut, faUser,} from '@fortawesome/free-solid-svg-icons';
     import type {MenuButton} from '$common/menu-button';
 
     import UserButton from './UserButton.svelte';
@@ -20,9 +20,9 @@
             className: 'border-t mx-2 border-gray-400',
         },
         {
-            href: '/logout',
-            icon: faBell,
-            i18n: 'menu.user.notifications',
+            href: '/login',
+            icon: faSignOut,
+            i18n: 'menu.user.logout',
         },
     ];
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { ActionData} from '../../../.svelte-kit/types/src/routes'
+    import type { ActionData} from './$types'
     import {applyAction, enhance} from "$app/forms";
     import {invalidateAll} from "$app/navigation";
     export let form: ActionData
