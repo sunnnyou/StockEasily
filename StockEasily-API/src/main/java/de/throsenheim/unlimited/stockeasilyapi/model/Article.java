@@ -96,6 +96,7 @@ public class Article {
 
     public void setImage(String encodedImage) {
         if (encodedImage == null) {
+            setImage((Blob) null);
             return;
         }
         encodedImage = encodedImage.substring(encodedImage.indexOf(',') + 1);

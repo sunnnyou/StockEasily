@@ -206,6 +206,7 @@
                                                   name: 'article-image',
                                                   text: $t('general.image')
                                               }}
+                                              onDelete={() => $validatableArticleStore.image.value = undefined}
                                               onFileChange={files => $validatableArticleStore.image = onImageSelected(files, $validatableArticleStore, $t)}
                                               previewImageOptions={{
                                                 alt: $selectedFileName,

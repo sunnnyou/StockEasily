@@ -2,7 +2,7 @@
     import {AcceptType} from '$components/common/input/file/accept-type';
     import {containsMinMaxStep} from '$components/html/input/input-type';
     import {containsPlaceholder} from '$components/html/input/input-type';
-    import {faFileArrowUp} from '@fortawesome/free-solid-svg-icons';
+    import {faFileArrowUp, faTrash} from '@fortawesome/free-solid-svg-icons';
     import {InputType} from './input-type';
     import {PreviewImageOptions} from '../../common/input/preview-image-options';
     import {selectedFiles} from '$common/image-input-utils';
@@ -21,7 +21,9 @@
     export let max = '';
     export let maxLength: string | undefined = undefined;
     export let name = '';
-    export let onFileChange: ((files: File[]) => void) = () => {};
+    export let onDelete: Function | undefined = undefined;
+    export let onFileChange: ((files: File[]) => void) = () => {
+    };
     export let placeholder = '';
     export let previewImageOptions: PreviewImageOptions = {alt: '', show: false, src: ''};
     export let step = 1;
@@ -38,6 +40,13 @@
         selectedFiles.set(FILES);
         if (onFileChange) {
             onFileChange(FILES);
+        }
+    }
+
+    function onDeleteImage(){
+        if (onDelete) {
+            console.log('bla')
+            onDelete();
         }
     }
 
@@ -126,8 +135,20 @@
             <FaIcon className="inset-0 w-14 h-14 flex justify-center items-center" icon={faFileArrowUp}
                     scale="3"></FaIcon>
         </div>
-        <div class="text-center">{$t($selectedFiles?.length > 0 ? 'general.replaceImage' : 'general.chooseImage')}</div>
+        <div class="text-center">{$t($selectedFiles?.length > 0 || previewImageOptions?.src?.length > 0 ? 'general.replaceImage' : 'general.chooseImage')}</div>
     </div>
+    {#if $selectedFiles?.length > 0 || previewImageOptions?.src?.length > 0}
+        <div class="mt-5 w-full cursor-pointer"
+             on:click={() => onDeleteImage()}
+             on:keyup
+        >
+            <div class="w-14 h-14 mx-auto">
+                <FaIcon className="inset-0 w-14 h-14 flex justify-center items-center" icon={faTrash}
+                        scale="3"></FaIcon>
+            </div>
+            <div class="text-center">{$t('general.deleteImage')}</div>
+        </div>
+    {/if}
 {:else}
     <input class={className}
            class:error={error?.length > 0 ? 'border-red-500': ''}

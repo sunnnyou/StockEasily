@@ -13,6 +13,7 @@
     export let error = '';
     export let labelOptions: LabelOptions | undefined;
     export let name = '';
+    export let onDelete: Function | undefined = undefined;
     export let onFileChange: ((files: File[]) => void) = () => {};
     export let parentClass: string | undefined = undefined;
     export let previewImageOptions: PreviewImageOptions = {alt: '', show: false, src: ''};
@@ -25,6 +26,7 @@
               {error}
               {labelOptions}
               {name}
+              {onDelete}
               {onFileChange}
               {parentClass}
               {previewImageOptions}

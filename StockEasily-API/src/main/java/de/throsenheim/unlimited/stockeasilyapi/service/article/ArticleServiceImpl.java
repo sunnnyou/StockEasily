@@ -162,11 +162,9 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         final String image = request.getImage();
-        if (image != null) {
-            final String previousValue = updatedArticle.getImage() == null ? "NULL" : "";
-            updatedArticle.setImage(image);
-            LOGGER.debug("Updating article with id, set image {} -> {}", previousValue, "NOT NULL");
-        }
+        final String previousValue = updatedArticle.getImage() == null ? "NULL" : "";
+        updatedArticle.setImage(image);
+        LOGGER.debug("Updating article with id, set image {} -> {}", previousValue, "NOT NULL");
 
         Article articleUpdated = this.articleRepository.save(updatedArticle);
         if (articleUpdated == null) {

@@ -18,6 +18,7 @@
     export let maxLength = '';
     export let min = '';
     export let name = '';
+    export let onDelete: Function | undefined = undefined;
     export let onFileChange: ((files: File[]) => void) = () => {};
     export let parentClass = '';
     export let placeholder = '';
@@ -88,6 +89,7 @@
                {min}
                {maxLength}
                {name}
+               {onDelete}
                {onFileChange}
                {placeholder}
                {previewImageOptions}

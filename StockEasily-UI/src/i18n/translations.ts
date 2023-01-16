@@ -10,6 +10,7 @@ export default {
         'general.category.placeholder': 'e.g. Cables, Preserving jars, …',
         'general.description': 'Description',
         'general.chooseImage': 'Choose image',
+        'general.deleteImage': 'Delete image',
         'general.replaceImage': 'Replace image',
         'general.edit': 'Edit',
         'general.delete': 'Delete',
