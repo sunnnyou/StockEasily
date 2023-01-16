@@ -54,6 +54,7 @@ lint_frontend:
   stage: lint
   script:
     - cd StockEasily-UI
+    - npm clean-install
     - npm run lint
 
 
