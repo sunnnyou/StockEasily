@@ -24,6 +24,7 @@ build_frontend:
     - cd StockEasily-UI
     - npm clean-install
     - npm run build
+    - ls -lah . 
   artifacts:
     paths:
       - StockEasily-UI/.sveltekit/output/*
