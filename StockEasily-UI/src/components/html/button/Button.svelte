@@ -11,7 +11,7 @@
     export let value = '';
 
     function getButtonClass() {
-        return priority === ButtonPriority.Transparent ? '' : 'btn';
+        return priority === ButtonPriority.Transparent ? '' : 'btn h-10 px-5 ';
     }
 
     function getPriorityClass() {
@@ -20,11 +20,13 @@
                 return 'btn-blue';
             case ButtonPriority.Secondary:
                 return 'btn-light-gray';
+            case ButtonPriority.Dangerous:
+                return 'text-red-100 transition-colors duration-150 bg-red-700 rounded-lg focus:shadow-outline hover:bg-red-800';
             case ButtonPriority.TransparentHover:
                 return 'btn-hover';
             case ButtonPriority.Transparent:
             default:
-                '';
+                return '';
         }
     }
 </script>

@@ -1,22 +1,30 @@
 package de.throsenheim.unlimited.stockeasilyapi.service.article;
 
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.CategoryRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.PropertyRequestDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.UpdateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
-import de.throsenheim.unlimited.stockeasilyapi.dto.response.SearchArticleResponse;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.GetArticleResponseDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.UpdateArticleResponseDto;
 import de.throsenheim.unlimited.stockeasilyapi.model.Article;
 import de.throsenheim.unlimited.stockeasilyapi.repository.ArticleRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class ArticleServiceImpl implements ArticleService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleServiceImpl.class);
 
     private final ArticleRepository articleRepository;
 
@@ -50,33 +58,43 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Optional<Article> search(long id) {
-        return articleRepository.findById(id);
+    @Nullable
+    public GetArticleResponseDto search(long id) {
+        Optional<Article> result = articleRepository.findById(id);
+        if (result != null && result.isPresent()) {
+            return new GetArticleResponseDto(result.get());
+        }
+        return null;
     }
 
     @Override
-    public List<Article> searchAllByName(String name) {
-        return articleRepository.findAllByName(name);
+    public List<GetArticleResponseDto> searchAllByName(String name) {
+        List<Article> articles = articleRepository.findAllByName(name);
+        List<GetArticleResponseDto> result = new ArrayList<>(articles.size());
+        for (Article article : articles) {
+            result.add(new GetArticleResponseDto(article));
+        }
+        return result;
     }
 
     @Override
-    public List<SearchArticleResponse> searchAll() {
+    public List<GetArticleResponseDto> searchAll() {
         final List<Article> articleList = articleRepository.findAll();
-        final List<SearchArticleResponse> articleResponseList = new ArrayList<>();
-        for(Article article : articleList) {
-            articleResponseList.add(new SearchArticleResponse(article));
+        final List<GetArticleResponseDto> result = new ArrayList<>();
+        for (Article article : articleList) {
+            result.add(new GetArticleResponseDto(article));
         }
-        return articleResponseList;
+        return result;
     }
 
     @Override
-    public List<SearchArticleResponse> searchAllPage(int limit, int page) {
+    public List<GetArticleResponseDto> searchAllPage(int limit, int page) {
         final List<Article> articleList = articleRepository.findAllPage(limit, page);
-        final List<SearchArticleResponse> articleResponseList = new ArrayList<>();
-        for(Article article : articleList) {
-            articleResponseList.add(new SearchArticleResponse(article));
+        final List<GetArticleResponseDto> result = new ArrayList<>();
+        for (Article article : articleList) {
+            result.add(new GetArticleResponseDto(article));
         }
-        return articleResponseList;
+        return result;
     }
 
     @Override
@@ -90,11 +108,21 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<SearchArticleResponse> searchAllByQuery(String query, int limit, int page) {
+    @Nullable
+    public Long getParsedIdOrNull(String id) {
+        try {
+            return Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<GetArticleResponseDto> searchAllByQuery(String query, int limit, int page) {
         final List<Article> articleList = articleRepository.findAllByQuery(query, limit, page);
-        final List<SearchArticleResponse> articleResponseList = new ArrayList<>();
-        for(Article article : articleList) {
-            articleResponseList.add(new SearchArticleResponse(article));
+        final List<GetArticleResponseDto> articleResponseList = new ArrayList<>();
+        for (Article article : articleList) {
+            articleResponseList.add(new GetArticleResponseDto(article));
         }
         return articleResponseList;
     }
@@ -107,5 +135,43 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Optional<Integer> deleteArticle(long articleId) {
         return Optional.of(articleRepository.delete(articleId));
+    }
+
+    @Override
+    public UpdateArticleResponseDto update(UpdateArticleRequestDto request, @NonNull GetArticleResponseDto existingArticle) {
+        Article updatedArticle = existingArticle.toModel();
+
+        final CategoryRequestDto category = request.getCategory();
+        if (category != null) {
+            updatedArticle.setCategory(category.toModel());
+        }
+
+        final List<PropertyRequestDto> properties = request.getProperties();
+        if (properties != null && properties.size() > 0) {
+            updatedArticle.setProperties(properties.stream().map(PropertyRequestDto::toModel).collect(Collectors.toList()));
+        }
+
+        final int quantity = request.getQuantity();
+        if (quantity >= 0) {
+            updatedArticle.setQuantity(quantity);
+        }
+
+        final String name = request.getName();
+        if (name != null) {
+            updatedArticle.setName(name);
+        }
+
+        final String image = request.getImage();
+        final String previousValue = updatedArticle.getImage() == null ? "NULL" : "";
+        updatedArticle.setImage(image);
+        LOGGER.debug("Updating article with id, set image {} -> {}", previousValue, "NOT NULL");
+
+        Article articleUpdated = this.articleRepository.save(updatedArticle);
+        if (articleUpdated == null) {
+            LOGGER.error("Could not update article with id {}", updatedArticle.getId());
+            return null;
+        }
+        return new UpdateArticleResponseDto(articleUpdated);
+
     }
 }

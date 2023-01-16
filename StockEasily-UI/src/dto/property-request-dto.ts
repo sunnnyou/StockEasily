@@ -1,11 +1,5 @@
-import type {Validatable} from '../common/validatable';
-
-export type ValidatableProperty = Validatable<PropertyRequestDto> & {
-    errors: {
-        name: string;
-        description: string;
-    };
-};
+import type {Validatable} from '$validation/validatable';
+import type {ValidatableProperty} from '../validation/validatable-property';
 
 export const PROPERTY_LIMITS = {
     MAX_LENGTH: {

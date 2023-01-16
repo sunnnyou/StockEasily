@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {faChartArea, faHome, faList, faPlus, faWallet} from '@fortawesome/free-solid-svg-icons';
+    import {faChartArea, faHome, faList, faPlus, faQrcode, faWallet} from '@fortawesome/free-solid-svg-icons';
     import MainMenuButton from './MainMenuButton.svelte';
 
     export let buttons = [
@@ -19,9 +19,9 @@
             icon: faPlus,
         },
         {
-            href: '/analytics',
-            i18n: 'menu.analytics',
-            icon: faChartArea,
+            href: '/articles/qrcode',
+            i18n: 'qrcode.title',
+            icon: faQrcode,
         },
         {
             href: '/payments',
