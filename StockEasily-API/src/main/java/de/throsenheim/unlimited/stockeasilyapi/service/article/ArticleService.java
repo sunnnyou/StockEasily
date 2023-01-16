@@ -1,11 +1,13 @@
 package de.throsenheim.unlimited.stockeasilyapi.service.article;
 
 import de.throsenheim.unlimited.stockeasilyapi.dto.request.CreateArticleRequestDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.request.UpdateArticleRequestDto;
 import de.throsenheim.unlimited.stockeasilyapi.dto.response.CreateArticleResponseDto;
-import de.throsenheim.unlimited.stockeasilyapi.dto.response.SearchArticleResponse;
-import de.throsenheim.unlimited.stockeasilyapi.model.Article;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.GetArticleResponseDto;
+import de.throsenheim.unlimited.stockeasilyapi.dto.response.UpdateArticleResponseDto;
 import org.springframework.validation.FieldError;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,21 +16,25 @@ public interface ArticleService {
 
     FieldError getImageFieldError();
 
-    Optional<Article> search(long id);
+    GetArticleResponseDto search(long id);
 
-    List<Article> searchAllByName(String name);
+    List<GetArticleResponseDto> searchAllByName(String name);
 
-    List<SearchArticleResponse> searchAll();
+    List<GetArticleResponseDto> searchAll();
 
-    List<SearchArticleResponse> searchAllPage(int limit, int page);
+    List<GetArticleResponseDto> searchAllPage(int limit, int page);
 
     boolean validateImage(byte[] data);
 
     int getArticleRepositorySize();
 
-    List<SearchArticleResponse> searchAllByQuery(String query, int limit, int page);
+    Long getParsedIdOrNull(String id);
+
+    List<GetArticleResponseDto> searchAllByQuery(String query, int limit, int page);
 
     int getArticleRepositorySizeQuery(String query);
 
     Optional<Integer> deleteArticle(long articleId);
+
+    UpdateArticleResponseDto update(UpdateArticleRequestDto request, @NotNull GetArticleResponseDto existingArticle);
 }

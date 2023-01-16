@@ -12,13 +12,14 @@
     export let allowMultiple = true;
     export let disabled = false;
     export let error = '';
-    export let files: File[] = [];
     export let className = '';
     export let labelOptions: LabelOptions | undefined;
     export let max = '';
     export let maxLength = '';
     export let min = '';
     export let name = '';
+    export let onDelete: Function | undefined = undefined;
+    export let onFileChange: ((files: File[]) => void) = () => {};
     export let parentClass = '';
     export let placeholder = '';
     export let previewImageOptions: PreviewImageOptions = {alt: '', show: false, src: ''};
@@ -88,13 +89,14 @@
                {min}
                {maxLength}
                {name}
+               {onDelete}
+               {onFileChange}
                {placeholder}
                {previewImageOptions}
                {step}
                {title}
                {type}
                bind:value
-               bind:files
                on:change
                on:input
         />

@@ -1,5 +1,6 @@
 package de.throsenheim.unlimited.stockeasilyapi.dto.request;
 
+import de.throsenheim.unlimited.stockeasilyapi.model.Property;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotNull;
@@ -30,6 +31,13 @@ public class PropertyRequestDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Property toModel() {
+        Property result = new Property();
+        result.setName(getName());
+        result.setDescription(getDescription());
+        return result;
     }
 
 }

@@ -1,26 +1,29 @@
 <script lang="ts">
-    import {isPropertyRequestValid} from '../../../dto/property-request-dto';
-    import type {PropertyRequestDto, ValidatableProperty} from '../../../dto/property-request-dto';
+    import type {PropertyRequestDto} from '$dto/property-request-dto';
+    import type {ValidatableProperty} from '$validation/validatable-property';
 
     import {ButtonPriority} from '$components/html/button/button-priority';
-    import {faCheck, faPen, faPlus} from '@fortawesome/free-solid-svg-icons';
-    import {onMount} from 'svelte';
-    import {PROPERTY_LIMITS} from "../../../dto/property-request-dto.js";
     import {LabelOptions} from './label-options';
+
+    import {faCheck, faPen, faPlus, faTrash} from '@fortawesome/free-solid-svg-icons';
+    import {isPropertyRequestValid} from '$dto/property-request-dto';
+    import {onMount} from 'svelte';
+    import {PROPERTY_LIMITS} from '$dto/property-request-dto';
     import {t} from '$i18n/i18n';
 
     import Button from '$components/html/button/Button.svelte';
     import FaIcon from '$components/common/FaIcon.svelte';
     import InputFlexContainer from '$components/common/input/InputFlexContainer.svelte';
-    import Label from '$components/html/input/Label.svelte';
     import LabeledInput from '$components/common/input/LabeledInput.svelte';
+    import PropertiesLabel from '$components/common/article/PropertiesLabel.svelte';
 
-    export let addMarginTop: boolean = true;
+    export let addMarginTop = true;
     export let edit = false;
     export let errors = {name: '', description: ''};
     export let forceEdit = false;
     export let leftLabelOptions: LabelOptions | undefined;
     export let leftPlaceholder = '';
+    export let onDelete: Function | undefined = undefined;
     export let onSave: Function | undefined = undefined;
     export let parentClass: string | undefined = undefined;
     export let parentId: string | undefined;
@@ -29,9 +32,10 @@
     export let rightLabelOptions: LabelOptions | undefined;
     export let rightPlaceholder = '';
 
-    let internalProperty: PropertyRequestDto = property?.value ? property?.value : {description: '', name: ''};
+    let internalProperty: PropertyRequestDto | undefined;
 
     onMount(() => {
+        internalProperty = property?.value?.name ? property.value : {description: '', name: ''};
         setHideProp();
     });
 
@@ -48,9 +52,14 @@
         setHideProp();
     }
 
-    function onButtonClick() {
-        if (!property && edit && !isPropertyRequestValid(internalProperty)
-        ) {
+    function onDeleteButtonClick() {
+        if (onDelete) {
+            onDelete();
+        }
+    }
+
+    function onSaveOrEditButtonClick() {
+        if (!property && edit && !isPropertyRequestValid(internalProperty)) {
             return;
         }
 
@@ -70,59 +79,62 @@
 
 <div>
     {#if parentLabelOptions && !parentLabelOptions.hide}
-        <div class="flex flex-col{parentClass ? ' ' + parentClass : ''}">
-            <div class="flex items-end h-10 {addMarginTop ? ' mt-2' : ''}">
-                <Label className={parentLabelOptions.className}
-                       name={parentLabelOptions.name}
-                       bold={parentLabelOptions.isBold}
+        <PropertiesLabel {addMarginTop}
+                         className={parentClass}
+                         labelOptions={parentLabelOptions}
+        />
+    {/if}
+    {#if internalProperty?.name !== undefined }
+        <div class="flex flex-row items-end"
+             id={parentLabelOptions.name}
+        >
+            <div class="w-10/12">
+                <InputFlexContainer
+                        leftClass="w-1/2"
+                        {parentId}
+                        rightClass="w-1/2"
                 >
-                    {#if parentLabelOptions?.text?.length > 0}
-                        {parentLabelOptions.text}
-                    {:else}
-                        {$t('props') + ':'}
-                    {/if}
-                </Label>
+                    <LabeledInput disabled={!edit}
+                                  error={errors?.name}
+                                  labelOptions={leftLabelOptions}
+                                  maxLength={PROPERTY_LIMITS.MAX_LENGTH.NAME}
+                                  placeholder={leftPlaceholder || $t('props.name.placeholder')}
+                                  value={internalProperty.name}
+                                  on:change={event => internalProperty.name = event.target.value.trim()}
+                                  slot="left"
+                    />
+
+                    <LabeledInput disabled={!edit}
+                                  error={errors?.description}
+                                  labelOptions={rightLabelOptions}
+                                  maxLength={PROPERTY_LIMITS.MAX_LENGTH.DESCRIPTION}
+                                  placeholder={rightPlaceholder || $t('props.description.placeholder')}
+                                  value={internalProperty.description}
+                                  on:change={event => internalProperty.description = event.target.value.trim()}
+                                  slot="right"
+                    />
+                </InputFlexContainer>
             </div>
+            <Button className="m-0 w-0.5/12"
+                    priority={ButtonPriority.TransparentHover}
+                    title={forceEdit ? $t('general.add') : (edit ? $t('general.save') : $t('general.edit'))}
+                    on:click={() => onSaveOrEditButtonClick()}
+            >
+                <FaIcon icon={forceEdit ? faPlus : (edit ? faCheck : faPen)}
+                        parentClass="mx-1"
+                />
+            </Button>
+            {#if !forceEdit}
+                <Button className="m-0 w-0.5/12"
+                        priority={ButtonPriority.TransparentHover}
+                        title={$t('general.delete')}
+                        on:click={() => onDeleteButtonClick()}
+                >
+                    <FaIcon icon={faTrash}
+                            parentClass="mx-1"
+                    />
+                </Button>
+            {/if}
         </div>
     {/if}
-    <div class="flex flex-row"
-         id={parentLabelOptions.name}
-    >
-        <div class="w-10/12">
-            <InputFlexContainer
-                                leftClass="w-1/2"
-                                {parentId}
-                                rightClass="w-1/2"
-            >
-                <LabeledInput disabled={!edit}
-                              error={errors?.name}
-                              labelOptions={leftLabelOptions}
-                              maxLength={PROPERTY_LIMITS.MAX_LENGTH.NAME}
-                              placeholder={leftPlaceholder || $t('props.name.placeholder')}
-                              bind:value={internalProperty.name}
-                              on:change={event => internalProperty.name = event.target.value.trim()}
-                              slot="left"
-                />
-
-                <LabeledInput disabled={!edit}
-                              error={errors?.description}
-                              labelOptions={rightLabelOptions}
-                              maxLength={PROPERTY_LIMITS.MAX_LENGTH.DESCRIPTION}
-                              placeholder={rightPlaceholder || $t('props.description.placeholder')}
-                              bind:value={internalProperty.description}
-                              on:change={event => internalProperty.description = event.target.value.trim()}
-                              slot="right"
-                />
-            </InputFlexContainer>
-        </div>
-        <Button className="add-property h-10 w-1.5/12"
-                priority={ButtonPriority.TransparentHover}
-                title={forceEdit ? $t('general.add') : (edit ? $t('general.save') : $t('general.edit'))}
-                on:click={() => onButtonClick()}
-        >
-            <FaIcon icon={forceEdit ? faPlus : (edit ? faCheck : faPen)}
-                    parentClass="mx-5"
-            />
-        </Button>
-    </div>
 </div>

@@ -2,24 +2,28 @@
     import {AcceptType} from '$components/common/input/file/accept-type';
     import {containsMinMaxStep} from '$components/html/input/input-type';
     import {containsPlaceholder} from '$components/html/input/input-type';
-    import {faFileArrowUp} from '@fortawesome/free-solid-svg-icons';
+    import {faFileArrowUp, faTrash} from '@fortawesome/free-solid-svg-icons';
     import {InputType} from './input-type';
     import {PreviewImageOptions} from '../../common/input/preview-image-options';
+    import {selectedFiles} from '$common/image-input-utils';
     import {t} from '$i18n/i18n';
 
     import FaIcon from '$components/common/FaIcon.svelte';
+    import PreviewImage from '$components/common/article/PreviewImage.svelte';
 
     export let accept = AcceptType.Any;
     export let allowMultiple = true;
     export let className = '';
     export let disabled = false;
     export let error = '';
-    export let files: File[] = [];
     export let id = '';
     export let min = '';
     export let max = '';
     export let maxLength: string | undefined = undefined;
     export let name = '';
+    export let onDelete: Function | undefined = undefined;
+    export let onFileChange: ((files: File[]) => void) = () => {
+    };
     export let placeholder = '';
     export let previewImageOptions: PreviewImageOptions = {alt: '', show: false, src: ''};
     export let step = 1;
@@ -27,8 +31,22 @@
     export let type = InputType.Text;
     export let value = '';
 
-    function handleInput(e: any) {
-        files = type.match(/^(number|range)$/) ? +e.target.value : e.target.value;
+    function handleFileChange(event) {
+        const FILES = event.target.files;
+        if (FILES === undefined) {
+            console.warn('Ignoring selected files, event.target.files is undefined');
+            return;
+        }
+        selectedFiles.set(FILES);
+        if (onFileChange) {
+            onFileChange(FILES);
+        }
+    }
+
+    function onDeleteImage(){
+        if (onDelete) {
+            onDelete();
+        }
     }
 
     function typeAction(node) {
@@ -73,12 +91,10 @@
 {:else if type === InputType.File}
     {#if previewImageOptions?.show}
         {#if previewImageOptions.src}
-            <img alt={previewImageOptions.alt || $t('general.previewImage')}
-                 class="mx-auto max-w-sm max-h-80"
-                 src={previewImageOptions.src}
-            >
+            <PreviewImage alt={previewImageOptions.alt || $t('general.previewImage')}
+                          src={previewImageOptions.src}
+            />
         {:else}
-
             <div class="text-center my-20">
                 {$t('general.input.noImageSelected')}
             </div>
@@ -92,11 +108,9 @@
                {name}
                {title}
                {type}
-               {value}
                bind:this={inputRef}
-               on:change
+               on:change={handleFileChange}
                on:keydown
-               on:input={handleInput}
                use:typeAction
         >
     {:else}
@@ -106,11 +120,9 @@
                {name}
                {title}
                {type}
-               {value}
                bind:this={inputRef}
-               on:change
+               on:change={handleFileChange}
                on:keyup
-               on:input={handleInput}
                use:typeAction
         >
     {/if}
@@ -122,8 +134,20 @@
             <FaIcon className="inset-0 w-14 h-14 flex justify-center items-center" icon={faFileArrowUp}
                     scale="3"></FaIcon>
         </div>
-        <div class="text-center">{$t(files?.length > 0 ? 'general.replaceImage' : 'general.chooseImage')}</div>
+        <div class="text-center">{$t($selectedFiles?.length > 0 || previewImageOptions?.src?.length > 0 ? 'general.replaceImage' : 'general.chooseImage')}</div>
     </div>
+    {#if $selectedFiles?.length > 0 || previewImageOptions?.src?.length > 0}
+        <div class="mt-5 w-full cursor-pointer"
+             on:click={() => onDeleteImage()}
+             on:keyup
+        >
+            <div class="w-14 h-14 mx-auto">
+                <FaIcon className="inset-0 w-14 h-14 flex justify-center items-center" icon={faTrash}
+                        scale="3"></FaIcon>
+            </div>
+            <div class="text-center">{$t('general.deleteImage')}</div>
+        </div>
+    {/if}
 {:else}
     <input class={className}
            class:error={error?.length > 0 ? 'border-red-500': ''}

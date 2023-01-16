@@ -10,8 +10,10 @@ export default {
         'general.category.placeholder': 'e.g. Cables, Preserving jars, …',
         'general.description': 'Description',
         'general.chooseImage': 'Choose image',
+        'general.deleteImage': 'Delete image',
         'general.replaceImage': 'Replace image',
         'general.edit': 'Edit',
+        'general.delete': 'Delete',
         'general.error': 'Error',
         'general.guest': 'Guest',
         'general.image': 'Image',
@@ -24,6 +26,7 @@ export default {
         'general.save': 'Save',
         'general.search': 'Search',
         'general.step': 'Step',
+        'general.unset': 'Unset',
 
         // menu
         'menu.analytics': 'Analytics',
@@ -53,6 +56,7 @@ export default {
 
         // articles
         'article': 'Article',
+        'article.edit': 'Edit Article',
         'articles.name': 'Name',
         'articles.id' : 'ID',
         'articles.notFound': 'No articles found.',
@@ -61,6 +65,7 @@ export default {
         'articles.error.backend': 'Error with backend.',
         'articles.error.delete': 'Couldn\'t delete article',
         'articles.confirm.delete': 'Are you sure that you want to delete this article?',
+        'articles.image.deleted': 'The image was deleted',
 
         // categories
         'category': 'Category',
@@ -73,6 +78,7 @@ export default {
         'validation.between': '{{entity}} length must be between {{min}} and {{max}}',
         'validation.max': '{{entity}} maximum is {{max}}',
         'validation.image': 'The selected image is too big. Max. size: {{expected}}',
+        'validation.unknown': 'An unknown error occurred.',
 
         // footer
         'about': 'About',
