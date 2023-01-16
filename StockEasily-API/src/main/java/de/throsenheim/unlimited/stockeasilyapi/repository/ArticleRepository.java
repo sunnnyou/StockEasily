@@ -161,6 +161,7 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             }
             final Article articleFound = articleFoundResult.get();
 
+            // Category
             // Save Category if new
             final Category currentCategory = articleFound.getCategory();
             final Category resultCategory = categoryRepository.save(article.getCategory());
@@ -176,7 +177,8 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
                 LOGGER.debug("Deleted orphaned category with id {}", currentCategory.getId());
             }
 
-            // Save properties if any new (added or "edited")
+            // Property
+            // Save properties if any new (added or replaced old one)
             final List<Property> currentProperties = articleFound.getProperties();
             final List<Property> requestProperties = article.getProperties();
 
