@@ -7,6 +7,7 @@
     import {goto} from '$app/navigation';
     import {getImageResponseMessage, onImageSelected} from '$common/image-input-utils';
     import {imageSelected, selectedFileName, selectedFiles} from '$common/image-input-utils';
+    import {onDeleteProperty} from '$common/property-utils';
     import {onDestroy, onMount} from 'svelte';
     import {onSaveProperty} from '$common/property-utils';
     import {SESSION_INFO} from '../../../common/session-util';
@@ -156,6 +157,10 @@
                                                name: 'prop-inner-parent' + i,
                                            }}
                                            property={property}
+                                           onDelete={() => {
+                                               onDeleteProperty($validatableArticleStore, i)
+                                               $validatableArticleStore = $validatableArticleStore;
+                                           }}
                                            onSave={property => $validatableArticleStore.properties = onSaveProperty($validatableArticleStore, property, i)}
                                            rightLabelOptions={{
                                                className: 'text-gray-600 ml-2',

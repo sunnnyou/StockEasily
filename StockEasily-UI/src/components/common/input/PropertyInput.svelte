@@ -5,7 +5,7 @@
     import {ButtonPriority} from '$components/html/button/button-priority';
     import {LabelOptions} from './label-options';
 
-    import {faCheck, faPen, faPlus} from '@fortawesome/free-solid-svg-icons';
+    import {faCheck, faPen, faPlus, faTrash} from '@fortawesome/free-solid-svg-icons';
     import {isPropertyRequestValid} from '$dto/property-request-dto';
     import {onMount} from 'svelte';
     import {PROPERTY_LIMITS} from '$dto/property-request-dto';
@@ -23,6 +23,7 @@
     export let forceEdit = false;
     export let leftLabelOptions: LabelOptions | undefined;
     export let leftPlaceholder = '';
+    export let onDelete: Function | undefined = undefined;
     export let onSave: Function | undefined = undefined;
     export let parentClass: string | undefined = undefined;
     export let parentId: string | undefined;
@@ -34,7 +35,7 @@
     let internalProperty: PropertyRequestDto | undefined;
 
     onMount(() => {
-        internalProperty = property?.value?.name ?  property.value : {description: '', name: ''};
+        internalProperty = property?.value?.name ? property.value : {description: '', name: ''};
         setHideProp();
     });
 
@@ -51,7 +52,13 @@
         setHideProp();
     }
 
-    function onButtonClick() {
+    function onDeleteButtonClick() {
+        if (onDelete) {
+            onDelete();
+        }
+    }
+
+    function onSaveOrEditButtonClick() {
         if (!property && edit && !isPropertyRequestValid(internalProperty)) {
             return;
         }
@@ -111,12 +118,23 @@
             <Button className="m-0 w-0.5/12"
                     priority={ButtonPriority.TransparentHover}
                     title={forceEdit ? $t('general.add') : (edit ? $t('general.save') : $t('general.edit'))}
-                    on:click={() => onButtonClick()}
+                    on:click={() => onSaveOrEditButtonClick()}
             >
                 <FaIcon icon={forceEdit ? faPlus : (edit ? faCheck : faPen)}
                         parentClass="mx-1"
                 />
             </Button>
+            {#if !forceEdit}
+                <Button className="m-0 w-0.5/12"
+                        priority={ButtonPriority.TransparentHover}
+                        title={$t('general.delete')}
+                        on:click={() => onDeleteButtonClick()}
+                >
+                    <FaIcon icon={faTrash}
+                            parentClass="mx-1"
+                    />
+                </Button>
+            {/if}
         </div>
     {/if}
 </div>

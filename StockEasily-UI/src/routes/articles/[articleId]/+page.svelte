@@ -1,11 +1,13 @@
 <script lang="ts">
+    import type {ValidatableArticle} from '$validation/validatable-article';
+
+    import {onDeleteProperty} from '$common/property-utils';
     import {AcceptType} from '$components/common/input/file/accept-type.js';
     import {ButtonPriority} from '$components/html/button/button-priority.js';
     import {ButtonType} from '$components/html/button/button-type.js';
     import {GetArticleResponseDto} from '$dto/response/get-article-response-dto';
     import {PropertyRequestDto} from '$dto/property-request-dto';
     import {UpdateArticleRequestDto} from '$dto/request/update-article-request-dto';
-    import type {ValidatableArticle} from '$validation/validatable-article';
 
     import {getImageResponseMessage, imageSelected, onImageSelected, selectedFiles} from '$common/image-input-utils';
     import {goto} from '$app/navigation';
@@ -293,6 +295,10 @@
                                                        name: 'prop-inner-parent' + i,
                                                    }}
                                                    {property}
+                                                   onDelete={() => {
+                                                       onDeleteProperty($validatableArticleStore, i);
+                                                       $validatableArticleStore = $validatableArticleStore;
+                                                   }}
                                                    onSave={property => onPropertyAdded(property, i)}
                                                    rightLabelOptions={{
                                                        className: 'text-gray-600 ml-2',
