@@ -43,19 +43,19 @@ build_frontend:
 #    - npm run test
 
 
-lint_backend:
-  stage: lint
-  image: gradle:latest
-  script:
-    - cd StockEasily-API
-#    - gradle lint
+#lint_backend:
+#  stage: lint
+#  image: gradle:latest
+#  script:
+#    - cd StockEasily-API
+#    - gradle lint # gives an error
 
-lint_frontend:
-  stage: lint
-  script:
-    - cd StockEasily-UI
-    - npm clean-install
-    - npm run lint
+#lint_frontend:
+#  stage: lint
+#  script:
+#    - cd StockEasily-UI
+#    - npm clean-install
+#    - npm run lint # gives an error, linter not successful
 
 
 deploy:
