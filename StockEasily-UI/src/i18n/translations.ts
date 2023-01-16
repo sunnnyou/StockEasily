@@ -80,6 +80,12 @@ export default {
         'validation.image': 'The selected image is too big. Max. size: {{expected}}',
         'validation.unknown': 'An unknown error occurred.',
 
+        // qrcode
+        'qrcode.title': 'Scan QR-Code',
+        'qrcode.start': 'Start QR-Scan',
+        'qrcode.stop': 'Stop Scanning',
+        'qrcode.error': 'Can\'t access camera. {{error}}',
+
         // footer
         'about': 'About',
         'about.contact': 'Contact',
