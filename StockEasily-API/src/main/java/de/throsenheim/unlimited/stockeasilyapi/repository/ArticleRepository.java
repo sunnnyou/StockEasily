@@ -205,12 +205,12 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         return result;
     }
 
-    private void removeOrphanedProperties(List<Property> requestProperties, List<Property> currentProperties) {
+    private void removeOrphanedProperties(final List<Property> requestProperties, final List<Property> currentProperties) {
         final List<Property> orphanedProperties = ListUtil.getUnusedItems(requestProperties, currentProperties);
         propertyRepository.deleteAll(orphanedProperties);
     }
 
-    private List<Property> updateProperties(List<Property> requestProperties, List<Property> currentProperties) {
+    private List<Property> updateProperties(final List<Property> requestProperties, final List<Property> currentProperties) {
         // Save properties if any new (added or replaced old one)
         final List<Property> newProperties = ListUtil.getNewItems(requestProperties, currentProperties);
         return (List<Property>) propertyRepository.saveAll(newProperties);
