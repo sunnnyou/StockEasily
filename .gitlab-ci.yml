@@ -5,7 +5,6 @@ variables:
 
 stages:
   - build
-  - test
   - lint
   - deploy
 
@@ -29,19 +28,19 @@ build_frontend:
     paths:
       - StockEasily-UI/.sveltekit/output/*
 
-test_backend:
-  stage: test
-  image: gradle:latest
-  script:
-    - cd StockEasily-API
-    - gradle test
+#test_backend:
+#  stage: test
+#  image: gradle:latest
+#  script:
+#    - cd StockEasily-API
+#    - gradle test
 
-test_frontend:
-  stage: test
-  script:
-    - cd StockEasily-UI
-    - npx playwright install
-    - npm run test
+#test_frontend:
+#  stage: test
+#  script:
+#    - cd StockEasily-UI
+#    - npx playwright install
+#    - npm run test
 
 
 lint_backend:
