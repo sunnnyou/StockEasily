@@ -184,22 +184,21 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
             final List<Property> resultProperties = (List<Property>) propertyRepository.saveAll(newProperties);
             article.setProperties(resultProperties);
 
-            // Remove old properties that are orphaned
-            final List<Property> orphanedProperties = ListUtil.getUnusedItems(requestProperties, currentProperties);
-            propertyRepository.deleteAll(orphanedProperties);
-
+            // ArticleProperty
             // Save ArticleProperty relations if any new
             final List<ArticleProperty> currentRelations = getArticlePropertyRelations(articleFound);
             final List<ArticleProperty> requestRelations = getArticlePropertyRelations(article);
 
             final List<ArticleProperty> newRelations = ListUtil.getNewItems(requestRelations, currentRelations);
-            final List<ArticleProperty> resultRelations = (List<ArticleProperty>) articlePropertyRepository.saveAll(requestRelations);
+            articlePropertyRepository.saveAll(newRelations);
 
-            // Remove unwanted ArticleProperty relations
+            // Remove old relations
+            final List<ArticleProperty> oldRelations = ListUtil.getUnusedItems(requestRelations, currentRelations);
+            articlePropertyRepository.deleteAll(oldRelations);
 
-            // Remove old properties if any orphaned
-//            final List<Property> unusedProperties = ListUtil.getUnusedItems(requestProperties, currentProperties);
-
+            // Remove orphaned properties
+            final List<Property> orphanedProperties = ListUtil.getUnusedItems(requestProperties, currentProperties);
+            propertyRepository.deleteAll(orphanedProperties);
 
             return update(article, commit);
         }
