@@ -166,15 +166,12 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
                 article.setCategory(category);
             }
 
-            // Property
-            // Save properties if any new (added or replaced old one)
             final List<Property> currentProperties = articleFound.getProperties();
             final List<Property> requestProperties = article.getProperties();
-
-            final List<Property> newProperties = ListUtil.getNewItems(requestProperties, currentProperties);
-            final List<Property> resultProperties = (List<Property>) propertyRepository.saveAll(newProperties);
-            article.setProperties(resultProperties);
-
+            final List<Property> properties = updateProperties(requestProperties, currentProperties);
+            if (properties != null) {
+                article.setProperties(properties);
+            }
             // ArticleProperty
             // Save ArticleProperty relations if any new
             final List<ArticleProperty> currentRelations = getArticlePropertyRelations(articleFound);
@@ -218,6 +215,12 @@ public class ArticleRepository implements HumaneRepository<Article, Long> {
         List<ArticleProperty> articlePropertyRelations = getArticlePropertyRelations(result);
         articlePropertyRepository.saveAll(articlePropertyRelations);
         return result;
+    }
+
+    private List<Property> updateProperties(List<Property> requestProperties, List<Property> currentProperties) {
+        // Save properties if any new (added or replaced old one)
+        final List<Property> newProperties = ListUtil.getNewItems(requestProperties, currentProperties);
+        return (List<Property>) propertyRepository.saveAll(newProperties);
     }
 
     @Nullable
