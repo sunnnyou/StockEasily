@@ -1,35 +1,40 @@
-<script lang="ts">
-    import type { ActionData} from './$types'
-    import {applyAction, enhance} from "$app/forms";
-    import {invalidateAll} from "$app/navigation";
-    export let form: ActionData
+<script>
+    export let error;
+
+    let email;
+    let password;
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        // Send login request to the backend
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                body: JSON.stringify({ email, password }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+            const data = await res.json();
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                // Redirect to the home page
+                window.location.href = '/';
+            } else {
+                error = data.message;
+            }
+        } catch (err) {
+            console.error(err);
+            error = 'An error occurred. Please try again later.';
+        }
+    };
 </script>
 
-<h1>Login</h1>
-
-<form action="?/login" method="POST" use:enhance={() => {
-    return async ({result}) => {
-        invalidateAll()
-        await applyAction(result)
-    }
-}}>
-    <div>
-        <label for="username">Username</label>
-        <input type="text" name="username" id="username" required />
-    </div>
-
-    <div>
-        <label for="password">Password</label>
-        <input type="text" name="password" id="password" required />
-    </div>
-
-    {#if form?.invalid}
-        <p class="error">Username or password required.</p>
+<form on:submit={handleSubmit}>
+    <label for="email">Email:</label>
+    <input type="email" id="email" bind:value={email} required />
+    <label for="password">Password:</label>
+    <input type="password" id="password" bind:value={password} required />
+    <button type="submit">Log in</button>
+    {#if error}
+        <p style="color: red">{error}</p>
     {/if}
-
-    {#if form?.credentials}
-        <p class="error">Wrong username or password credentials.</p>
-    {/if}
-
-    <button type="submit">Login</button>
 </form>
