@@ -67,4 +67,8 @@ public class UserProfile {
     public boolean isAuthenticated() {
         return authenticated;
     }
+
+    public void setConnection(String connection) {
+        this.connection = connection;
+    }
 }

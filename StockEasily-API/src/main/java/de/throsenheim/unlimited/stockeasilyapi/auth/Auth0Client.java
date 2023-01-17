@@ -36,6 +36,7 @@ public class Auth0Client {
                 UserProfile user = new UserProfile();
                 user.setEmail(email);
                 user.setPassword(password);
+                user.setConnection("Username-Password-Authentication");
 
         }
 
