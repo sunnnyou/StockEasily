@@ -6,8 +6,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import de.throsenheim.unlimited.stockeasilyapi.user.UserProfile;
 
-import java.io.UnsupportedEncodingException;
-
 public class Auth0Client {
     private String clientId;
     private String clientSecret;
@@ -33,4 +31,13 @@ public class Auth0Client {
     public DecodedJWT decodeToken(String token) {
         return JWT.decode(token);
     }
-}
+
+        public void createUser(String email, String password) {
+                UserProfile user = new UserProfile();
+                user.setEmail(email);
+                user.setPassword(password);
+
+        }
+
+    }
+
