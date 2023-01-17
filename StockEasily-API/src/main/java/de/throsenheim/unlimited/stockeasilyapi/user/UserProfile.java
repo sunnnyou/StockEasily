@@ -13,11 +13,12 @@ public class UserProfile {
     public UserProfile() {
     }
 
-    public UserProfile(String name, String email, String password) {
+    public UserProfile(String name, String email, String password, String connection) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.authenticated = false;
+        this.connection = connection;
     }
 
     public UserProfile(DecodedJWT jwt) {

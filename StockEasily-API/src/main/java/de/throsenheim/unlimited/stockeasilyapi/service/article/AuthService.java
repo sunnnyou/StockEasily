@@ -1,13 +1,11 @@
 package de.throsenheim.unlimited.stockeasilyapi.service.article;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import de.throsenheim.unlimited.stockeasilyapi.auth.Auth0Client;
 import de.throsenheim.unlimited.stockeasilyapi.config.Auth0Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.websocket.DecodeException;
 @Service
 public class AuthService {
     @Autowired
