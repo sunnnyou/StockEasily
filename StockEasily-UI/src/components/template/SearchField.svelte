@@ -19,7 +19,7 @@
     <form on:submit|preventDefault={() => {
         value = encodeURIComponent(value.replace(/^\?/,''));
         if (browser){
-            goto(`/articles/page/1?${encodeURIComponent(value)}`)}}
+            window.location.href = `/articles/page/1?${encodeURIComponent(value)}`}}
         }
     >
         <Input className="w-full bg-gray-100 text-sm text-gray-800 transition border focFus:outline-none focus:border-gray-700 rounded py-1 px-2 pl-10 appearance-none leading-normal"
